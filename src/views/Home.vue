@@ -1,5 +1,6 @@
 <script setup>
 import { ArrowRight, Code, Database, Layout, Server, Smartphone, Globe } from 'lucide-vue-next'
+import heroBgImage from '@/assets/hero-bg.png'
 
 const skills = [
   { name: 'Frontend', icon: Layout, items: ['Vue.js', 'React', 'Tailwind CSS', 'TypeScript'] },
@@ -35,7 +36,7 @@ const projects = [
     <section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       <!-- Background Image -->
       <div class="absolute inset-0 z-0">
-        <img src="@/assets/hero-bg.png" alt="Background" class="w-full h-full object-cover" />
+        <img :src="heroBgImage" alt="Background" class="w-full h-full object-cover" />
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px]"></div>
       </div>
 
