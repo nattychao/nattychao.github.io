@@ -3,23 +3,23 @@ import { Briefcase, GraduationCap, Code, User, Mail, Github, Linkedin, Globe } f
 
 const experience = [
   {
-    role: 'Senior Frontend Developer',
-    company: 'Tech Corp',
-    period: '2022 - Present',
-    description: 'Leading the frontend team in building scalable web applications using Vue 3 and TypeScript. Improved performance by 40%.'
+    role: '高级前端开发工程师',
+    company: '科技公司',
+    period: '2022 - 至今',
+    description: '领导前端团队使用 Vue 3 和 TypeScript 构建可扩展的 Web 应用。将性能提升了 40%。'
   },
   {
-    role: 'Full Stack Developer',
-    company: 'Startup Inc',
+    role: '全栈开发工程师',
+    company: '创业公司',
     period: '2020 - 2022',
-    description: 'Developed full-stack features using Node.js and React. Implemented real-time collaboration tools.'
+    description: '使用 Node.js 和 React 开发全栈功能。实现了实时协作工具。'
   }
 ]
 
 const education = [
   {
-    degree: 'B.S. Computer Science',
-    school: 'University of Technology',
+    degree: '计算机科学学士',
+    school: '科技大学',
     period: '2016 - 2020'
   }
 ]
@@ -38,7 +38,7 @@ const skills = [
       </div>
       <div class="text-center md:text-left flex-grow">
         <h1 class="text-4xl font-bold text-slate-900 mb-2">Natty Chao</h1>
-        <p class="text-xl text-indigo-600 font-medium mb-4">Full Stack Developer</p>
+        <p class="text-xl text-indigo-600 font-medium mb-4">全栈开发工程师</p>
         <div class="flex flex-wrap justify-center md:justify-start gap-4 text-slate-600">
           <a href="mailto:contact@nattychao.com" class="flex items-center gap-2 hover:text-indigo-600 transition-colors">
             <Mail class="w-4 h-4" /> contact@nattychao.com
@@ -65,7 +65,7 @@ const skills = [
             <div class="p-2 bg-indigo-100 rounded-lg text-indigo-600">
               <Briefcase class="w-6 h-6" />
             </div>
-            Experience
+            工作经历
           </h2>
           <div class="space-y-8">
             <div v-for="(job, index) in experience" :key="index" class="relative pl-8 border-l-2 border-slate-200 last:border-0 pb-8 last:pb-0">
@@ -83,12 +83,12 @@ const skills = [
             <div class="p-2 bg-purple-100 rounded-lg text-purple-600">
               <Code class="w-6 h-6" />
             </div>
-            Recent Projects
+            最近项目
           </h2>
           <div class="grid gap-6">
             <div class="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
-              <h3 class="font-bold text-slate-900 mb-2">E-Commerce Platform</h3>
-              <p class="text-slate-600 text-sm mb-4">A full-featured shopping platform built with Vue 3 and Node.js.</p>
+              <h3 class="font-bold text-slate-900 mb-2">电商平台</h3>
+              <p class="text-slate-600 text-sm mb-4">使用 Vue 3 和 Node.js 构建的功能齐全的购物平台。</p>
               <div class="flex gap-2">
                 <span class="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-medium">Vue.js</span>
                 <span class="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-medium">Node.js</span>
@@ -103,7 +103,7 @@ const skills = [
         <!-- Skills -->
         <section>
           <h2 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-            <User class="w-5 h-5 text-indigo-600" /> Skills
+            <User class="w-5 h-5 text-indigo-600" /> 技能
           </h2>
           <div class="flex flex-wrap gap-2">
             <span v-for="skill in skills" :key="skill" class="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-sm font-medium">
@@ -115,7 +115,7 @@ const skills = [
         <!-- Education -->
         <section>
           <h2 class="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-            <GraduationCap class="w-5 h-5 text-indigo-600" /> Education
+            <GraduationCap class="w-5 h-5 text-indigo-600" /> 教育背景
           </h2>
           <div v-for="(edu, index) in education" :key="index" class="mb-4">
             <h3 class="font-bold text-slate-900">{{ edu.school }}</h3>

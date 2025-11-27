@@ -29,8 +29,8 @@ onMounted(async () => {
     </article>
 
     <div v-else class="text-center py-20">
-      <h1 class="text-2xl font-bold text-slate-900">Post not found</h1>
-      <router-link to="/blog" class="text-indigo-600 hover:text-indigo-700 mt-4 inline-block">Back to Blog</router-link>
+      <h1 class="text-2xl font-bold text-slate-900">文章未找到</h1>
+      <router-link to="/blog" class="text-indigo-600 hover:text-indigo-700 mt-4 inline-block">返回博客</router-link>
     </div>
   </div>
 </template>

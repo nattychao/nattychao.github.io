@@ -12,7 +12,7 @@ onMounted(() => {
 
 <template>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-    <h1 class="text-4xl font-bold text-slate-900 mb-12">Blog</h1>
+    <h1 class="text-4xl font-bold text-slate-900 mb-12">博客</h1>
     
     <div v-if="loading" class="text-center py-20">
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
@@ -28,7 +28,7 @@ onMounted(() => {
         </h2>
         <p class="text-slate-600 mb-4 flex-grow">{{ post.description }}</p>
         <RouterLink :to="'/blog/' + post.slug" class="text-indigo-600 font-medium hover:text-indigo-700 inline-flex items-center gap-1 mt-auto">
-          Read more &rarr;
+          阅读更多 &rarr;
         </RouterLink>
       </article>
     </div>

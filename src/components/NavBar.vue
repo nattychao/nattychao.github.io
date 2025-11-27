@@ -10,9 +10,9 @@ const toggleMenu = () => {
 }
 
 const navLinks = [
-  { name: 'Home', path: '/' },
-  { name: 'Blog', path: '/blog' },
-  { name: 'Resume', path: '/resume' },
+  { name: '首页', path: '/' },
+  { name: '博客', path: '/blog' },
+  { name: '简历', path: '/resume' },
 ]
 </script>
 
