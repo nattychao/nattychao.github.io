@@ -236,4 +236,3 @@ function estimateReadTime(content) {
 <style scoped>
 /* No custom CSS needed, using Tailwind */
 </style>
-
