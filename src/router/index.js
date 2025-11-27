@@ -41,7 +41,7 @@ routes.push({
 })
 
 const router = createRouter({
-  history: createWebHistory('/nattychao.github.io/'),
+  history: createWebHistory(),
   routes
 })
 
