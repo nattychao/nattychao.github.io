@@ -17,11 +17,10 @@ Object.keys(modules).forEach(filePath => {
   // 获取文件名（不含扩展名）
   const fileName = filePath.split('/').pop().replace('.vue', '')
   
-  // 跳过 Home.vue，因为已经手动添加了
-  if (fileName === 'Home') return
+  // 跳过 Home.vue 和 BlogPost.vue (BlogPost 使用动态路由)
+  if (['Home', 'BlogPost'].includes(fileName)) return
   
   // 将组件名转换为路由路径
-  // 例如：BlogPost -> /blog-post
   // 例如：Resume -> /resume
   const path = `/${fileName.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}`
   
@@ -41,7 +40,7 @@ routes.push({
 })
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes
 })
 

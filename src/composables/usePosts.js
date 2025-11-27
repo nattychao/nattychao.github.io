@@ -36,7 +36,7 @@ export function usePosts() {
           console.log(`Loading post: ${fileName}`)
           
           // 使用fetch加载文件内容
-          const response = await fetch(`/src/posts/${fileName}`)
+          const response = await fetch(`/posts/${fileName}`)
           console.log(`Response status for ${fileName}: ${response.status}`)
           if (!response.ok) {
             console.error(`Failed to load ${fileName}: ${response.statusText}`)
