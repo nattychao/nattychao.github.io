@@ -2,6 +2,7 @@
 title: The Future of Web Dev
 date: 2025-11-28
 description: Exploring the latest trends in frontend development.
+tags: ['Vue', 'React', 'Svelte', 'Solid', 'Web开发']
 ---
 
 # The Future of Web Dev

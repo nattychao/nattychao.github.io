@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@vueuse/motion": "^2.0.0",
+    "defu": "^6.1.4",
+    "gray-matter": "^4.0.3",
     "lucide-vue-next": "^0.290.0",
     "markdown-it": "^14.1.0",
     "vue": "^3.3.0",
