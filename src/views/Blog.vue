@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, computed, nextTick } from 'vue'
+import { onMounted, onBeforeUnmount, ref, computed, nextTick } from 'vue'
 import { usePosts } from '../composables/usePosts'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { getCategoryClass } from '../utils/categoryColors.js'
@@ -16,6 +16,13 @@ const hasTransition = ref(false) // 控制是否应用过渡动画
 const tabRefs = ref([])
 const activeTabUnderlineLeft = ref('0px')
 const activeTabUnderlineWidth = ref('0px')
+// 标签栏吸顶状态
+const isSticky = ref(false)
+
+// 保存滚动位置
+const scrollPosition = ref(0)
+
+// 标签栏容器引用
 const tabsContainerRef = ref(null)
 
 // 定义分类
@@ -35,7 +42,7 @@ const updateUnderline = async () => {
   const activeTabIndex = categories.findIndex(cat => cat.id === selectedCategory.value)
   if (activeTabIndex !== -1 && tabRefs.value[activeTabIndex]) {
     const activeTab = tabRefs.value[activeTabIndex]
-    
+
     // 控制动画效果
     if (isInitialLoad.value) {
       // 初始化时不使用动画
@@ -48,11 +55,12 @@ const updateUnderline = async () => {
       activeTabUnderlineLeft.value = `${activeTab.offsetLeft}px`
       activeTabUnderlineWidth.value = `${activeTab.offsetWidth}px`
     }
-    
+
     // 滚动到选中的标签
     if (tabsContainerRef.value) {
       const container = tabsContainerRef.value
-      const scrollLeft = activeTab.offsetLeft - (container.offsetWidth / 2) + (activeTab.offsetWidth / 2)
+      const scrollLeft =
+        activeTab.offsetLeft - container.offsetWidth / 2 + activeTab.offsetWidth / 2
       container.scrollTo({
         left: scrollLeft,
         behavior: 'smooth'
@@ -62,12 +70,12 @@ const updateUnderline = async () => {
 }
 
 // 处理标签点击
-const handleTabClick = (categoryId) => {
+const handleTabClick = categoryId => {
   selectedCategory.value = categoryId
   // 标记不是初始加载，需要动画
   isInitialLoad.value = false
   updateUnderline()
-  
+
   // Update URL query parameter
   router.push({
     query: {
@@ -78,22 +86,22 @@ const handleTabClick = (categoryId) => {
 }
 
 // 获取文章所属的所有分类
-const getPostCategories = (post) => {
+const getPostCategories = post => {
   // 如果tags为空、不是数组或空数组，则返回空数组（表示不属于任何特定分类）
   if (!post.tags || !Array.isArray(post.tags) || post.tags.length === 0) {
     return []
   }
-  
+
   // 获取文章所属的所有分类
   const postCategories = []
-  
+
   // 检查tags中是否包含特定分类
   categories.forEach(category => {
     if (category.id !== '全部' && post.tags.includes(category.id)) {
       postCategories.push(category.id)
     }
   })
-  
+
   return postCategories
 }
 
@@ -102,7 +110,7 @@ const filteredPosts = computed(() => {
   if (selectedCategory.value === '全部') {
     return posts.value
   }
-  
+
   return posts.value.filter(post => {
     const postCategories = getPostCategories(post)
     // 如果tags为空或空数组，则只在"全部"分类下显示
@@ -114,107 +122,140 @@ const filteredPosts = computed(() => {
   })
 })
 
+// 处理滚动事件，实现标签栏吸顶效果和保存滚动位置
+const handleScroll = () => {
+  if (!tabsContainerRef.value) return
+
+  // 获取标签栏的位置
+  const rect = tabsContainerRef.value.getBoundingClientRect()
+  // 如果标签栏顶部距离视口顶部的距离小于等于64px（header高度），则认为已经吸顶
+  isSticky.value = rect.top <= 64
+
+  // 保存当前滚动位置
+  scrollPosition.value = window.scrollY
+}
+
 onMounted(() => {
   loadPosts()
   // 初始化下划线位置
   setTimeout(() => {
     updateUnderline()
   }, 100)
-  
+
   // 监听窗口大小变化 - 窗口大小变化也不使用动画
   window.addEventListener('resize', () => {
     hasTransition.value = false
     updateUnderline()
   })
+
+  // 添加滚动事件监听
+  window.addEventListener('scroll', handleScroll)
+  // 初始检查一次吸顶状态
+  handleScroll()
+
+  // 恢复滚动位置
+  nextTick(() => {
+    window.scrollTo(0, scrollPosition.value)
+  })
+})
+
+// 在离开页面时保存滚动位置
+onBeforeUnmount(() => {
+  // 移除滚动事件监听
+  window.removeEventListener('scroll', handleScroll)
+  // 保存当前滚动位置
+  scrollPosition.value = window.scrollY
 })
 </script>
 
 <template>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-20">
-    <h1 class="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 mb-4 sm:mb-6 md:mb-8">博客</h1>
-    
+  <div class="py-8 sm:py-12 md:py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 mb-2 sm:mb-4 md:mb-6">
+        博客
+      </h1>
+    </div>
     <!-- 分类标签栏 -->
-    <div class="mb-8 sm:mb-10 md:mb-12">
+    <div ref="tabsContainerRef"
+      :class="['w-full pt-2 transition-colors duration-300', isSticky ? 'sticky top-16 bg-white/80 backdrop-blur-md z-50' : 'bg-transparent']">
       <!-- 滚动容器 -->
-      <div 
-        ref="tabsContainerRef"
-        class="overflow-x-auto scrollbar-hide"
-      >
-        <div class="relative flex gap-2 border-b border-slate-200 whitespace-nowrap pb-px min-w-max">
-          <button 
-            v-for="(category, index) in categories" 
-            :key="category.id"
-            :ref="el => tabRefs[index] = el"
-            @click="handleTabClick(category.id)"
-            :class="[
-              'px-3 sm:px-4 py-2 font-medium text-xs sm:text-sm transition-all duration-200',
-              selectedCategory === category.id 
-                ? 'text-indigo-600' 
-                : 'text-slate-600 hover:text-slate-900'
-            ]"
-          >
-            {{ category.name }}
-          </button>
-          
-          <!-- 活动标签下划线 -->
-          <div 
-            :class="[
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div ref="tabsContainerRef" class="overflow-x-auto scrollbar-hide">
+          <div class="relative flex gap-2 border-b border-slate-200 whitespace-nowrap pb-px min-w-max">
+            <button v-for="(category, index) in categories" :key="category.id" :ref="el => (tabRefs[index] = el)"
+              @click="handleTabClick(category.id)" :class="[
+                'px-3 sm:px-4 py-2 font-medium text-xs sm:text-sm transition-all duration-200',
+                selectedCategory === category.id
+                  ? 'text-indigo-600'
+                  : 'text-slate-600 hover:text-slate-900'
+              ]">
+              {{ category.name }}
+            </button>
+            <!-- 活动标签下划线 -->
+            <div :class="[
               'absolute bottom-0 h-0.5 bg-indigo-600',
               hasTransition ? 'transition-all duration-300 ease-out' : ''
-            ]"
-            :style="{
+            ]" :style="{
               left: activeTabUnderlineLeft,
               width: activeTabUnderlineWidth
-            }"
-          ></div>
+            }"></div>
+          </div>
         </div>
       </div>
-    </div>
-    
-    <div v-if="loading" class="text-center py-16 sm:py-20">
-      <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-indigo-600 mx-auto"></div>
-    </div>
 
-    <div v-else>
-      <!-- 当前分类的博客数量 -->
-      <div class="mb-4 sm:mb-6 text-sm sm:text-base text-slate-600">
-        找到 {{ filteredPosts.length }} 篇{{ selectedCategory === '全部' ? '' : selectedCategory }}相关博客
+      <!-- 吸顶状态下的全宽分割线 -->
+      <div v-if="isSticky" class="absolute bottom-0 left-0 right-0 h-px bg-slate-200"></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      <div v-if="loading" class="text-center py-16 sm:py-20">
+        <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-indigo-600 mx-auto"></div>
       </div>
-      
-      <!-- 博客列表 -->
-      <div v-if="filteredPosts.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-        <article v-for="post in filteredPosts" :key="post.slug" class="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-100 hover:shadow-md transition-all hover:-translate-y-1 flex flex-col">
-          <!-- 分类标签 -->
-          <div class="flex flex-wrap gap-1.5 sm:gap-2 mb-2 sm:mb-3">
-            <span v-for="tag in (post.tags || [])" :key="tag" 
-                  :class="getCategoryClass(tag)"
-                  class="inline-block px-2 sm:px-3 py-1 text-xs font-medium rounded-full border transition-all duration-200 hover:shadow-sm">
-              {{ tag }}
-            </span>
-          </div>
-          
-          <div class="text-xs sm:text-sm text-slate-500 mb-1.5 sm:mb-2">{{ new Date(post.date).toLocaleDateString() }}</div>
-          <h2 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3">
-            <RouterLink :to="'/blog/' + post.slug" class="hover:text-indigo-600 transition-colors">
-              {{ post.title }}
+      <div v-else>
+        <!-- 当前分类的博客数量 -->
+        <div class="mb-4 sm:mb-6 text-sm sm:text-base text-slate-600">
+          找到 {{ filteredPosts.length }} 篇{{
+            selectedCategory === '全部' ? '' : selectedCategory
+          }}相关博客
+        </div>
+        <!-- 博客列表 -->
+        <div v-if="filteredPosts.length > 0"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+          <article v-for="post in filteredPosts" :key="post.slug"
+            class="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-100 hover:shadow-md transition-all hover:-translate-y-1 flex flex-col">
+            <!-- 分类标签 -->
+            <div class="flex flex-wrap gap-1.5 sm:gap-2 mb-2 sm:mb-3">
+              <span v-for="tag in post.tags || []" :key="tag" :class="getCategoryClass(tag)"
+                class="inline-block px-2 sm:px-3 py-1 text-xs font-medium rounded-full border transition-all duration-200 hover:shadow-sm">
+                {{ tag }}
+              </span>
+            </div>
+            <div class="text-xs sm:text-sm text-slate-500 mb-1.5 sm:mb-2">
+              {{ new Date(post.date).toLocaleDateString() }}
+            </div>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3">
+              <RouterLink :to="'/blog/' + post.slug" class="hover:text-indigo-600 transition-colors">
+                {{ post.title }}
+              </RouterLink>
+            </h2>
+            <p class="text-sm sm:text-base text-slate-600 mb-3 sm:mb-4 flex-grow">
+              {{ post.description }}
+            </p>
+            <RouterLink :to="'/blog/' + post.slug"
+              class="text-indigo-600 font-medium hover:text-indigo-700 inline-flex items-center gap-1 mt-auto text-sm sm:text-base">
+              阅读更多 &rarr;
             </RouterLink>
-          </h2>
-          <p class="text-sm sm:text-base text-slate-600 mb-3 sm:mb-4 flex-grow">{{ post.description }}</p>
-          <RouterLink :to="'/blog/' + post.slug" class="text-indigo-600 font-medium hover:text-indigo-700 inline-flex items-center gap-1 mt-auto text-sm sm:text-base">
-            阅读更多 &rarr;
-          </RouterLink>
-        </article>
-      </div>
-      
-      <!-- 无内容提示 -->
-      <div v-else class="text-center py-12 sm:py-16">
-        <div class="text-slate-400 text-sm sm:text-lg mb-3 sm:mb-4">暂无{{ selectedCategory }}相关的博客</div>
-        <button 
-          @click="handleTabClick('全部')"
-          class="px-3 sm:px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors text-sm sm:text-base"
-        >
-          查看全部博客
-        </button>
+          </article>
+        </div>
+        <!-- 无内容提示 -->
+        <div v-else class="text-center py-12 sm:py-16">
+          <div class="text-slate-400 text-sm sm:text-lg mb-3 sm:mb-4">
+            暂无{{ selectedCategory }}相关的博客
+          </div>
+          <button @click="handleTabClick('全部')"
+            class="px-3 sm:px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors text-sm sm:text-base">
+            查看全部博客
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -223,10 +264,14 @@ onMounted(() => {
 <style scoped>
 /* 隐藏滚动条但保持滚动功能 */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
+
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
+  display: none;
+  /* Chrome, Safari and Opera */
 }
 </style>
