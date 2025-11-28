@@ -15,22 +15,22 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-    <div v-if="loading" class="text-center py-20">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-20">
+    <div v-if="loading" class="text-center py-16 sm:py-20">
+      <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-indigo-600 mx-auto"></div>
     </div>
 
-    <article v-else-if="post" class="prose prose-lg prose-slate mx-auto">
-      <div class="mb-8 text-center">
-        <div class="text-sm text-indigo-600 font-medium mb-2">{{ new Date(post.date).toLocaleDateString() }}</div>
-        <h1 class="text-4xl font-bold text-slate-900 mb-4">{{ post.title }}</h1>
+    <article v-else-if="post" class="prose prose-sm sm:prose-base md:prose-lg prose-slate mx-auto">
+      <div class="mb-6 sm:mb-8 text-center">
+        <div class="text-xs sm:text-sm text-indigo-600 font-medium mb-1.5 sm:mb-2">{{ new Date(post.date).toLocaleDateString() }}</div>
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-3 sm:mb-4">{{ post.title }}</h1>
       </div>
       <div v-html="post.html"></div>
     </article>
 
-    <div v-else class="text-center py-20">
-      <h1 class="text-2xl font-bold text-slate-900">文章未找到</h1>
-      <router-link to="/blog" class="text-indigo-600 hover:text-indigo-700 mt-4 inline-block">返回博客</router-link>
+    <div v-else class="text-center py-16 sm:py-20">
+      <h1 class="text-xl sm:text-2xl font-bold text-slate-900">文章未找到</h1>
+      <router-link to="/blog" class="text-indigo-600 hover:text-indigo-700 mt-3 sm:mt-4 inline-block text-sm sm:text-base">返回博客</router-link>
     </div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 ---
 title: AFNetworking 完全指南：iOS 网络请求最佳实践
-date: 2025-10-29
+date: 2025-11-30
 description: 深入探讨 AFNetworking 网络库的核心功能、使用方法和最佳实践，帮助 iOS 开发者构建高效可靠的网络层。
 tags: ['Objective-C', 'AFNetworking', '网络请求', 'iOS']
 ---

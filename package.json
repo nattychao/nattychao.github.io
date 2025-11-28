@@ -4,9 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "npm run generate-posts && vite",
+    "build": "npm run generate-posts && vite build",
+    "preview": "vite preview",
+    "generate-posts": "node scripts/generate-posts.js"
   },
   "dependencies": {
     "@vueuse/motion": "^2.0.0",

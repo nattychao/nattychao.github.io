@@ -99,11 +99,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-    <h1 class="text-4xl font-bold text-slate-900 mb-8">博客</h1>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-20">
+    <h1 class="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 mb-4 sm:mb-6 md:mb-8">博客</h1>
     
     <!-- 分类标签栏 -->
-    <div class="mb-12">
+    <div class="mb-8 sm:mb-10 md:mb-12">
       <!-- 滚动容器 -->
       <div 
         ref="tabsContainerRef"
@@ -116,7 +116,7 @@ onMounted(() => {
             :ref="el => tabRefs[index] = el"
             @click="handleTabClick(category.id)"
             :class="[
-              'px-4 py-2 font-medium text-sm transition-all duration-200',
+              'px-3 sm:px-4 py-2 font-medium text-xs sm:text-sm transition-all duration-200',
               selectedCategory === category.id 
                 ? 'text-indigo-600' 
                 : 'text-slate-600 hover:text-slate-900'
@@ -137,47 +137,47 @@ onMounted(() => {
       </div>
     </div>
     
-    <div v-if="loading" class="text-center py-20">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+    <div v-if="loading" class="text-center py-16 sm:py-20">
+      <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-indigo-600 mx-auto"></div>
     </div>
 
     <div v-else>
       <!-- 当前分类的博客数量 -->
-      <div class="mb-6 text-slate-600">
+      <div class="mb-4 sm:mb-6 text-sm sm:text-base text-slate-600">
         找到 {{ filteredPosts.length }} 篇{{ selectedCategory === '全部' ? '' : selectedCategory }}相关博客
       </div>
       
       <!-- 博客列表 -->
-      <div v-if="filteredPosts.length > 0" class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        <article v-for="post in filteredPosts" :key="post.slug" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-all hover:-translate-y-1 flex flex-col">
+      <div v-if="filteredPosts.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+        <article v-for="post in filteredPosts" :key="post.slug" class="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-100 hover:shadow-md transition-all hover:-translate-y-1 flex flex-col">
           <!-- 分类标签 -->
-          <div class="flex flex-wrap gap-2 mb-3">
+          <div class="flex flex-wrap gap-1.5 sm:gap-2 mb-2 sm:mb-3">
             <span v-for="tag in (post.tags || [])" :key="tag" 
                   :class="getCategoryClass(tag)"
-                  class="inline-block px-3 py-1 text-xs font-medium rounded-full border transition-all duration-200 hover:shadow-sm">
+                  class="inline-block px-2 sm:px-3 py-1 text-xs font-medium rounded-full border transition-all duration-200 hover:shadow-sm">
               {{ tag }}
             </span>
           </div>
           
-          <div class="text-sm text-slate-500 mb-2">{{ new Date(post.date).toLocaleDateString() }}</div>
-          <h2 class="text-xl font-bold text-slate-900 mb-3">
+          <div class="text-xs sm:text-sm text-slate-500 mb-1.5 sm:mb-2">{{ new Date(post.date).toLocaleDateString() }}</div>
+          <h2 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3">
             <RouterLink :to="'/blog/' + post.slug" class="hover:text-indigo-600 transition-colors">
               {{ post.title }}
             </RouterLink>
           </h2>
-          <p class="text-slate-600 mb-4 flex-grow">{{ post.description }}</p>
-          <RouterLink :to="'/blog/' + post.slug" class="text-indigo-600 font-medium hover:text-indigo-700 inline-flex items-center gap-1 mt-auto">
+          <p class="text-sm sm:text-base text-slate-600 mb-3 sm:mb-4 flex-grow">{{ post.description }}</p>
+          <RouterLink :to="'/blog/' + post.slug" class="text-indigo-600 font-medium hover:text-indigo-700 inline-flex items-center gap-1 mt-auto text-sm sm:text-base">
             阅读更多 &rarr;
           </RouterLink>
         </article>
       </div>
       
       <!-- 无内容提示 -->
-      <div v-else class="text-center py-16">
-        <div class="text-slate-400 text-lg mb-4">暂无{{ selectedCategory }}相关的博客</div>
+      <div v-else class="text-center py-12 sm:py-16">
+        <div class="text-slate-400 text-sm sm:text-lg mb-3 sm:mb-4">暂无{{ selectedCategory }}相关的博客</div>
         <button 
-          @click="selectedCategory = '全部'"
-          class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          @click="handleTabClick('全部')"
+          class="px-3 sm:px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors text-sm sm:text-base"
         >
           查看全部博客
         </button>

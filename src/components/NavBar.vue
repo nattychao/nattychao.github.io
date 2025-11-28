@@ -2,17 +2,18 @@
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { Menu, X, Github, Linkedin, Mail, Phone, MessageCircle } from 'lucide-vue-next'
+import SideMenu from './SideMenu.vue'
+import { useToast } from '@/composables/useToast.js'
 
 const isMenuOpen = ref(false)
 const isScrolled = ref(false)
 const route = useRoute()
 
+// Toast功能
+const { showToast } = useToast()
+
 // 判断是否为首页
 const isHomePage = computed(() => route.path === '/')
-
-const toggleMenu = () => {
-  isMenuOpen.value = !isMenuOpen.value
-}
 
 const handleScroll = () => {
   // 只在首页处理滚动效果
@@ -21,16 +22,32 @@ const handleScroll = () => {
     return
   }
   
-  // 当滚动超过轮播图高度减去导航栏高度时，改变样式
-  // 轮播图高度为视口高度的0.618倍，但最小高度为600px
-  const heroHeight = Math.max(window.innerHeight * 0.618, 600)
+  // 根据屏幕宽度计算不同的Hero高度
+  let heroHeight
+  if (window.innerWidth >= 768) { // md breakpoint
+    // PC端：视口高度的0.618倍，但最小高度为600px
+    heroHeight = Math.max(window.innerHeight * 0.618, 600)
+  } else {
+    // H5端：视口高度的50%，但最小高度为400px
+    heroHeight = Math.max(window.innerHeight * 0.5, 400)
+  }
+  
   isScrolled.value = window.scrollY > (heroHeight - 64)
 }
 
 // 检查当前滚动位置
 const checkScrollPosition = () => {
   if (isHomePage.value) {
-    const heroHeight = Math.max(window.innerHeight * 0.618, 600)
+    // 根据屏幕宽度计算不同的Hero高度
+    let heroHeight
+    if (window.innerWidth >= 768) { // md breakpoint
+      // PC端：视口高度的0.618倍，但最小高度为600px
+      heroHeight = Math.max(window.innerHeight * 0.618, 600)
+    } else {
+      // H5端：视口高度的50%，但最小高度为400px
+      heroHeight = Math.max(window.innerHeight * 0.5, 400)
+    }
+    
     isScrolled.value = window.scrollY > (heroHeight - 64)
   } else {
     isScrolled.value = true
@@ -62,9 +79,29 @@ const navLinks = [
 
 // 显示微信二维码
 const showWeChatQR = () => {
-  // 这里可以添加显示微信二维码的逻辑
-  // 例如弹出一个模态框或者跳转到微信页面
-  alert('微信号: nattychao')
+  // 复制微信号到剪贴板
+  const wechatId = 'nattychao'
+  navigator.clipboard.writeText(wechatId)
+    .then(() => {
+      showToast()
+    })
+    .catch(err => {
+      console.error('复制失败:', err)
+      // 降级方案：使用传统的复制方法
+      const textArea = document.createElement('textarea')
+      textArea.value = wechatId
+      document.body.appendChild(textArea)
+      textArea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
+      
+      showToast()
+    })
+}
+
+// 切换侧滑菜单
+const toggleSideMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value
 }
 </script>
 
@@ -147,7 +184,7 @@ const showWeChatQR = () => {
 
         <!-- Mobile Menu Button -->
         <div class="md:hidden flex items-center">
-          <button @click="toggleMenu" :class="[
+          <button @click="toggleSideMenu" :class="[
             'focus:outline-none transition-colors',
             !isHomePage || isScrolled 
               ? 'text-slate-600 hover:text-slate-900' 
@@ -159,31 +196,8 @@ const showWeChatQR = () => {
         </div>
       </div>
     </div>
-
-    <!-- Mobile Menu -->
-    <div v-if="isMenuOpen" :class="[
-      'md:hidden border-b transition-all duration-300',
-      !isHomePage || isScrolled 
-        ? 'bg-white border-slate-100' 
-        : 'bg-black/30 backdrop-blur-lg border-white/20'
-    ]">
-      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-        <RouterLink 
-          v-for="link in navLinks" 
-          :key="link.name" 
-          :to="link.path"
-          :class="[
-            'block px-3 py-2 rounded-md text-base font-medium transition-colors',
-            !isHomePage || isScrolled 
-              ? 'text-slate-600 hover:text-indigo-600 hover:bg-slate-50' 
-              : 'text-white hover:text-white/80 hover:bg-white/10'
-          ]"
-          :active-class="(!isHomePage || isScrolled) ? 'text-indigo-600 bg-slate-50' : 'text-white bg-white/10'"
-          @click="isMenuOpen = false"
-        >
-          {{ link.name }}
-        </RouterLink>
-      </div>
-    </div>
   </nav>
+  
+  <!-- SideMenu Component -->
+  <SideMenu :isOpen="isMenuOpen" @close="isMenuOpen = false" />
 </template>

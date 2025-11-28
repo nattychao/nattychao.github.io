@@ -11,40 +11,27 @@ export function usePosts() {
   const loadPosts = async () => {
     try {
       loading.value = true
-      console.log('Starting to load posts...')
-      console.log('Current posts count before loading:', posts.value.length)
       const loadedPosts = []
       
-      // 直接定义文章列表
-      const postFiles = [
-        'afnetworking-guide.md',
-        'css-grid-complete-guide.md',
-        'frontend-security-best-practices.md',
-        'frontend-testing-strategies.md',
-        'future-web-dev.md',
-        'modern-build-tools-comparison.md',
-        'react-hooks-best-practices.md',
-        'svelte-vs-react.md',
-        'typescript-advanced-tips.md',
-        'vue3-composition-api.md',
-        'web-performance-optimization.md'
-      ]
+      // 直接定义文章列表（这里有问题，使用扫描文件夹的做法最简单，但是发到线上会报错，另一种发方式是在这里列出列表，目前用的json文件）
+      // Fetch the list of posts from the generated JSON file
+      const response = await fetch('/posts.json')
+      if (!response.ok) {
+        throw new Error('Failed to load posts list')
+      }
+      const postFiles = await response.json()
       
       for (const fileName of postFiles) {
         try {
           const slug = fileName.replace('.md', '')
-          console.log(`Loading post: ${fileName}`)
           
           // 使用fetch加载文件内容
           const response = await fetch(`/posts/${fileName}`)
-          console.log(`Response status for ${fileName}: ${response.status}`)
           if (!response.ok) {
-            console.error(`Failed to load ${fileName}: ${response.statusText}`)
             continue
           }
           
           const content = await response.text()
-          console.log(`Successfully loaded ${fileName}, content length: ${content.length}`)
           
           // 简单解析frontmatter
           let title = slug
@@ -106,7 +93,6 @@ export function usePosts() {
               }
             }
           } catch (frontmatterError) {
-            console.error(`Error parsing frontmatter for ${fileName}:`, frontmatterError)
             // 如果frontmatter解析失败，使用默认值
             body = content
           }
@@ -121,36 +107,25 @@ export function usePosts() {
             html: md.render(body),
             readingTime: calculateReadingTime(body)
           })
-          console.log(`Successfully processed post: ${title}`)
         } catch (error) {
-          console.error(`Error loading ${fileName}:`, error)
+          // 错误处理
         }
       }
       
-      console.log(`Loaded ${loadedPosts.length} posts in total`)
       // 按日期降序排序
       posts.value = loadedPosts.sort((a, b) => new Date(b.date) - new Date(a.date))
-      console.log('Posts loaded and sorted successfully')
-      console.log(`Posts array now has ${posts.value.length} items`)
-      console.log('First post title:', posts.value.length > 0 ? posts.value[0].title : 'No posts')
     } catch (err) {
-      console.error('Error loading posts:', err)
+      // 错误处理
     } finally {
       loading.value = false
-      console.log('Loading posts completed, loading set to false')
     }
   }
 
   const getPost = async (slug) => {
-    console.log(`Getting post with slug: ${slug}`)
-    console.log(`Current posts count: ${posts.value.length}`)
     if (posts.value.length === 0) {
-      console.log('No posts loaded, loading posts now...')
       await loadPosts()
-      console.log(`Posts loaded, new count: ${posts.value.length}`)
     }
     const post = posts.value.find(p => p.slug === slug)
-    console.log(`Found post: ${post ? post.title : 'Not found'}`)
     return post
   }
 

@@ -80,24 +80,24 @@ function estimateReadTime(content) {
 
 <template>
   <!-- Recent Posts Preview -->
-  <section class="py-24 bg-slate-50">
+  <section class="py-12 sm:py-20 md:py-24 bg-slate-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-end mb-12">
+      <div class="flex justify-between items-end mb-8 sm:mb-10 md:mb-12">
         <div>
-          <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">最近思考</h2>
-          <p class="text-slate-600">关于 全栈 开发和设计的见解。</p>
+          <h2 class="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 mb-3 sm:mb-4">最近思考</h2>
+          <p class="text-sm sm:text-base text-slate-600">关于 全栈 开发和设计的见解。</p>
         </div>
         <router-link to="/blog" class="hidden md:flex items-center text-indigo-600 font-semibold hover:text-indigo-700 transition-colors">
           更多博客 <ArrowRight class="w-4 h-4 ml-1" />
         </router-link>
       </div>
       
-      <div class="grid md:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
         <router-link 
           v-for="(post, index) in recentPosts" 
           :key="post.slug" 
           :to="`/blog/${post.slug}`"
-          class="group bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 block"
+          class="group bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 block"
         >
           <!-- Card Header with Unique Gradient -->
           <div 
@@ -118,26 +118,26 @@ function estimateReadTime(content) {
             }"
           ></div>
             
-          <div class="p-7">
-            <h3 class="text-xl font-bold text-slate-900 mb-3 leading-tight group-hover:text-indigo-600 transition-colors line-clamp-2">{{ post.title }}</h3>
-            <p class="text-slate-600 mb-5 line-clamp-3 text-sm leading-relaxed">
+          <div class="p-4 sm:p-5 md:p-7">
+            <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 leading-tight group-hover:text-indigo-600 transition-colors line-clamp-2">{{ post.title }}</h3>
+            <p class="text-sm sm:text-base text-slate-600 mb-4 sm:mb-5 line-clamp-3 leading-relaxed">
               {{ post.description }}
             </p>
             
             <!-- Tags -->
-            <div class="flex flex-wrap gap-2 mb-5">
+            <div class="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-5">
               <span 
                 v-for="tag in (post.tags || [])" 
                 :key="tag" 
                 :class="getCategoryClass(tag)"
-                class="inline-block px-3 py-1 text-xs font-medium rounded-full border transition-all duration-200 hover:shadow-sm hover:scale-105"
+                class="inline-block px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-medium rounded-full border transition-all duration-200 hover:shadow-sm hover:scale-105"
               >
                 {{ tag }}
               </span>
             </div>
             
             <!-- Footer with date and read time -->
-            <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+            <div class="flex items-center justify-between pt-3 sm:pt-4 border-t border-slate-100">
               <div class="text-xs text-slate-500 flex items-center">
                 <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
@@ -158,18 +158,18 @@ function estimateReadTime(content) {
         <div 
           v-for="i in Math.max(0, postsPerPage - recentPosts.length)" 
           :key="`placeholder-${i}`"
-          class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 opacity-50"
+          class="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 shadow-sm border border-slate-100 opacity-50"
         >
-          <div class="text-xs font-bold tracking-wider text-slate-400 uppercase mb-3">即将推出</div>
-          <h3 class="text-xl font-bold text-slate-400 mb-3 leading-tight">更多内容即将到来</h3>
-          <p class="text-slate-400 mb-6">
+          <div class="text-xs font-bold tracking-wider text-slate-400 uppercase mb-2 sm:mb-3">即将推出</div>
+          <h3 class="text-lg sm:text-xl font-bold text-slate-400 mb-2 sm:mb-3 leading-tight">更多内容即将到来</h3>
+          <p class="text-sm sm:text-base text-slate-400 mb-4 sm:mb-6">
             敬请期待更多关于 Web 开发、编程和技术的文章。
           </p>
         </div>
       </div>
       
       <!-- 分页控件 -->
-      <div v-if="totalPages > 1" class="mt-12 flex justify-center items-center space-x-2">
+      <div v-if="totalPages > 1" class="mt-8 sm:mt-10 md:mt-12 flex justify-center items-center space-x-2">
         <!-- 上一页按钮 -->
         <button 
           @click="goToPrevPage"
@@ -179,7 +179,7 @@ function estimateReadTime(content) {
             ? 'text-slate-300 cursor-not-allowed' 
             : 'text-slate-600 hover:bg-slate-100'"
         >
-          <ChevronLeft class="w-5 h-5" />
+          <ChevronLeft class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         
         <!-- 页码按钮 -->
@@ -188,7 +188,7 @@ function estimateReadTime(content) {
             v-for="page in totalPages" 
             :key="page"
             @click="goToPage(page)"
-            class="w-10 h-10 rounded-full font-medium transition-colors"
+            class="w-8 h-8 sm:w-10 sm:h-10 rounded-full font-medium transition-colors text-sm sm:text-base"
             :class="currentPage === page 
               ? 'bg-indigo-600 text-white' 
               : 'text-slate-600 hover:bg-slate-100'"
@@ -206,11 +206,11 @@ function estimateReadTime(content) {
             ? 'text-slate-300 cursor-not-allowed' 
             : 'text-slate-600 hover:bg-slate-100'"
         >
-          <ChevronRight class="w-5 h-5" />
+          <ChevronRight class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
       </div>
       
-      <div class="mt-8 text-center md:hidden">
+      <div class="mt-6 sm:mt-8 text-center md:hidden">
         <router-link to="/blog" class="inline-flex items-center text-indigo-600 font-semibold hover:text-indigo-700 transition-colors">
           阅读博客 <ArrowRight class="w-4 h-4 ml-1" />
         </router-link>
