@@ -1,11 +1,18 @@
 <script setup>
 import { onMounted, ref, computed, nextTick } from 'vue'
 import { usePosts } from '../composables/usePosts'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { getCategoryClass } from '../utils/categoryColors.js'
 
 const { posts, loading, loadPosts } = usePosts()
-const selectedCategory = ref('全部')
+const route = useRoute()
+const router = useRouter()
+
+// Initialize from query param or default to '全部'
+// 确保从任何页面返回和刷新时都保持状态
+const selectedCategory = ref(route.query.category || '全部')
+const isInitialLoad = ref(true) // 用于区分初始化和点击切换
+const hasTransition = ref(false) // 控制是否应用过渡动画
 const tabRefs = ref([])
 const activeTabUnderlineLeft = ref('0px')
 const activeTabUnderlineWidth = ref('0px')
@@ -28,8 +35,19 @@ const updateUnderline = async () => {
   const activeTabIndex = categories.findIndex(cat => cat.id === selectedCategory.value)
   if (activeTabIndex !== -1 && tabRefs.value[activeTabIndex]) {
     const activeTab = tabRefs.value[activeTabIndex]
-    activeTabUnderlineLeft.value = `${activeTab.offsetLeft}px`
-    activeTabUnderlineWidth.value = `${activeTab.offsetWidth}px`
+    
+    // 控制动画效果
+    if (isInitialLoad.value) {
+      // 初始化时不使用动画
+      hasTransition.value = false
+      activeTabUnderlineLeft.value = `${activeTab.offsetLeft}px`
+      activeTabUnderlineWidth.value = `${activeTab.offsetWidth}px`
+    } else {
+      // 点击切换时使用动画
+      hasTransition.value = true
+      activeTabUnderlineLeft.value = `${activeTab.offsetLeft}px`
+      activeTabUnderlineWidth.value = `${activeTab.offsetWidth}px`
+    }
     
     // 滚动到选中的标签
     if (tabsContainerRef.value) {
@@ -46,7 +64,17 @@ const updateUnderline = async () => {
 // 处理标签点击
 const handleTabClick = (categoryId) => {
   selectedCategory.value = categoryId
+  // 标记不是初始加载，需要动画
+  isInitialLoad.value = false
   updateUnderline()
+  
+  // Update URL query parameter
+  router.push({
+    query: {
+      ...route.query,
+      category: categoryId
+    }
+  })
 }
 
 // 获取文章所属的所有分类
@@ -93,8 +121,11 @@ onMounted(() => {
     updateUnderline()
   }, 100)
   
-  // 监听窗口大小变化
-  window.addEventListener('resize', updateUnderline)
+  // 监听窗口大小变化 - 窗口大小变化也不使用动画
+  window.addEventListener('resize', () => {
+    hasTransition.value = false
+    updateUnderline()
+  })
 })
 </script>
 
@@ -127,7 +158,10 @@ onMounted(() => {
           
           <!-- 活动标签下划线 -->
           <div 
-            class="absolute bottom-0 h-0.5 bg-indigo-600 transition-all duration-300 ease-out"
+            :class="[
+              'absolute bottom-0 h-0.5 bg-indigo-600',
+              hasTransition ? 'transition-all duration-300 ease-out' : ''
+            ]"
             :style="{
               left: activeTabUnderlineLeft,
               width: activeTabUnderlineWidth
