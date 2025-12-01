@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { Menu, X, Github, Linkedin, Mail, Phone, MessageCircle } from 'lucide-vue-next'
+import { Menu, X, Github, Mail, Phone, MessageCircle } from 'lucide-vue-next'
 import SideMenu from './SideMenu.vue'
 import { useToast } from '@/composables/useToast.js'
 
@@ -21,34 +21,44 @@ const handleScroll = () => {
     isScrolled.value = true // 非首页默认为已滚动状态
     return
   }
-  
+
+  // 获取安全区域高度（考虑刘海屏或灵动岛）
+  const safeAreaTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top') || '0')
+
   // 根据屏幕宽度计算不同的Hero高度
   let heroHeight
   if (window.innerWidth >= 768) { // md breakpoint
     // PC端：视口高度的0.618倍，但最小高度为600px
     heroHeight = Math.max(window.innerHeight * 0.618, 600)
   } else {
-    // H5端：视口高度的50%，但最小高度为400px
-    heroHeight = Math.max(window.innerHeight * 0.5, 400)
+    // H5端：视口高度的50%，但最小高度为400px，并考虑安全区域
+    heroHeight = Math.max((window.innerHeight - safeAreaTop) * 0.5, 400)
   }
-  
-  isScrolled.value = window.scrollY > (heroHeight - 64)
+
+  // 考虑header高度和安全区域
+  const headerHeight = 64 + safeAreaTop
+  isScrolled.value = window.scrollY > (heroHeight - headerHeight)
 }
 
 // 检查当前滚动位置
 const checkScrollPosition = () => {
   if (isHomePage.value) {
+    // 获取安全区域高度（考虑刘海屏或灵动岛）
+    const safeAreaTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top') || '0')
+
     // 根据屏幕宽度计算不同的Hero高度
     let heroHeight
     if (window.innerWidth >= 768) { // md breakpoint
       // PC端：视口高度的0.618倍，但最小高度为600px
       heroHeight = Math.max(window.innerHeight * 0.618, 600)
     } else {
-      // H5端：视口高度的50%，但最小高度为400px
-      heroHeight = Math.max(window.innerHeight * 0.5, 400)
+      // H5端：视口高度的50%，但最小高度为400px，并考虑安全区域
+      heroHeight = Math.max((window.innerHeight - safeAreaTop) * 0.5, 400)
     }
-    
-    isScrolled.value = window.scrollY > (heroHeight - 64)
+
+    // 考虑header高度和安全区域
+    const headerHeight = 64 + safeAreaTop
+    isScrolled.value = window.scrollY > (heroHeight - headerHeight)
   } else {
     isScrolled.value = true
   }
@@ -94,7 +104,7 @@ const showWeChatQR = () => {
       textArea.select()
       document.execCommand('copy')
       document.body.removeChild(textArea)
-      
+
       showToast()
     })
 }
@@ -108,73 +118,67 @@ const toggleSideMenu = () => {
 <template>
   <nav :class="[
     'sticky top-0 z-50 border-b transition-all duration-300',
-    !isHomePage || isScrolled 
-      ? 'bg-white/80 backdrop-blur-md border-slate-100 shadow-sm' 
+    !isHomePage || isScrolled
+      ? 'bg-white/80 backdrop-blur-md border-slate-100 shadow-sm'
       : 'bg-transparent backdrop-blur-lg border-transparent'
-  ]">
+  ]" :style="{ paddingTop: 'var(--safe-area-inset-top, 0px)' }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16 items-center">
         <div class="flex-shrink-0 flex items-center">
           <RouterLink to="/" :class="[
             'text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent transition-all duration-300',
-            !isHomePage || isScrolled 
-              ? 'from-indigo-600 to-purple-600' 
+            !isHomePage || isScrolled
+              ? 'from-indigo-600 to-purple-600'
               : 'from-white to-white'
           ]">
             NattyChao
           </RouterLink>
         </div>
-        
+
         <!-- Desktop Menu -->
         <div class="hidden md:flex space-x-8 items-center">
-          <RouterLink 
-            v-for="link in navLinks" 
-            :key="link.name" 
-            :to="link.path"
-            :class="[
-              'font-medium transition-colors',
-              !isHomePage || isScrolled 
-                ? 'text-slate-600 hover:text-indigo-600' 
-                : 'text-white hover:text-white/80'
-            ]"
-            :active-class="(!isHomePage || isScrolled) ? 'text-indigo-600' : 'text-white'"
-          >
+          <RouterLink v-for="link in navLinks" :key="link.name" :to="link.path" :class="[
+            'font-medium transition-colors',
+            !isHomePage || isScrolled
+              ? 'text-slate-600 hover:text-indigo-600'
+              : 'text-white hover:text-white/80'
+          ]" :active-class="(!isHomePage || isScrolled) ? 'text-indigo-600' : 'text-white'">
             {{ link.name }}
           </RouterLink>
           <div :class="[
             'flex space-x-4 border-l pl-6 transition-all duration-300',
-            !isHomePage || isScrolled 
-              ? 'border-slate-200' 
+            !isHomePage || isScrolled
+              ? 'border-slate-200'
               : 'border-white/30'
           ]">
             <a href="https://github.com/nattychao" target="_blank" :class="[
               'transition-colors',
-              !isHomePage || isScrolled 
-                ? 'text-slate-400 hover:text-slate-800' 
+              !isHomePage || isScrolled
+                ? 'text-slate-400 hover:text-slate-800'
                 : 'text-white/80 hover:text-white'
             ]">
               <Github class="w-5 h-5" />
             </a>
             <a href="mailto:2439194386@qq.com" :class="[
               'transition-colors',
-              !isHomePage || isScrolled 
-                ? 'text-slate-400 hover:text-indigo-600' 
+              !isHomePage || isScrolled
+                ? 'text-slate-400 hover:text-indigo-600'
                 : 'text-white/80 hover:text-white'
             ]">
               <Mail class="w-5 h-5" />
             </a>
             <a href="tel:+8617681870768" :class="[
               'transition-colors',
-              !isHomePage || isScrolled 
-                ? 'text-slate-400 hover:text-indigo-600' 
+              !isHomePage || isScrolled
+                ? 'text-slate-400 hover:text-indigo-600'
                 : 'text-white/80 hover:text-white'
             ]">
               <Phone class="w-5 h-5" />
             </a>
             <a href="#" @click.prevent="showWeChatQR" :class="[
               'transition-colors',
-              !isHomePage || isScrolled 
-                ? 'text-slate-400 hover:text-indigo-600' 
+              !isHomePage || isScrolled
+                ? 'text-slate-400 hover:text-indigo-600'
                 : 'text-white/80 hover:text-white'
             ]">
               <MessageCircle class="w-5 h-5" />
@@ -186,8 +190,8 @@ const toggleSideMenu = () => {
         <div class="md:hidden flex items-center">
           <button @click="toggleSideMenu" :class="[
             'focus:outline-none transition-colors',
-            !isHomePage || isScrolled 
-              ? 'text-slate-600 hover:text-slate-900' 
+            !isHomePage || isScrolled
+              ? 'text-slate-600 hover:text-slate-900'
               : 'text-white hover:text-white/80'
           ]">
             <Menu v-if="!isMenuOpen" class="w-6 h-6" />
@@ -197,7 +201,7 @@ const toggleSideMenu = () => {
       </div>
     </div>
   </nav>
-  
+
   <!-- SideMenu Component -->
   <SideMenu :isOpen="isMenuOpen" @close="isMenuOpen = false" />
 </template>

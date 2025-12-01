@@ -122,18 +122,45 @@ const filteredPosts = computed(() => {
   })
 })
 
+// 节流函数，用于优化滚动事件处理
+const throttle = (func, delay) => {
+  let timeoutId
+  let lastExecTime = 0
+  return function (...args) {
+    const currentTime = Date.now()
+
+    if (currentTime - lastExecTime > delay) {
+      func.apply(this, args)
+      lastExecTime = currentTime
+    } else {
+      clearTimeout(timeoutId)
+      timeoutId = setTimeout(() => {
+        func.apply(this, args)
+        lastExecTime = Date.now()
+      }, delay - (currentTime - lastExecTime))
+    }
+  }
+}
+
 // 处理滚动事件，实现标签栏吸顶效果和保存滚动位置
 const handleScroll = () => {
   if (!tabsContainerRef.value) return
 
+  // 获取安全区域高度（考虑刘海屏或灵动岛）
+  const safeAreaTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top') || '0')
+
   // 获取标签栏的位置
   const rect = tabsContainerRef.value.getBoundingClientRect()
-  // 如果标签栏顶部距离视口顶部的距离小于等于64px（header高度），则认为已经吸顶
-  isSticky.value = rect.top <= 64
+  // 如果标签栏顶部距离视口顶部的距离小于等于header高度+安全区域，则认为已经吸顶
+  const threshold = 64 + safeAreaTop
+  isSticky.value = rect.top <= threshold
 
   // 保存当前滚动位置
   scrollPosition.value = window.scrollY
 }
+
+// 节流后的滚动处理函数
+const throttledHandleScroll = throttle(handleScroll, 16) // 约60fps
 
 onMounted(() => {
   loadPosts()
@@ -149,7 +176,7 @@ onMounted(() => {
   })
 
   // 添加滚动事件监听
-  window.addEventListener('scroll', handleScroll)
+  window.addEventListener('scroll', throttledHandleScroll)
   // 初始检查一次吸顶状态
   handleScroll()
 
@@ -162,7 +189,7 @@ onMounted(() => {
 // 在离开页面时保存滚动位置
 onBeforeUnmount(() => {
   // 移除滚动事件监听
-  window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('scroll', throttledHandleScroll)
   // 保存当前滚动位置
   scrollPosition.value = window.scrollY
 })
@@ -177,7 +204,10 @@ onBeforeUnmount(() => {
     </div>
     <!-- 分类标签栏 -->
     <div ref="tabsContainerRef"
-      :class="['w-full pt-2 transition-colors duration-300', isSticky ? 'sticky top-16 bg-white/80 backdrop-blur-md z-50' : 'bg-transparent']">
+      :class="['w-full pt-2', isSticky ? 'sticky bg-white/90 backdrop-blur-sm z-50' : 'bg-transparent']" :style="{
+        top: isSticky ? `calc(4rem + var(--safe-area-inset-top, 0px))` : '',
+        transition: 'background-color 0.1s ease-out, backdrop-filter 0.1s ease-out'
+      }">
       <!-- 滚动容器 -->
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref="tabsContainerRef" class="overflow-x-auto scrollbar-hide">

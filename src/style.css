@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 安全区域变量，用于支持刘海屏和灵动岛 */
+:root {
+  --safe-area-inset-top: env(safe-area-inset-top);
+  --safe-area-inset-right: env(safe-area-inset-right);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom);
+  --safe-area-inset-left: env(safe-area-inset-left);
+}
+
 /* Custom styles for premium feel */
 body {
   @apply bg-slate-50 text-slate-900 antialiased;
