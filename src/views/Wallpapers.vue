@@ -1,62 +1,256 @@
 <script setup>
-import { onMounted, onBeforeUnmount, ref, computed, nextTick } from 'vue'
-import { useWallpapers } from '../composables/useWallpapers.js'
+import { onMounted, onBeforeUnmount, ref, nextTick, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-const { wallpapers, loading, loadWallpapers } = useWallpapers()
 const route = useRoute()
 const router = useRouter()
 
-// Initialize from query param or default to '全部'
-// 确保从任何页面返回和刷新时都保持状态
-const selectedCategory = ref(route.query.category || '全部')
-const isInitialLoad = ref(true) // 用于区分初始化和点击切换
-const hasTransition = ref(false) // 控制是否应用过渡动画
+// API Parameters
+const client = ref('pc')
+const currentSource = ref('')
+const currentPage = ref(0)
+const currentColor = ref('')
+const currentTag = ref('')
+const currentOrder = ref('')
+
+// 响应式图片尺寸参数
+const imageWidth = ref(800) // 默认宽度
+const imageQuality = ref(80) // 默认质量
+
+// Data Arrays
+const sources = [
+  { name: "全部壁纸源", value: "" },
+  { name: "Infinity风景", value: "InfinityLandscape" },
+  { name: "Infinity动漫", value: "Infinity" },
+  { name: "Bing", value: "bing" },
+  { name: "Unsplash", value: "Unsplash" },
+  { name: "Life Of Pix", value: "Life+Of+Pix" },
+  { name: "MMT", value: "MMT" },
+  { name: "Realistic Shots", value: "Realistic+Shots" },
+  { name: "Jay Mantri", value: "Jay+Mantri" },
+  { name: "Free Nature Stock", value: "Free+Nature" },
+  { name: "Skitter Photo", value: "Skitter+Photo" },
+  { name: "Startup Stock Photos", value: "Startup+Stock+Photos" },
+  { name: "Barn Images", value: "Barn+Images" },
+  { name: "Picography", value: "Picography" }
+]
+
+const availableTags = [
+  { name: "自然", value: "nature" },
+  { name: "海洋", value: "ocean" },
+  { name: "建筑", value: "architecture" },
+  { name: "动物", value: "animals" },
+  { name: "旅行", value: "travel" },
+  { name: "美食", value: "food-drink" },
+  { name: "动漫", value: "anime" },
+  { name: "运动", value: "athletics" },
+  { name: "技术", value: "technology" },
+  { name: "街头", value: "street-photography" },
+  { name: "Bing每日", value: "Bing" }
+]
+
+// State
+const wallpapers = ref([])
+const loading = ref(false)
+const isInitialLoad = ref(true)
+const hasTransition = ref(false)
 const tabRefs = ref([])
 const activeTabUnderlineLeft = ref('0px')
 const activeTabUnderlineWidth = ref('0px')
-// 标签栏吸顶状态
 const isSticky = ref(false)
-
-// 保存滚动位置
 const scrollPosition = ref(0)
+const totalCount = ref(0)
+const totalPages = ref(0)
+// 图片懒加载和渐进式加载
+const imageLoaded = ref({}) // 跟踪图片加载状态
+const imageInView = ref({}) // 跟踪图片是否在视口中
+let observer = null // Intersection Observer实例
 
-// 标签栏容器引用
+// 处理图片加载完成
+const handleImageLoad = (imageId) => {
+  imageLoaded.value[imageId] = true
+}
+
+// 使用Intersection Observer检测图片是否进入视口
+const setupIntersectionObserver = () => {
+  // 清理之前的观察者
+  if (observer) {
+    observer.disconnect()
+  }
+
+  // 创建新的观察者
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const imageId = entry.target.id.replace('wallpaper-', '')
+      if (entry.isIntersecting && !imageInView.value[imageId]) {
+        imageInView.value[imageId] = true
+        console.log(`图片 ${imageId} 进入视口，开始加载`)
+      }
+    })
+  }, {
+    rootMargin: '500px' // 提前500px开始加载
+  })
+
+  // 观察所有壁纸元素
+  nextTick(() => {
+    wallpapers.value.forEach(wallpaper => {
+      const element = document.getElementById(`wallpaper-${wallpaper.id}`)
+      if (element && !imageInView.value[wallpaper.id]) {
+        observer.observe(element)
+      }
+    })
+  })
+}
+
+// 检查图片是否在视口中（备用方法）
+const checkImageInView = (imageId) => {
+  const element = document.getElementById(`wallpaper-${imageId}`)
+  if (!element) return false
+
+  const rect = element.getBoundingClientRect()
+
+  // 添加一些缓冲区域，提前加载即将进入视口的图片
+  const buffer = 500 // 增加缓冲区，提前加载更多图片
+  const isNearViewport = (
+    rect.top >= -buffer &&
+    rect.left >= -buffer &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) + buffer &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth) + buffer
+  )
+
+  if (isNearViewport && !imageInView.value[imageId]) {
+    imageInView.value[imageId] = true
+    console.log(`图片 ${imageId} 进入视口，开始加载`)
+  }
+
+  return isNearViewport
+}
+
+// 滚动时检查图片是否在视口中
+const handleScrollForImages = () => {
+  // 如果Intersection Observer不可用，使用备用方法
+  if (!observer) {
+    wallpapers.value.forEach(wallpaper => {
+      checkImageInView(wallpaper.id)
+    })
+  }
+}
+
+// 节流函数
+const throttle = (func, limit) => {
+  let inThrottle
+  return function () {
+    const args = arguments
+    const context = this
+    if (!inThrottle) {
+      func.apply(context, args)
+      inThrottle = true
+      setTimeout(() => inThrottle = false, limit)
+    }
+  }
+}
+
+// 节流后的滚动处理函数
+const throttledHandleScrollForImages = throttle(handleScrollForImages, 200)
+
+// Refs
 const stickyHeaderRef = ref(null)
 const tabsScrollRef = ref(null)
 
-// 定义分类
-const categories = [
-  { id: '全部', name: '全部' },
-  { id: '自然', name: '自然' },
-  { id: '城市', name: '城市' },
-  { id: '抽象', name: '抽象' },
-  { id: '科技', name: '科技' },
-  { id: '艺术', name: '艺术' },
-  { id: '动物', name: '动物' }
-]
+// Initialize from query param
+if (route.query.source) {
+  currentSource.value = route.query.source
+}
+if (route.query.tag) {
+  currentTag.value = route.query.tag
+}
 
-// 更新下划线位置和宽度
+// Fetch Wallpapers
+const fetchWallpapers = async () => {
+  loading.value = true
+  try {
+    // 使用代理 API 路径，避免跨域和混合内容问题
+    let urlString = "/api/v2/get_wallpaper_list"
+    urlString += "?client=" + client.value
+    urlString += "&source=" + currentSource.value
+    urlString += "&page=" + currentPage.value
+    urlString += "&color=" + currentColor.value
+    urlString += "&tag=" + currentTag.value
+    urlString += "&order=" + currentOrder.value
+
+    const response = await fetch(urlString)
+    const data = await response.json()
+
+    let list = []
+    // The API structure is data -> data -> list
+    if (data && data.data && Array.isArray(data.data.list)) {
+      list = data.data.list
+      // Extract pagination info
+      totalCount.value = data.data.count || 0
+      totalPages.value = data.data.totalPages || 0
+    } else if (data && Array.isArray(data.data)) {
+      // Fallback or other structure
+      list = data.data
+    } else {
+      console.warn('Unexpected API response structure:', data)
+    }
+
+    wallpapers.value = list.map(item => {
+      const rawSrc = item.src?.rawSrc || ''
+
+      // 将 infinitypro-img.infinitynewtab.com 的图片 URL 替换为代理 URL
+      const proxiedThumbnail = rawSrc.replace('https://infinitypro-img.infinitynewtab.com', '/img')
+      const proxiedUrl = proxiedThumbnail
+
+      // 创建小尺寸预览图片 - 使用动态尺寸参数
+      const smallThumbnail = proxiedThumbnail + `?w=${imageWidth.value}&q=${imageQuality.value}&auto=format`
+
+      // 创建低质量图片占位符 (LQIP) - 使用更小的尺寸和模糊效果
+      const lqipUrl = proxiedThumbnail + '?w=20&h=20&blur=10&auto=format'
+
+      // 添加调试日志
+      console.log('Original URL:', rawSrc)
+      console.log('Proxied URL:', proxiedThumbnail)
+
+      return {
+        id: item._id,
+        title: item.source || 'Wallpaper',
+        description: item.dimensions || '',
+        category: item.source || '',
+        resolution: item.dimensions || '',
+        format: 'jpg',
+        thumbnail: smallThumbnail, // 使用小尺寸预览图片
+        url: proxiedUrl, // 使用代理 URL
+        lqip: lqipUrl, // 低质量图片占位符
+        fallbackUrl: 'https://picsum.photos/seed/wallpaper' + item._id + '/400/300.jpg' // 添加备用图片URL
+      }
+    })
+
+  } catch (error) {
+    console.error('Failed to fetch wallpapers:', error)
+    wallpapers.value = []
+  } finally {
+    loading.value = false
+  }
+}
+
+// Update Underline
 const updateUnderline = async () => {
   await nextTick()
-  const activeTabIndex = categories.findIndex(cat => cat.id === selectedCategory.value)
+  const activeTabIndex = sources.findIndex(s => s.value === currentSource.value)
   if (activeTabIndex !== -1 && tabRefs.value[activeTabIndex]) {
     const activeTab = tabRefs.value[activeTabIndex]
 
-    // 控制动画效果
     if (isInitialLoad.value) {
-      // 初始化时不使用动画
       hasTransition.value = false
       activeTabUnderlineLeft.value = `${activeTab.offsetLeft}px`
       activeTabUnderlineWidth.value = `${activeTab.offsetWidth}px`
     } else {
-      // 点击切换时使用动画
       hasTransition.value = true
       activeTabUnderlineLeft.value = `${activeTab.offsetLeft}px`
       activeTabUnderlineWidth.value = `${activeTab.offsetWidth}px`
     }
 
-    // 滚动到选中的标签
     if (tabsScrollRef.value) {
       const container = tabsScrollRef.value
       const scrollLeft =
@@ -69,149 +263,221 @@ const updateUnderline = async () => {
   }
 }
 
-// 处理标签点击
-const handleTabClick = categoryId => {
-  selectedCategory.value = categoryId
-  // 标记不是初始加载，需要动画
+// Handle Tab Click (Source)
+const handleTabClick = (sourceValue) => {
+  currentSource.value = sourceValue
+  currentPage.value = 0 // Reset page on source change
   isInitialLoad.value = false
   updateUnderline()
 
-  // Update URL query parameter
   router.push({
     query: {
       ...route.query,
-      category: categoryId
+      source: sourceValue
     }
   })
+
+  fetchWallpapers()
 }
 
-// 获取壁纸所属的分类
-const getWallpaperCategory = wallpaper => {
-  return wallpaper.category || ''
-}
-
-// 根据选中的分类过滤壁纸
-const filteredWallpapers = computed(() => {
-  if (selectedCategory.value === '全部') {
-    return wallpapers.value
+// Handle Tag Click
+const handleTagClick = (tagValue) => {
+  // Toggle tag if clicking the same one, or just set it? 
+  // User said "click tab and new added tag to dynamic modify params"
+  // If I click the same tag, maybe deselect? For now just set it.
+  if (currentTag.value === tagValue) {
+    currentTag.value = '' // Allow deselecting
+  } else {
+    currentTag.value = tagValue
   }
 
-  return wallpapers.value.filter(wallpaper => {
-    const wallpaperCategory = getWallpaperCategory(wallpaper)
-    // 如果category为空，则只在"全部"分类下显示
-    if (!wallpaperCategory) {
-      return selectedCategory.value === '全部'
+  currentPage.value = 0 // Reset page on tag change
+
+  router.push({
+    query: {
+      ...route.query,
+      tag: currentTag.value
     }
-    // 否则，如果壁纸属于当前选中的分类，则显示
-    return wallpaperCategory === selectedCategory.value
   })
+
+  fetchWallpapers()
+}
+
+// Pagination Controls
+const goToPage = (page) => {
+  if (page >= 0 && page < totalPages.value) {
+    currentPage.value = page
+    fetchWallpapers()
+    // Scroll to top when changing pages
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+}
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value - 1) {
+    goToPage(currentPage.value + 1)
+  }
+}
+
+const prevPage = () => {
+  if (currentPage.value > 0) {
+    goToPage(currentPage.value - 1)
+  }
+}
+
+// Computed property for visible page numbers
+const visiblePages = computed(() => {
+  const pages = []
+  const maxVisible = 5
+  const half = Math.floor(maxVisible / 2)
+
+  let start = Math.max(0, currentPage.value - half)
+  let end = Math.min(totalPages.value - 1, start + maxVisible - 1)
+
+  // Adjust start if we're near the end
+  if (end - start < maxVisible - 1) {
+    start = Math.max(0, end - maxVisible + 1)
+  }
+
+  for (let i = start; i <= end; i++) {
+    pages.push(i)
+  }
+
+  return pages
 })
 
-// 响应式顶部内边距
+// Responsive Padding
 const paddingTop = ref('calc(64px + var(--safe-area-inset-top, 0px) + 2rem)')
 
-// 处理窗口大小变化
-const handleResize = () => {
-  if (window.innerWidth >= 768) { // md断点及以上
-    paddingTop.value = 'calc(64px + var(--safe-area-inset-top, 0px) + 3rem)'
-  } else {
-    paddingTop.value = 'calc(64px + var(--safe-area-inset-top, 0px) + 2rem)'
-  }
-}
-
-// 节流函数，用于优化滚动事件处理
-const throttle = (func, delay) => {
-  let timeoutId
-  let lastExecTime = 0
-  return function (...args) {
-    const currentTime = Date.now()
-
-    if (currentTime - lastExecTime > delay) {
-      func.apply(this, args)
-      lastExecTime = currentTime
-    } else {
-      clearTimeout(timeoutId)
-      timeoutId = setTimeout(() => {
-        func.apply(this, args)
-        lastExecTime = Date.now()
-      }, delay - (currentTime - lastExecTime))
-    }
-  }
-}
-
-// 处理滚动事件，实现标签栏吸顶效果和保存滚动位置
+// Scroll Handling
 const handleScroll = () => {
   if (!stickyHeaderRef.value) return
-
-  // 获取安全区域高度（考虑刘海屏或灵动岛）
   const safeAreaTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top') || '0')
-
-  // 获取标签栏的位置
   const rect = stickyHeaderRef.value.getBoundingClientRect()
-  // 如果标签栏顶部距离视口顶部的距离小于等于header高度+安全区域，则认为已经吸顶
   const threshold = 64 + safeAreaTop
   isSticky.value = rect.top <= threshold
-
-  // 保存当前滚动位置
   scrollPosition.value = window.scrollY
 }
 
-// 节流后的滚动处理函数
-const throttledHandleScroll = throttle(handleScroll, 16) // 约60fps
+const throttledHandleScroll = throttle(handleScroll, 16)
 
-// 处理壁纸下载
+// Actions
 const handleDownload = (wallpaper) => {
-  // 创建一个临时链接元素来触发下载
   const link = document.createElement('a')
   link.href = wallpaper.url
-  link.download = `${wallpaper.title}.${wallpaper.format}`
+  link.download = `wallpaper-${wallpaper.id}.jpg`
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
 }
 
-// 处理壁纸预览
 const handlePreview = (wallpaper) => {
-  // 这里可以实现一个预览模态框
   window.open(wallpaper.url, '_blank')
 }
 
-onMounted(() => {
-  loadWallpapers()
-  // 初始化下划线位置
-  setTimeout(() => {
-    updateUnderline()
-  }, 100)
+// 根据图片真实尺寸比例计算样式
+const getImageStyle = (wallpaper) => {
+  if (!wallpaper.resolution) {
+    return { aspectRatio: '3/4' } // 默认比例
+  }
 
-  // 监听窗口大小变化 - 窗口大小变化也不使用动画
+  // 解析分辨率字符串，例如 "1920x1080"
+  const [width, height] = wallpaper.resolution.split('x').map(Number)
+
+  if (!width || !height) {
+    return { aspectRatio: '3/4' } // 默认比例
+  }
+
+  // 计算宽高比
+  const aspectRatio = width / height
+
+  // 设置最小和最大高度限制
+  const minHeight = 150
+  const maxHeight = 400
+
+  // 根据屏幕宽度计算列宽
+  const screenWidth = window.innerWidth
+  let columnWidth
+
+  if (screenWidth < 640) { // 移动端两列
+    columnWidth = (screenWidth - 48) / 2 // 减去padding和gap
+  } else if (screenWidth < 768) { // 平板端三列
+    columnWidth = (screenWidth - 64) / 3
+  } else if (screenWidth < 1024) { // 中等屏幕四列
+    columnWidth = (screenWidth - 80) / 4
+  } else { // 大屏幕四列
+    columnWidth = (screenWidth - 80) / 4
+  }
+
+  // 根据宽高比计算高度
+  let calculatedHeight = columnWidth / aspectRatio
+
+  // 限制高度范围
+  calculatedHeight = Math.max(minHeight, Math.min(calculatedHeight, maxHeight))
+
+  return {
+    height: `${calculatedHeight}px`
+  }
+}
+
+// 根据屏幕尺寸调整图片参数
+const adjustImageParams = () => {
+  const screenWidth = window.innerWidth
+
+  if (screenWidth < 640) { // 移动设备
+    imageWidth.value = 300
+    imageQuality.value = 60
+  } else if (screenWidth < 1024) { // 平板设备
+    imageWidth.value = 500
+    imageQuality.value = 70
+  } else { // 桌面设备
+    imageWidth.value = 700
+    imageQuality.value = 75
+  }
+
+  console.log(`调整图片参数: 宽度=${imageWidth.value}, 质量=${imageQuality.value}`)
+
+  // 重新获取壁纸以应用新的图片参数
+  fetchWallpapers()
+}
+
+onMounted(() => {
+  // 初始化图片参数
+  adjustImageParams()
+  fetchWallpapers()
+  updateUnderline()
+
+  // 添加事件监听
   window.addEventListener('resize', () => {
     hasTransition.value = false
     updateUnderline()
+    adjustImageParams() // 添加图片参数调整
   })
-
-  // 添加滚动事件监听
   window.addEventListener('scroll', throttledHandleScroll)
-  // 初始检查一次吸顶状态
-  handleScroll()
+  window.addEventListener('scroll', throttledHandleScrollForImages)
 
-  // 恢复滚动位置
+  // 初始化Intersection Observer
+  setupIntersectionObserver()
+
+  // 初始检查图片是否在视口
   nextTick(() => {
+    handleScrollForImages()
     window.scrollTo(0, scrollPosition.value)
   })
-
-  // 初始化顶部内边距
-  handleResize()
-  window.addEventListener('resize', handleResize)
 })
 
-// 在离开页面时保存滚动位置
 onBeforeUnmount(() => {
-  // 移除滚动事件监听
-  window.removeEventListener('scroll', throttledHandleScroll)
-  // 保存当前滚动位置
+  // 保存滚动位置
   scrollPosition.value = window.scrollY
-  // 移除窗口大小变化监听
-  window.removeEventListener('resize', handleResize)
+
+  // 移除事件监听
+  window.removeEventListener('scroll', throttledHandleScroll)
+  window.removeEventListener('scroll', throttledHandleScrollForImages)
+
+  // 清理Intersection Observer
+  if (observer) {
+    observer.disconnect()
+  }
 })
 </script>
 
@@ -228,18 +494,18 @@ onBeforeUnmount(() => {
       :style="{
         top: `calc(4rem + var(--safe-area-inset-top, 0px))`
       }">
-      <!-- 滚动容器 -->
+      <!-- 滚动容器 (Sources) -->
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref="tabsScrollRef" class="overflow-x-auto scrollbar-hide">
           <div class="relative flex gap-2 border-b border-slate-200 whitespace-nowrap pb-px min-w-max">
-            <button v-for="(category, index) in categories" :key="category.id" :ref="el => (tabRefs[index] = el)"
-              @click="handleTabClick(category.id)" :class="[
+            <button v-for="(source, index) in sources" :key="source.value" :ref="el => (tabRefs[index] = el)"
+              @click="handleTabClick(source.value)" :class="[
                 'px-3 sm:px-4 py-2 font-medium text-xs sm:text-sm transition-all duration-200',
-                selectedCategory === category.id
+                currentSource === source.value
                   ? 'text-theme-600'
                   : 'text-slate-600 hover:text-slate-900'
               ]">
-              {{ category.name }}
+              {{ source.name }}
             </button>
             <!-- 活动标签下划线 -->
             <div :class="[
@@ -249,6 +515,20 @@ onBeforeUnmount(() => {
               left: activeTabUnderlineLeft,
               width: activeTabUnderlineWidth
             }"></div>
+          </div>
+        </div>
+
+        <!-- Tags List -->
+        <div class="overflow-x-auto scrollbar-hide mt-2 pb-2">
+          <div class="flex gap-2 whitespace-nowrap min-w-max px-1">
+            <button v-for="tag in availableTags" :key="tag.value" @click="handleTagClick(tag.value)" :class="[
+              'px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 border',
+              currentTag === tag.value
+                ? 'bg-theme-600 text-white border-theme-600'
+                : 'bg-white text-slate-600 border-slate-200 hover:border-theme-300 hover:text-theme-600'
+            ]">
+              {{ tag.name }}
+            </button>
           </div>
         </div>
       </div>
@@ -265,26 +545,37 @@ onBeforeUnmount(() => {
       <div v-else>
         <!-- 当前分类的壁纸数量 -->
         <div class="mb-4 sm:mb-6 text-sm sm:text-base text-slate-600">
-          找到 {{ filteredWallpapers.length }} 张{{
-            selectedCategory === '全部' ? '' : selectedCategory
-          }}壁纸
+          找到 {{ totalCount }} 张壁纸 <span v-if="totalPages > 0">(第 {{ currentPage + 1 }} / {{ totalPages }} 页)</span>
         </div>
         <!-- 壁纸列表 -->
-        <div v-if="filteredWallpapers.length > 0"
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-          <div v-for="wallpaper in filteredWallpapers" :key="wallpaper.id"
+        <div v-if="wallpapers.length > 0"
+          class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 sm:gap-4 md:gap-5">
+          <div v-for="wallpaper in wallpapers" :key="wallpaper.id" :id="`wallpaper-${wallpaper.id}`"
             class="group relative overflow-hidden rounded-xl sm:rounded-2xl shadow-sm border border-slate-100 hover:shadow-lg transition-all duration-300">
             <!-- 壁纸图片 -->
-            <div class="aspect-video sm:aspect-[4/3] lg:aspect-[3/2] overflow-hidden bg-slate-100">
-              <img :src="wallpaper.thumbnail" :alt="wallpaper.title"
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div class="overflow-hidden bg-slate-100" :style="getImageStyle(wallpaper)">
+              <div class="relative w-full h-full group-hover:scale-105 transition-transform duration-500"
+                @click="handlePreview(wallpaper)">
+                <!-- 低质量占位符图片 -->
+                <img :src="wallpaper.thumbnail" :alt="wallpaper.title || 'Wallpaper'"
+                  class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+                  :class="{ 'opacity-0': imageLoaded[wallpaper.id] }" loading="lazy" />
+
+                <!-- 高质量图片 - 只有在图片进入视口时才加载 -->
+                <img v-if="imageInView[wallpaper.id]" :src="wallpaper.smallThumbnail"
+                  :alt="wallpaper.title || 'Wallpaper'"
+                  class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+                  :class="{ 'opacity-100': imageLoaded[wallpaper.id], 'opacity-0': !imageLoaded[wallpaper.id] }"
+                  loading="lazy" @load="handleImageLoad(wallpaper.id)"
+                  @error="() => { imageLoaded[wallpaper.id] = true }" />
+              </div>
             </div>
 
             <!-- 悬浮信息层 -->
             <div
               class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-              <h3 class="text-white font-semibold text-lg mb-1">{{ wallpaper.title }}</h3>
-              <p class="text-white/80 text-sm mb-3">{{ wallpaper.description }}</p>
+              <h3 class="text-white font-semibold text-lg mb-1 truncate">{{ wallpaper.title }}</h3>
+              <p class="text-white/80 text-sm mb-3 truncate">{{ wallpaper.description }}</p>
               <div class="flex gap-2">
                 <button @click="handlePreview(wallpaper)"
                   class="flex-1 bg-white/20 backdrop-blur-sm text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-white/30 transition-colors">
@@ -301,17 +592,69 @@ onBeforeUnmount(() => {
             <div class="p-4">
               <div class="flex justify-between items-center">
                 <span class="text-xs sm:text-sm text-slate-500">{{ wallpaper.resolution }}</span>
-                <span class="text-xs sm:text-sm text-slate-500">{{ wallpaper.category }}</span>
+                <span class="text-xs sm:text-sm text-slate-500 truncate max-w-[50%]">{{ wallpaper.category }}</span>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- 分页控件 -->
+        <div v-if="totalPages > 1" class="mt-8 flex justify-center items-center gap-2">
+          <!-- 上一页按钮 -->
+          <button @click="prevPage" :disabled="currentPage === 0" :class="[
+            'px-3 py-2 rounded-lg text-sm font-medium transition-all',
+            currentPage === 0
+              ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+              : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-theme-300'
+          ]">
+            上一页
+          </button>
+
+          <!-- 第一页 -->
+          <button v-if="visiblePages[0] > 0" @click="goToPage(0)"
+            class="px-3 py-2 rounded-lg text-sm font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-theme-300 transition-all">
+            1
+          </button>
+
+          <!-- 省略号 -->
+          <span v-if="visiblePages[0] > 1" class="text-slate-400">...</span>
+
+          <!-- 页码按钮 -->
+          <button v-for="page in visiblePages" :key="page" @click="goToPage(page)" :class="[
+            'px-3 py-2 rounded-lg text-sm font-medium transition-all',
+            currentPage === page
+              ? 'bg-theme-600 text-white'
+              : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-theme-300'
+          ]">
+            {{ page + 1 }}
+          </button>
+
+          <!-- 省略号 -->
+          <span v-if="visiblePages[visiblePages.length - 1] < totalPages - 2" class="text-slate-400">...</span>
+
+          <!-- 最后一页 -->
+          <button v-if="visiblePages[visiblePages.length - 1] < totalPages - 1" @click="goToPage(totalPages - 1)"
+            class="px-3 py-2 rounded-lg text-sm font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-theme-300 transition-all">
+            {{ totalPages }}
+          </button>
+
+          <!-- 下一页按钮 -->
+          <button @click="nextPage" :disabled="currentPage === totalPages - 1" :class="[
+            'px-3 py-2 rounded-lg text-sm font-medium transition-all',
+            currentPage === totalPages - 1
+              ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+              : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-theme-300'
+          ]">
+            下一页
+          </button>
+        </div>
+
         <!-- 无内容提示 -->
         <div v-else class="text-center py-12 sm:py-16">
           <div class="text-slate-400 text-sm sm:text-lg mb-3 sm:mb-4">
-            暂无{{ selectedCategory }}相关的壁纸
+            暂无壁纸
           </div>
-          <button @click="handleTabClick('全部')"
+          <button @click="handleTabClick('')"
             class="px-3 sm:px-4 py-2 bg-theme-600 text-white rounded-full hover:bg-theme-700 transition-colors text-sm sm:text-base">
             查看全部壁纸
           </button>
