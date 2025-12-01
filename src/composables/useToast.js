@@ -5,13 +5,15 @@ const toastInstance = ref(null)
 let currentTimer = null
 let isShowing = false
 let pendingMessage = null
+let pendingType = null
 let pendingDuration = null
 
 export function useToast() {
-  const showToast = (message = '复制成功', duration = 2000) => {
+  const showToast = (message = '复制成功', type = 'success', duration = 2000) => {
     // 如果当前有Toast正在显示，保存新的消息为待处理
     if (isShowing) {
       pendingMessage = message
+      pendingType = type
       pendingDuration = duration
       return
     }
@@ -39,6 +41,7 @@ export function useToast() {
     // 创建Vue应用并挂载Toast组件
     const app = createApp(Toast, {
       message,
+      type,
       duration,
       onHide: () => {
         // Toast隐藏后的回调
@@ -47,13 +50,15 @@ export function useToast() {
         // 如果有待处理的消息，显示它
         if (pendingMessage) {
           const msg = pendingMessage
+          const typ = pendingType
           const dur = pendingDuration
           pendingMessage = null
+          pendingType = null
           pendingDuration = null
           
           // 使用setTimeout确保在下一个事件循环中显示
           setTimeout(() => {
-            showToast(msg, dur)
+            showToast(msg, typ, dur)
           }, 50)
         } else {
           // 没有待处理消息，清理DOM

@@ -164,7 +164,7 @@ const toggleSideMenu = () => {
         <!-- Desktop Menu -->
         <div class="hidden md:flex space-x-8 items-center">
           <RouterLink v-for="link in navLinks" :key="link.name" :to="link.path" :class="[
-            'font-medium transition-colors',
+            'font-medium transition-colors relative',
             !isHomePage
               ? 'text-slate-600 hover:text-indigo-600'
               : isFullyScrolled
@@ -174,8 +174,11 @@ const toggleSideMenu = () => {
                   : 'text-white hover:text-white/80'
           ]"
             :active-class="(!isHomePage || isFullyScrolled) ? 'text-indigo-600' : (isScrolled ? 'text-white' : 'text-white')">
+            <!-- 选中指示器 -->
+            <span v-if="route.path === link.path" class="absolute -bottom-1 left-0 right-0 h-0.5 bg-current"></span>
             {{ link.name }}
           </RouterLink>
+
           <div :class="[
             'flex space-x-4 border-l pl-6 transition-all duration-300',
             !isHomePage

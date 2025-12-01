@@ -30,7 +30,7 @@ const skills = [
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-20">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-20" :style="{ paddingTop: 'calc(64px + var(--safe-area-inset-top, 0px) + 2rem)' }">
     <!-- Header -->
     <div class="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-sm border border-slate-100 mb-6 sm:mb-8 md:mb-12 flex flex-col md:flex-row items-center gap-4 sm:gap-6 md:gap-8">
       <div class="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold text-2xl sm:text-3xl md:text-4xl">

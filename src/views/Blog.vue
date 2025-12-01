@@ -122,6 +122,18 @@ const filteredPosts = computed(() => {
   })
 })
 
+// 响应式顶部内边距
+const paddingTop = ref('calc(64px + var(--safe-area-inset-top, 0px) + 2rem)')
+
+// 处理窗口大小变化
+const handleResize = () => {
+  if (window.innerWidth >= 768) { // md断点及以上
+    paddingTop.value = 'calc(64px + var(--safe-area-inset-top, 0px) + 3rem)'
+  } else {
+    paddingTop.value = 'calc(64px + var(--safe-area-inset-top, 0px) + 2rem)'
+  }
+}
+
 // 节流函数，用于优化滚动事件处理
 const throttle = (func, delay) => {
   let timeoutId
@@ -184,6 +196,10 @@ onMounted(() => {
   nextTick(() => {
     window.scrollTo(0, scrollPosition.value)
   })
+
+  // 初始化顶部内边距
+  handleResize()
+  window.addEventListener('resize', handleResize)
 })
 
 // 在离开页面时保存滚动位置
@@ -192,11 +208,13 @@ onBeforeUnmount(() => {
   window.removeEventListener('scroll', throttledHandleScroll)
   // 保存当前滚动位置
   scrollPosition.value = window.scrollY
+  // 移除窗口大小变化监听
+  window.removeEventListener('resize', handleResize)
 })
 </script>
 
 <template>
-  <div class="py-8 sm:py-12 md:py-20">
+  <div class="py-8 sm:py-12 md:py-20" :style="{ paddingTop }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1 class="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 mb-2 sm:mb-4 md:mb-6">
         博客
