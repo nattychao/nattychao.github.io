@@ -23,7 +23,8 @@ const isSticky = ref(false)
 const scrollPosition = ref(0)
 
 // 标签栏容器引用
-const tabsContainerRef = ref(null)
+const stickyHeaderRef = ref(null)
+const tabsScrollRef = ref(null)
 
 // 定义分类
 const categories = [
@@ -57,8 +58,8 @@ const updateUnderline = async () => {
     }
 
     // 滚动到选中的标签
-    if (tabsContainerRef.value) {
-      const container = tabsContainerRef.value
+    if (tabsScrollRef.value) {
+      const container = tabsScrollRef.value
       const scrollLeft =
         activeTab.offsetLeft - container.offsetWidth / 2 + activeTab.offsetWidth / 2
       container.scrollTo({
@@ -156,13 +157,13 @@ const throttle = (func, delay) => {
 
 // 处理滚动事件，实现标签栏吸顶效果和保存滚动位置
 const handleScroll = () => {
-  if (!tabsContainerRef.value) return
+  if (!stickyHeaderRef.value) return
 
   // 获取安全区域高度（考虑刘海屏或灵动岛）
   const safeAreaTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top') || '0')
 
   // 获取标签栏的位置
-  const rect = tabsContainerRef.value.getBoundingClientRect()
+  const rect = stickyHeaderRef.value.getBoundingClientRect()
   // 如果标签栏顶部距离视口顶部的距离小于等于header高度+安全区域，则认为已经吸顶
   const threshold = 64 + safeAreaTop
   isSticky.value = rect.top <= threshold
@@ -226,13 +227,14 @@ onBeforeUnmount(() => {
       </h1>
     </div>
     <!-- 分类标签栏 -->
-    <div ref="tabsContainerRef"
-      :class="['w-full pt-2 sticky z-50', isSticky ? 'bg-white/90 backdrop-blur-sm' : 'bg-transparent']" :style="{
-        top: isSticky ? `calc(4rem + var(--safe-area-inset-top, 0px))` : ''
+    <div ref="stickyHeaderRef"
+      :class="['w-full pt-2 sticky z-50 transition-colors duration-200', isSticky ? 'bg-white/90 backdrop-blur-sm' : 'bg-slate-50']"
+      :style="{
+        top: `calc(4rem + var(--safe-area-inset-top, 0px))`
       }">
       <!-- 滚动容器 -->
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div ref="tabsContainerRef" class="overflow-x-auto scrollbar-hide">
+        <div ref="tabsScrollRef" class="overflow-x-auto scrollbar-hide">
           <div class="relative flex gap-2 border-b border-slate-200 whitespace-nowrap pb-px min-w-max">
             <button v-for="(category, index) in categories" :key="category.id" :ref="el => (tabRefs[index] = el)"
               @click="handleTabClick(category.id)" :class="[
