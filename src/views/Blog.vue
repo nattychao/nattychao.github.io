@@ -204,9 +204,8 @@ onBeforeUnmount(() => {
     </div>
     <!-- 分类标签栏 -->
     <div ref="tabsContainerRef"
-      :class="['w-full pt-2', isSticky ? 'sticky bg-white/90 backdrop-blur-sm z-50' : 'bg-transparent']" :style="{
-        top: isSticky ? `calc(4rem + var(--safe-area-inset-top, 0px))` : '',
-        transition: 'background-color 0.1s ease-out, backdrop-filter 0.1s ease-out'
+      :class="['w-full pt-2 sticky z-50', isSticky ? 'bg-white/90 backdrop-blur-sm' : 'bg-transparent']" :style="{
+        top: isSticky ? `calc(4rem + var(--safe-area-inset-top, 0px))` : ''
       }">
       <!-- 滚动容器 -->
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
