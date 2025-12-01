@@ -26,6 +26,13 @@
           </svg>
         </div>
 
+        <!-- 错误图标 -->
+        <div v-else-if="type === 'error'" class="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+          <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </div>
+
         <!-- 消息内容 -->
         <span class="text-sm font-normal whitespace-nowrap">{{ message }}</span>
       </div>
@@ -44,7 +51,7 @@ const props = defineProps({
   type: {
     type: String,
     default: 'success',
-    validator: (value) => ['success', 'warning', 'info'].includes(value)
+    validator: (value) => ['success', 'warning', 'info', 'error'].includes(value)
   },
   duration: {
     type: Number,
