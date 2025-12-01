@@ -156,7 +156,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { X, Github, Mail, Phone, MessageCircle, Home, Briefcase, BookOpen, FileText, ChevronRight } from 'lucide-vue-next'
+import { X, Github, Mail, Phone, MessageCircle, Home, Briefcase, BookOpen, FileText, Image, ChevronRight } from 'lucide-vue-next'
 import { useToast } from '@/composables/useToast.js'
 
 const props = defineProps({
@@ -176,9 +176,10 @@ const { showToast } = useToast()
 // 导航链接
 const navLinks = [
   { name: '首页', path: '/' },
+  { name: '简历', path: '/resume' },
   { name: '项目', path: '/projects' },
   { name: '博客', path: '/blog' },
-  { name: '简历', path: '/resume' },
+  { name: '壁纸', path: '/wallpapers' },
 ]
 
 // 关闭菜单
@@ -197,6 +198,7 @@ const getMenuIcon = (name) => {
     '首页': Home,
     '项目': Briefcase,
     '博客': BookOpen,
+    '壁纸': Image,
     '简历': FileText
   }
   return icons[name] || Home
@@ -246,7 +248,7 @@ const preventBodyScroll = (prevent) => {
 
 // 监听菜单开关状态
 watch(() => props.isOpen, (newVal) => {
-  // preventBodyScroll(newVal)
+  preventBodyScroll(newVal)
 })
 
 // 监听路由变化，关闭菜单
@@ -256,7 +258,7 @@ watch(route, () => {
 
 // 组件卸载时恢复滚动
 onUnmounted(() => {
-  // preventBodyScroll(false)
+  preventBodyScroll(false)
 })
 </script>
 

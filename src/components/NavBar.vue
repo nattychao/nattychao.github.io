@@ -99,9 +99,10 @@ watch(route, () => {
 
 const navLinks = [
   { name: '首页', path: '/' },
+  { name: '简历', path: '/resume' },
   { name: '项目', path: '/projects' },
   { name: '博客', path: '/blog' },
-  { name: '简历', path: '/resume' },
+  { name: '壁纸', path: '/wallpapers' },
 ]
 
 // 显示微信二维码
@@ -134,7 +135,7 @@ const toggleSideMenu = () => {
 
 <template>
   <nav :class="[
-    'sticky top-0 z-50 border-b transition-all duration-300',
+    'fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300',
     !isHomePage
       ? 'bg-white/80 backdrop-blur-md border-slate-100 shadow-sm'
       : isFullyScrolled
