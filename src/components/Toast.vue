@@ -20,7 +20,7 @@
         </div>
 
         <!-- 信息图标 -->
-        <div v-else-if="type === 'info'" class="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+        <div v-else-if="type === 'info'" class="w-5 h-5 bg-theme-500 rounded-full flex items-center justify-center">
           <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 16h-1v-4h-1m1-4h.01"></path>
           </svg>

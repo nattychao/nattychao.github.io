@@ -176,9 +176,9 @@ const toggleSideMenu = () => {
           <RouterLink to="/" :class="[
             'text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent',
             !isHomePage
-              ? 'from-indigo-600 to-purple-600'
+              ? 'from-theme-600 to-purple-600'
               : isFullyScrolled
-                ? 'from-indigo-600 to-purple-600'
+                ? 'from-theme-600 to-purple-600'
                 : 'from-white to-white'
           ]">
             NattyChao
@@ -190,11 +190,11 @@ const toggleSideMenu = () => {
           <RouterLink v-for="link in navLinks" :key="link.name" :to="link.path" :class="[
             'font-medium transition-colors relative',
             !isHomePage
-              ? 'text-slate-600 hover:text-indigo-600'
+              ? route.path === link.path ? 'text-theme-600' : 'text-slate-600 hover:text-theme-600'
               : isFullyScrolled
-                ? 'text-slate-600 hover:text-indigo-600'
-                : 'text-white hover:text-white/80'
-          ]" :active-class="(!isHomePage || isFullyScrolled) ? 'text-indigo-600' : 'text-white'">
+                ? route.path === link.path ? 'text-theme-600' : 'text-slate-600 hover:text-theme-600'
+                : route.path === link.path ? 'text-white' : 'text-white hover:text-white/80'
+          ]">
             <!-- 选中指示器 -->
             <span v-if="route.path === link.path" class="absolute -bottom-1 left-0 right-0 h-0.5 bg-current"></span>
             {{ link.name }}
@@ -221,9 +221,9 @@ const toggleSideMenu = () => {
             <a href="mailto:2439194386@qq.com" :class="[
               'transition-colors',
               !isHomePage
-                ? 'text-slate-400 hover:text-indigo-600'
+                ? 'text-slate-400 hover:text-theme-600'
                 : isFullyScrolled
-                  ? 'text-slate-400 hover:text-indigo-600'
+                  ? 'text-slate-400 hover:text-theme-600'
                   : 'text-white/80 hover:text-white'
             ]">
               <Mail class="w-5 h-5" />
@@ -231,9 +231,9 @@ const toggleSideMenu = () => {
             <a href="tel:+8617681870768" :class="[
               'transition-colors',
               !isHomePage
-                ? 'text-slate-400 hover:text-indigo-600'
+                ? 'text-slate-400 hover:text-theme-600'
                 : isFullyScrolled
-                  ? 'text-slate-400 hover:text-indigo-600'
+                  ? 'text-slate-400 hover:text-theme-600'
                   : 'text-white/80 hover:text-white'
             ]">
               <Phone class="w-5 h-5" />
@@ -241,9 +241,9 @@ const toggleSideMenu = () => {
             <a href="#" @click.prevent="showWeChatQR" :class="[
               'transition-colors',
               !isHomePage
-                ? 'text-slate-400 hover:text-indigo-600'
+                ? 'text-slate-400 hover:text-theme-600'
                 : isFullyScrolled
-                  ? 'text-slate-400 hover:text-indigo-600'
+                  ? 'text-slate-400 hover:text-theme-600'
                   : 'text-white/80 hover:text-white'
             ]">
               <MessageCircle class="w-5 h-5" />

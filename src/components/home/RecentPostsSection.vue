@@ -87,7 +87,7 @@ function estimateReadTime(content) {
           <h2 class="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 mb-3 sm:mb-4">最近思考</h2>
           <p class="text-sm sm:text-base text-slate-600">关于 全栈 开发和设计的见解。</p>
         </div>
-        <router-link to="/blog" class="hidden md:flex items-center text-indigo-600 font-semibold hover:text-indigo-700 transition-colors">
+        <router-link to="/blog" class="hidden md:flex items-center text-theme-600 font-semibold hover:text-theme-700 transition-colors">
           更多博客 <ArrowRight class="w-4 h-4 ml-1" />
         </router-link>
       </div>
@@ -103,23 +103,23 @@ function estimateReadTime(content) {
           <div 
             class="h-2" 
             :class="{
-              'bg-gradient-to-r from-violet-600 via-purple-500 to-indigo-600': (currentPage - 1) * postsPerPage + index === 0,
+              'bg-gradient-to-r from-violet-600 via-purple-500 to-theme-600': (currentPage - 1) * postsPerPage + index === 0,
               'bg-gradient-to-r from-pink-500 via-rose-500 to-red-500': (currentPage - 1) * postsPerPage + index === 1,
               'bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600': (currentPage - 1) * postsPerPage + index === 2,
               'bg-gradient-to-r from-amber-500 via-orange-500 to-red-600': (currentPage - 1) * postsPerPage + index === 3,
-              'bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600': (currentPage - 1) * postsPerPage + index === 4,
+              'bg-gradient-to-r from-theme-500 via-theme-500 to-purple-600': (currentPage - 1) * postsPerPage + index === 4,
               'bg-gradient-to-r from-green-500 via-teal-500 to-cyan-500': (currentPage - 1) * postsPerPage + index === 5,
               'bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500': (currentPage - 1) * postsPerPage + index === 6,
-              'bg-gradient-to-r from-indigo-500 via-blue-500 to-cyan-500': (currentPage - 1) * postsPerPage + index === 7,
+              'bg-gradient-to-r from-theme-500 via-theme-500 to-cyan-500': (currentPage - 1) * postsPerPage + index === 7,
               'bg-gradient-to-r from-rose-500 via-red-500 to-orange-500': (currentPage - 1) * postsPerPage + index === 8,
               'bg-gradient-to-r from-cyan-500 via-teal-500 to-green-500': (currentPage - 1) * postsPerPage + index === 9,
               'bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500': (currentPage - 1) * postsPerPage + index === 10,
-              'bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500': (currentPage - 1) * postsPerPage + index === 11
+              'bg-gradient-to-r from-teal-500 via-cyan-500 to-theme-500': (currentPage - 1) * postsPerPage + index === 11
             }"
           ></div>
             
           <div class="p-4 sm:p-5 md:p-7">
-            <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 leading-tight group-hover:text-indigo-600 transition-colors line-clamp-2">{{ post.title }}</h3>
+            <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 leading-tight group-hover:text-theme-600 transition-colors line-clamp-2">{{ post.title }}</h3>
             <p class="text-sm sm:text-base text-slate-600 mb-4 sm:mb-5 line-clamp-3 leading-relaxed">
               {{ post.description }}
             </p>
@@ -190,7 +190,7 @@ function estimateReadTime(content) {
             @click="goToPage(page)"
             class="w-8 h-8 sm:w-10 sm:h-10 rounded-full font-medium transition-colors text-sm sm:text-base"
             :class="currentPage === page 
-              ? 'bg-indigo-600 text-white' 
+              ? 'bg-theme-600 text-white' 
               : 'text-slate-600 hover:bg-slate-100'"
           >
             {{ page }}
@@ -211,7 +211,7 @@ function estimateReadTime(content) {
       </div>
       
       <div class="mt-6 sm:mt-8 text-center md:hidden">
-        <router-link to="/blog" class="inline-flex items-center text-indigo-600 font-semibold hover:text-indigo-700 transition-colors">
+        <router-link to="/blog" class="inline-flex items-center text-theme-600 font-semibold hover:text-theme-700 transition-colors">
           阅读博客 <ArrowRight class="w-4 h-4 ml-1" />
         </router-link>
       </div>

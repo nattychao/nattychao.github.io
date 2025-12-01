@@ -234,14 +234,14 @@ onBeforeUnmount(() => {
               @click="handleTabClick(category.id)" :class="[
                 'px-3 sm:px-4 py-2 font-medium text-xs sm:text-sm transition-all duration-200',
                 selectedCategory === category.id
-                  ? 'text-indigo-600'
+                  ? 'text-theme-600'
                   : 'text-slate-600 hover:text-slate-900'
               ]">
               {{ category.name }}
             </button>
             <!-- 活动标签下划线 -->
             <div :class="[
-              'absolute bottom-0 h-0.5 bg-indigo-600',
+              'absolute bottom-0 h-0.5 bg-theme-600',
               hasTransition ? 'transition-all duration-300 ease-out' : ''
             ]" :style="{
               left: activeTabUnderlineLeft,
@@ -256,7 +256,7 @@ onBeforeUnmount(() => {
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
       <div v-if="loading" class="text-center py-16 sm:py-20">
-        <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-indigo-600 mx-auto"></div>
+        <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-theme-600 mx-auto"></div>
       </div>
       <div v-else>
         <!-- 当前分类的壁纸数量 -->
@@ -287,7 +287,7 @@ onBeforeUnmount(() => {
                   预览
                 </button>
                 <button @click="handleDownload(wallpaper)"
-                  class="flex-1 bg-indigo-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors">
+                  class="flex-1 bg-theme-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-theme-700 transition-colors">
                   下载
                 </button>
               </div>
@@ -308,7 +308,7 @@ onBeforeUnmount(() => {
             暂无{{ selectedCategory }}相关的壁纸
           </div>
           <button @click="handleTabClick('全部')"
-            class="px-3 sm:px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors text-sm sm:text-base">
+            class="px-3 sm:px-4 py-2 bg-theme-600 text-white rounded-full hover:bg-theme-700 transition-colors text-sm sm:text-base">
             查看全部壁纸
           </button>
         </div>

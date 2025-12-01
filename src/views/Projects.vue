@@ -61,7 +61,7 @@ onBeforeUnmount(() => {
           </div>
         </div>
         <h3
-          class="text-lg sm:text-xl font-bold text-slate-900 mb-1.5 sm:mb-2 group-hover:text-indigo-600 transition-colors">
+          class="text-lg sm:text-xl font-bold text-slate-900 mb-1.5 sm:mb-2 group-hover:text-theme-600 transition-colors">
           {{ project.title }}
         </h3>
         <p class="text-sm sm:text-base text-slate-600 mb-2 sm:mb-3 line-clamp-2">{{ project.description }}</p>

@@ -11,7 +11,7 @@ const skills = [
 
 <template>
   <!-- Skills Section -->
-  <section class="py-12 sm:py-20 md:py-24 bg-gradient-to-br from-slate-50 to-indigo-50">
+  <section class="py-12 sm:py-20 md:py-24 bg-gradient-to-br from-slate-50 to-theme-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="mb-8 sm:mb-10 md:mb-12 lg:mb-16 text-left sm:text-center md:text-center lg:text-center">
         <h2 class="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 mb-3 sm:mb-4">技术专长</h2>
@@ -28,18 +28,18 @@ const skills = [
           :enter="{ opacity: 1, y: 0, transition: { duration: 500, delay: index * 100, ease: 'easeOut' } }"
         >
           <!-- Animated border gradient effect on hover -->
-          <div class="absolute inset-0 rounded-xl sm:rounded-2xl p-[2px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10">
+          <div class="absolute inset-0 rounded-xl sm:rounded-2xl p-[2px] bg-gradient-to-r from-theme-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10">
             <div class="w-full h-full bg-white rounded-xl sm:rounded-2xl"></div>
           </div>
           
           <!-- Rotating gradient border animation -->
           <div class="absolute inset-0 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10">
-            <div class="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-75 group-hover:animate-spin-slow transition-opacity duration-500"></div>
+            <div class="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-theme-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-75 group-hover:animate-spin-slow transition-opacity duration-500"></div>
             <div class="absolute inset-[2px] bg-white rounded-xl sm:rounded-2xl"></div>
           </div>
           
           <!-- Glow effect -->
-          <div class="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500 -z-10 group-hover:animate-pulse"></div>
+          <div class="absolute inset-0 rounded-xl sm:rounded-2xl bg-gradient-to-r from-theme-500/20 via-purple-500/20 to-pink-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500 -z-10 group-hover:animate-pulse"></div>
           
           <!-- Moving shine effect -->
           <div class="absolute inset-0 rounded-xl sm:rounded-2xl overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10">
@@ -47,11 +47,11 @@ const skills = [
           </div>
           
           <!-- Decorative background element -->
-          <div class="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-full -mr-12 -mt-12 sm:-mr-16 sm:-mt-16 opacity-70 group-hover:scale-150 transition-transform duration-700"></div>
+          <div class="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-theme-50 to-purple-50 rounded-full -mr-12 -mt-12 sm:-mr-16 sm:-mt-16 opacity-70 group-hover:scale-150 transition-transform duration-700"></div>
           
           <div class="relative z-10">
             <!-- Icon with gradient background -->
-            <div class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl sm:rounded-2xl flex items-center justify-center text-white mb-4 sm:mb-6 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
+            <div class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-theme-500 to-purple-600 rounded-xl sm:rounded-2xl flex items-center justify-center text-white mb-4 sm:mb-6 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
               <component :is="skill.icon" class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
             </div>
             
@@ -68,7 +68,7 @@ const skills = [
                 :initial="{ opacity: 0, x: -20 }"
                 :enter="{ opacity: 1, x: 0, transition: { duration: 300, delay: (index * 100) + (itemIndex * 50) + 200, ease: 'easeOut' } }"
               >
-                <div class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-indigo-400 to-purple-500 rounded-full mr-2 sm:mr-3 group-hover/item:scale-150 transition-transform duration-200"></div>
+                <div class="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gradient-to-r from-theme-400 to-purple-500 rounded-full mr-2 sm:mr-3 group-hover/item:scale-150 transition-transform duration-200"></div>
                 <span class="font-medium">{{ item }}</span>
               </li>
             </ul>

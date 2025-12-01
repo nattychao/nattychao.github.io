@@ -35,7 +35,7 @@ const copyWeChatFromSocial = () => {
   <footer class="bg-gradient-to-br from-slate-50 to-white border-t border-slate-100 pt-12 sm:pt-14 md:pt-16 pb-6 sm:pb-7 md:pb-8 mt-0 relative overflow-hidden">
     <!-- 背景装饰 -->
     <div class="absolute top-0 left-0 w-full h-full opacity-5">
-      <div class="absolute top-10 left-10 w-40 h-40 bg-indigo-500 rounded-full blur-3xl"></div>
+      <div class="absolute top-10 left-10 w-40 h-40 bg-theme-500 rounded-full blur-3xl"></div>
       <div class="absolute bottom-10 right-10 w-60 h-60 bg-purple-500 rounded-full blur-3xl"></div>
     </div>
     
@@ -45,7 +45,7 @@ const copyWeChatFromSocial = () => {
         <div class="text-center md:text-left">
           <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mb-3 sm:mb-4">个人作品集</h3>
           <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
-            打造有意义的数字体验。让我们一起创造一些令人惊叹的东西。
+            打造有意义的数字体验。我们一起创造一些令人惊叹的东西。
           </p>
           <div class="flex items-center justify-center md:justify-start mt-4 text-sm text-slate-500">
             <MapPin class="w-4 h-4 mr-1" />
@@ -60,10 +60,10 @@ const copyWeChatFromSocial = () => {
           </h4>
           <ul class="space-y-2 sm:space-y-3 text-sm sm:text-base text-slate-600">
             <li class="flex items-center justify-center md:justify-start gap-2 group">
-              <div class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
-                <Phone class="w-4 h-4 text-indigo-600" />
+              <div class="w-8 h-8 rounded-full bg-theme-50 flex items-center justify-center group-hover:bg-theme-100 transition-colors">
+                <Phone class="w-4 h-4 text-theme-600" />
               </div>
-              <a href="tel:+8617681870768" class="hover:text-indigo-600 transition-colors relative inline-block after:content-[''] after:absolute after:w-0 after:h-[1px] after:bottom-0 after:left-0 after:bg-indigo-600 after:transition-all after:duration-300 hover:after:w-full">+86 176 8187 0768</a>
+              <a href="tel:+8617681870768" class="hover:text-theme-600 transition-colors relative inline-block after:content-[''] after:absolute after:w-0 after:h-[1px] after:bottom-0 after:left-0 after:bg-theme-600 after:transition-all after:duration-300 hover:after:w-full">+86 176 8187 0768</a>
             </li>
             <li class="flex items-center justify-center md:justify-start gap-2 group cursor-pointer" @click="copyWeChat">
               <div class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center group-hover:bg-green-100 transition-colors">
@@ -87,7 +87,7 @@ const copyWeChatFromSocial = () => {
           </h4>
           <div class="flex justify-center md:justify-start gap-3 sm:gap-4">
             <a href="https://github.com/nattychao" target="_blank" class="group">
-              <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300 transform group-hover:scale-110">
+              <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-theme-600 group-hover:text-white transition-all duration-300 transform group-hover:scale-110">
                 <Github class="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
             </a>
@@ -97,12 +97,12 @@ const copyWeChatFromSocial = () => {
               </div>
             </div>
             <a href="#" class="group">
-              <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-blue-400 group-hover:text-white transition-all duration-300 transform group-hover:scale-110">
+              <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-theme-400 group-hover:text-white transition-all duration-300 transform group-hover:scale-110">
                 <Twitter class="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
             </a>
             <a href="#" class="group">
-              <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 transform group-hover:scale-110">
+              <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-theme-600 group-hover:text-white transition-all duration-300 transform group-hover:scale-110">
                 <Linkedin class="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
             </a>
