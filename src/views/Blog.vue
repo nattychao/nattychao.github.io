@@ -258,7 +258,10 @@ onBeforeUnmount(() => {
       </div>
 
       <!-- 吸顶状态下的全宽分割线 -->
-      <div v-if="isSticky" class="absolute bottom-0 left-0 right-0 h-px bg-slate-200"></div>
+      <!-- 吸顶状态下的全宽分割线 -->
+      <div
+        :class="['absolute bottom-0 left-0 right-0 h-px bg-slate-200 transition-opacity duration-200', isSticky ? 'opacity-100' : 'opacity-0']">
+      </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
       <div v-if="loading" class="text-center py-16 sm:py-20">
