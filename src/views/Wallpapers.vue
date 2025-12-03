@@ -198,6 +198,9 @@ const fetchWallpapers = async () => {
     wallpapers.value = list.map(item => {
       const rawSrc = item.src?.rawSrc || ''
 
+      // 使用代理路径解决跨域问题
+      const proxiedSrc = rawSrc.replace('https://infinitypro-img.infinitynewtab.com', '/img')
+
       return {
         id: item._id,
         title: item.source || 'Wallpaper',
@@ -205,10 +208,10 @@ const fetchWallpapers = async () => {
         category: item.source || '',
         resolution: item.dimensions || '',
         format: 'jpg',
-        thumbnail: rawSrc, // 直接使用原始图片 URL
-        smallThumbnail: rawSrc, // 直接使用原始图片 URL
-        url: rawSrc, // 直接使用原始图片 URL
-        lqip: rawSrc, // 直接使用原始图片 URL
+        thumbnail: proxiedSrc, // 使用代理图片 URL
+        smallThumbnail: proxiedSrc, // 使用代理图片 URL
+        url: proxiedSrc, // 使用代理图片 URL
+        lqip: proxiedSrc, // 使用代理图片 URL
         fallbackUrl: 'https://picsum.photos/seed/wallpaper' + item._id + '/400/300.jpg' // 添加备用图片URL
       }
     })
