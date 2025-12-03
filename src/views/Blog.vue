@@ -224,7 +224,7 @@ onBeforeUnmount(() => {
   <div class="py-8 sm:py-12 md:py-20" :style="{ paddingTop }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1 class="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 mb-2 sm:mb-4 md:mb-6">
-        博客
+        宋的技术博客
       </h1>
     </div>
     <!-- 分类标签栏 -->

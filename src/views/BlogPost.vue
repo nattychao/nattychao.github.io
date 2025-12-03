@@ -22,9 +22,10 @@ onMounted(async () => {
     </div>
 
     <article v-else-if="post" class="prose prose-sm sm:prose-base md:prose-lg prose-slate mx-auto">
-      <div class="mb-6 sm:mb-8 text-center">
+      <div class="hidden mb-6 sm:mb-8 text-center">
         <div class="text-xs sm:text-sm text-theme-600 font-medium mb-1.5 sm:mb-2">
-          {{ new Date(post.date).toLocaleDateString() }}</div>
+          {{ new Date(post.date).toLocaleDateString() }}
+        </div>
         <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-3 sm:mb-4">{{ post.title }}</h1>
       </div>
       <div v-html="post.html"></div>
