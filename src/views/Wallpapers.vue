@@ -122,13 +122,8 @@ const fetchWallpapers = async () => {
     wallpapers.value = list.map(item => {
       const rawSrc = item.src?.rawSrc || ''
 
-      // 直接使用原始的 rawSrc 作为 url，不进行任何修改
-      const originalUrl = rawSrc
-
-      // 根据环境判断使用代理还是真实地址
-      const imageUrl = import.meta.env.DEV
-        ? rawSrc.replace('https://infinitypro-img.infinitynewtab.com', '/img') // 开发环境使用代理
-        : rawSrc // 生产环境使用真实地址
+      // 直接使用真实地址，不使用代理
+      const imageUrl = rawSrc
 
       return {
         id: item._id,
@@ -137,10 +132,7 @@ const fetchWallpapers = async () => {
         category: item.source || '',
         resolution: item.dimensions || '',
         format: 'jpg',
-        thumbnail: imageUrl, // 根据环境选择图片 URL
-        smallThumbnail: imageUrl, // 根据环境选择图片 URL
-        url: originalUrl, // 使用原始 URL，不进行修改
-        lqip: imageUrl, // 根据环境选择图片 URL
+        url: imageUrl, // 根据环境选择图片 URL
         fallbackUrl: 'https://picsum.photos/seed/wallpaper' + item._id + '/400/300.jpg' // 添加备用图片URL
       }
     })
@@ -464,8 +456,8 @@ onBeforeUnmount(() => {
             <div class="overflow-hidden bg-slate-100" :style="getImageStyle(wallpaper)">
               <div class="relative w-full h-full group-hover:scale-105 transition-transform duration-500"
                 @click="handlePreview(wallpaper)">
-                <!-- 直接加载原图 -->
-                <img :src="wallpaper.url" :alt="wallpaper.title || 'Wallpaper'"
+                <!-- 直接加载原图 特别注意一个非常经典的**防盗链（Hotlink Protection）**问题。-->
+                <img :src="wallpaper.url" referrerpolicy="no-referrer" :alt="wallpaper.title || 'Wallpaper'"
                   class="absolute inset-0 w-full h-full object-cover" />
 
 
