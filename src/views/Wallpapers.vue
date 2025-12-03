@@ -560,6 +560,12 @@ onBeforeUnmount(() => {
                   :class="{ 'opacity-100': imageLoaded[wallpaper.id], 'opacity-0': !imageLoaded[wallpaper.id] }"
                   loading="lazy" @load="handleImageLoad(wallpaper.id)"
                   @error="() => { imageLoaded[wallpaper.id] = true }" />
+
+                <!-- 显示真实图片地址用于线上排查 -->
+                <div
+                  class="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-2 overflow-hidden whitespace-nowrap text-ellipsis">
+                  {{ wallpaper.url }}
+                </div>
               </div>
             </div>
 
