@@ -123,7 +123,8 @@ const fetchWallpapers = async () => {
       const rawSrc = item.src?.rawSrc || ''
 
       // 直接使用真实地址，不使用代理
-      const imageUrl = rawSrc
+      const smallImageUrl = 'https://wsrv.nl/?url=' + rawSrc + '&w=600'
+      const largeImageUrl = rawSrc
 
       return {
         id: item._id,
@@ -132,7 +133,8 @@ const fetchWallpapers = async () => {
         category: item.source || '',
         resolution: item.dimensions || '',
         format: 'jpg',
-        url: imageUrl, // 根据环境选择图片 URL
+        thumbnail: smallImageUrl, // 根据环境选择图片 URL
+        url: largeImageUrl,
         fallbackUrl: 'https://picsum.photos/seed/wallpaper' + item._id + '/400/300.jpg' // 添加备用图片URL
       }
     })
@@ -454,25 +456,66 @@ onBeforeUnmount(() => {
             class="group relative overflow-hidden rounded-xl sm:rounded-2xl shadow-sm border border-slate-100 hover:shadow-lg transition-all duration-300">
             <!-- 壁纸图片 -->
             <div class="overflow-hidden bg-slate-100" :style="getImageStyle(wallpaper)">
-              <div class="relative w-full h-full group-hover:scale-105 transition-transform duration-500"
-                @click="handlePreview(wallpaper)">
+              <div class="relative w-full h-full group-hover:scale-105 transition-transform duration-500">
                 <!-- 直接加载原图 特别注意一个非常经典的**防盗链（Hotlink Protection）**问题。-->
-                <img :src="wallpaper.url" referrerpolicy="no-referrer" :alt="wallpaper.title || 'Wallpaper'"
+                <img :src="wallpaper.thumbnail" referrerpolicy="no-referrer" :alt="wallpaper.title || 'Wallpaper'"
                   class="absolute inset-0 w-full h-full object-cover" />
 
+                <!-- 移动设备下载按钮（始终显示） -->
+                <button @click.stop="handleDownload(wallpaper)"
+                  class="absolute bottom-3 right-3 bg-white/90 text-slate-800 px-3 py-2 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-1 sm:hidden"
+                  title="下载壁纸">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  <span class="text-xs">下载</span>
+                </button>
 
+                <!-- 桌面设备鼠标移入浮层 -->
+                <div
+                  class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 hidden sm:flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <div class="flex gap-2 sm:gap-3">
+                    <!-- 下载按钮 -->
+                    <button @click.stop="handleDownload(wallpaper)"
+                      class="bg-white/90 hover:bg-white text-slate-800 px-3 py-2 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-1"
+                      title="下载壁纸">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                      <span class="text-xs">下载</span>
+                    </button>
+
+                    <!-- 预览按钮 -->
+                    <button @click.stop="handlePreview(wallpaper)"
+                      class="bg-white/90 hover:bg-white text-slate-800 px-3 py-2 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-1"
+                      title="预览壁纸">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      <span class="text-xs">预览</span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
 
 
             <!-- 壁纸信息 -->
-            <div class="p-4">
+            <!-- <div class="p-4">
               <div class="flex justify-between items-center">
                 <span class="text-xs sm:text-sm text-slate-500">{{ wallpaper.resolution }}</span>
                 <span class="text-xs sm:text-sm text-slate-500 truncate max-w-[50%]">{{ wallpaper.category }}</span>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
 
