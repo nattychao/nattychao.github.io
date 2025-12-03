@@ -170,7 +170,7 @@ const fetchWallpapers = async () => {
   loading.value = true
   try {
     // 使用代理 API 路径，避免跨域和混合内容问题
-    let urlString = "/api/v2/get_wallpaper_list"
+    let urlString = "https://api.infinitynewtab.com/v2/get_wallpaper_list"
     urlString += "?client=" + client.value
     urlString += "&source=" + currentSource.value
     urlString += "&page=" + currentPage.value
