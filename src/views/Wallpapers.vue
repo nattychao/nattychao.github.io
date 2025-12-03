@@ -61,80 +61,7 @@ const isSticky = ref(false)
 const scrollPosition = ref(0)
 const totalCount = ref(0)
 const totalPages = ref(0)
-// 图片懒加载和渐进式加载
-const imageLoaded = ref({}) // 跟踪图片加载状态
-const imageInView = ref({}) // 跟踪图片是否在视口中
-let observer = null // Intersection Observer实例
-
-// 处理图片加载完成
-const handleImageLoad = (imageId) => {
-  imageLoaded.value[imageId] = true
-}
-
-// 使用Intersection Observer检测图片是否进入视口
-const setupIntersectionObserver = () => {
-  // 清理之前的观察者
-  if (observer) {
-    observer.disconnect()
-  }
-
-  // 创建新的观察者
-  observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      const imageId = entry.target.id.replace('wallpaper-', '')
-      if (entry.isIntersecting && !imageInView.value[imageId]) {
-        imageInView.value[imageId] = true
-        console.log(`图片 ${imageId} 进入视口，开始加载`)
-      }
-    })
-  }, {
-    rootMargin: '500px' // 提前500px开始加载
-  })
-
-  // 观察所有壁纸元素
-  nextTick(() => {
-    wallpapers.value.forEach(wallpaper => {
-      const element = document.getElementById(`wallpaper-${wallpaper.id}`)
-      if (element && !imageInView.value[wallpaper.id]) {
-        observer.observe(element)
-      }
-    })
-  })
-}
-
-// 检查图片是否在视口中（备用方法）
-const checkImageInView = (imageId) => {
-  const element = document.getElementById(`wallpaper-${imageId}`)
-  if (!element) return false
-
-  const rect = element.getBoundingClientRect()
-
-  // 添加一些缓冲区域，提前加载即将进入视口的图片
-  const buffer = 500 // 增加缓冲区，提前加载更多图片
-  const isNearViewport = (
-    rect.top >= -buffer &&
-    rect.left >= -buffer &&
-    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) + buffer &&
-    rect.right <= (window.innerWidth || document.documentElement.clientWidth) + buffer
-  )
-
-  if (isNearViewport && !imageInView.value[imageId]) {
-    imageInView.value[imageId] = true
-    console.log(`图片 ${imageId} 进入视口，开始加载`)
-  }
-
-  return isNearViewport
-}
-
-// 滚动时检查图片是否在视口中
-const handleScrollForImages = () => {
-  // 如果Intersection Observer不可用，使用备用方法
-  if (!observer) {
-    wallpapers.value.forEach(wallpaper => {
-      checkImageInView(wallpaper.id)
-    })
-  }
-}
+// 直接加载原图，移除所有图片优化
 
 // 节流函数
 const throttle = (func, limit) => {
@@ -149,9 +76,6 @@ const throttle = (func, limit) => {
     }
   }
 }
-
-// 节流后的滚动处理函数
-const throttledHandleScrollForImages = throttle(handleScrollForImages, 200)
 
 // Refs
 const stickyHeaderRef = ref(null)
@@ -446,14 +370,9 @@ onMounted(() => {
     adjustImageParams() // 添加图片参数调整
   })
   window.addEventListener('scroll', throttledHandleScroll)
-  window.addEventListener('scroll', throttledHandleScrollForImages)
 
-  // 初始化Intersection Observer
-  setupIntersectionObserver()
-
-  // 初始检查图片是否在视口
+  // 恢复滚动位置
   nextTick(() => {
-    handleScrollForImages()
     window.scrollTo(0, scrollPosition.value)
   })
 })
@@ -464,12 +383,6 @@ onBeforeUnmount(() => {
 
   // 移除事件监听
   window.removeEventListener('scroll', throttledHandleScroll)
-  window.removeEventListener('scroll', throttledHandleScrollForImages)
-
-  // 清理Intersection Observer
-  if (observer) {
-    observer.disconnect()
-  }
 })
 </script>
 
@@ -548,18 +461,9 @@ onBeforeUnmount(() => {
             <div class="overflow-hidden bg-slate-100" :style="getImageStyle(wallpaper)">
               <div class="relative w-full h-full group-hover:scale-105 transition-transform duration-500"
                 @click="handlePreview(wallpaper)">
-                <!-- 低质量占位符图片 -->
-                <img :src="wallpaper.thumbnail" :alt="wallpaper.title || 'Wallpaper'"
-                  class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
-                  :class="{ 'opacity-0': imageLoaded[wallpaper.id] }" loading="lazy" />
-
-                <!-- 高质量图片 - 只有在图片进入视口时才加载 -->
-                <img v-if="imageInView[wallpaper.id]" :src="wallpaper.smallThumbnail"
-                  :alt="wallpaper.title || 'Wallpaper'"
-                  class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
-                  :class="{ 'opacity-100': imageLoaded[wallpaper.id], 'opacity-0': !imageLoaded[wallpaper.id] }"
-                  loading="lazy" @load="handleImageLoad(wallpaper.id)"
-                  @error="() => { imageLoaded[wallpaper.id] = true }" />
+                <!-- 直接加载原图 -->
+                <img :src="wallpaper.url" :alt="wallpaper.title || 'Wallpaper'"
+                  class="absolute inset-0 w-full h-full object-cover" />
 
                 <!-- 显示真实图片地址用于线上排查 -->
                 <div
