@@ -198,8 +198,10 @@ const fetchWallpapers = async () => {
     wallpapers.value = list.map(item => {
       const rawSrc = item.src?.rawSrc || ''
 
-      // 使用代理路径解决跨域问题
-      const proxiedSrc = rawSrc.replace('https://infinitypro-img.infinitynewtab.com', '/img')
+      // 根据环境判断使用代理还是真实地址
+      const imageUrl = import.meta.env.DEV
+        ? rawSrc.replace('https://infinitypro-img.infinitynewtab.com', '/img') // 开发环境使用代理
+        : rawSrc // 生产环境使用真实地址
 
       return {
         id: item._id,
@@ -208,10 +210,10 @@ const fetchWallpapers = async () => {
         category: item.source || '',
         resolution: item.dimensions || '',
         format: 'jpg',
-        thumbnail: proxiedSrc, // 使用代理图片 URL
-        smallThumbnail: proxiedSrc, // 使用代理图片 URL
-        url: proxiedSrc, // 使用代理图片 URL
-        lqip: proxiedSrc, // 使用代理图片 URL
+        thumbnail: imageUrl, // 根据环境选择图片 URL
+        smallThumbnail: imageUrl, // 根据环境选择图片 URL
+        url: imageUrl, // 根据环境选择图片 URL
+        lqip: imageUrl, // 根据环境选择图片 URL
         fallbackUrl: 'https://picsum.photos/seed/wallpaper' + item._id + '/400/300.jpg' // 添加备用图片URL
       }
     })
