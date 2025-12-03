@@ -21,6 +21,12 @@ export default {
           950: '#1e1b4b',
         },
       },
+      fontFamily: {
+        'playfair': ['Playfair Display', 'serif'],
+        'montserrat': ['Montserrat', 'sans-serif'],
+        'helvetica': ['Helvetica', 'Arial', 'sans-serif'],
+        'futura': ['Futura PT', 'Futura', 'Helvetica', 'Arial', 'sans-serif'],
+      },
     },
   },
   plugins: [

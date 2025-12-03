@@ -136,6 +136,7 @@ const navLinks = [
   { name: '项目', path: '/projects' },
   { name: '博客', path: '/blog' },
   { name: '壁纸', path: '/wallpapers' },
+  { name: 'my', path: '/jewellery' },
 ]
 
 // 显示微信二维码

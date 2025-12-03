@@ -1,0 +1,30 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="pinkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F472B6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EC4899;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Stylized jewellery icon -->
+  <g fill="url(#pinkGradient)">
+    <!-- Necklace chain -->
+    <path d="M24 64 C24 40 44 20 64 20 C84 20 104 40 104 64" stroke="url(#pinkGradient)" stroke-width="4" fill="none"/>
+    
+    <!-- Pendant - diamond shape -->
+    <polygon points="64 40, 72 52, 64 64, 56 52"/>
+    
+    <!-- Earring 1 -->
+    <circle cx="40" cy="90" r="4"/>
+    <path d="M40 86 L40 76" stroke="url(#pinkGradient)" stroke-width="2"/>
+    <circle cx="40" cy="74" r="3"/>
+    
+    <!-- Earring 2 -->
+    <circle cx="88" cy="90" r="4"/>
+    <path d="M88 86 L88 76" stroke="url(#pinkGradient)" stroke-width="2"/>
+    <circle cx="88" cy="74" r="3"/>
+  </g>
+  
+  <!-- Text - MY JEWELLERY -->
+  <text x="64" y="118" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#EC4899">MY JEWELLERY</text>
+</svg>

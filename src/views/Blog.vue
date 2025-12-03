@@ -29,6 +29,7 @@ const tabsScrollRef = ref(null)
 // 定义分类
 const categories = [
   { id: '全部', name: '全部' },
+  { id: 'AI', name: 'AI' }, // 人工智能相关
   { id: 'Objective-C', name: 'Objective-C' },
   { id: 'Swift', name: 'Swift' },
   { id: 'Vue', name: 'Vue' },

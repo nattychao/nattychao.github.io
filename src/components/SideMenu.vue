@@ -156,7 +156,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { X, Github, Mail, Phone, MessageCircle, Home, Briefcase, BookOpen, FileText, Image, ChevronRight } from 'lucide-vue-next'
+import { X, Github, Mail, Phone, MessageCircle, Home, Briefcase, BookOpen, FileText, Image, Heart, ChevronRight } from 'lucide-vue-next'
 import { useToast } from '@/composables/useToast.js'
 
 const props = defineProps({
@@ -180,6 +180,7 @@ const navLinks = [
   { name: '项目', path: '/projects' },
   { name: '博客', path: '/blog' },
   { name: '壁纸', path: '/wallpapers' },
+  { name: 'my', path: '/jewellery' },
 ]
 
 // 关闭菜单
@@ -199,7 +200,8 @@ const getMenuIcon = (name) => {
     '项目': Briefcase,
     '博客': BookOpen,
     '壁纸': Image,
-    '简历': FileText
+    '简历': FileText,
+    'my': Heart
   }
   return icons[name] || Home
 }

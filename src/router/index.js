@@ -21,8 +21,9 @@ Object.keys(modules).forEach(filePath => {
   if (['Home', 'BlogPost'].includes(fileName)) return
   
   // 将组件名转换为路由路径
-  // 例如：Resume -> /resume
-  const path = `/${fileName.toLowerCase().replace(/([a-z])([A-Z])/g, '$1-$2')}`
+  // 例如：MyJewelleryStandalone -> my-jewellery-standalone
+  // 先插入连字符，再转小写
+  const path = `/${fileName.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()}`
   
   // 添加路由
   routes.push({

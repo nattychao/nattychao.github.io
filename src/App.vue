@@ -1,11 +1,10 @@
 <script setup>
 import NavBar from './components/NavBar.vue'
-import Footer from './components/Footer.vue'
 </script>
 
 <template>
   <div class="min-h-screen flex flex-col font-sans">
-    <NavBar />
+    <NavBar v-if="$route.name !== 'Jewellery'" />
     <main class="flex-grow">
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
@@ -13,7 +12,6 @@ import Footer from './components/Footer.vue'
         </transition>
       </router-view>
     </main>
-    <Footer />
   </div>
 </template>
 

@@ -43,7 +43,7 @@ export const categoryColors = {
   'Scala': 'bg-red-100 text-red-800 border-red-200', // GitHub: #c22d40
   'Shell': 'bg-green-100 text-green-800 border-green-200', // GitHub: #89e051
   'HTML': 'bg-orange-100 text-orange-800 border-orange-200', // GitHub: #e34c26
-  
+  'AI': 'bg-yellow-100 text-yellow-800 border-yellow-200', // 人工智能相关
   '默认标签': 'bg-gray-100 text-gray-800 border-gray-200' // 默认标签颜色
 }
 
