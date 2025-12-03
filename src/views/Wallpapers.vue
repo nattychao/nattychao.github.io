@@ -169,7 +169,7 @@ if (route.query.tag) {
 const fetchWallpapers = async () => {
   loading.value = true
   try {
-    // 使用代理 API 路径，避免跨域和混合内容问题
+    // 始终使用完整的 API 地址
     let urlString = "https://api.infinitynewtab.com/v2/get_wallpaper_list"
     urlString += "?client=" + client.value
     urlString += "&source=" + currentSource.value
@@ -198,20 +198,6 @@ const fetchWallpapers = async () => {
     wallpapers.value = list.map(item => {
       const rawSrc = item.src?.rawSrc || ''
 
-      // 将 infinitypro-img.infinitynewtab.com 的图片 URL 替换为代理 URL
-      const proxiedThumbnail = rawSrc.replace('https://infinitypro-img.infinitynewtab.com', '/img')
-      const proxiedUrl = proxiedThumbnail
-
-      // 创建小尺寸预览图片 - 使用动态尺寸参数
-      const smallThumbnail = proxiedThumbnail + `?w=${imageWidth.value}&q=${imageQuality.value}&auto=format`
-
-      // 创建低质量图片占位符 (LQIP) - 使用更小的尺寸和模糊效果
-      const lqipUrl = proxiedThumbnail + '?w=20&h=20&blur=10&auto=format'
-
-      // 添加调试日志
-      console.log('Original URL:', rawSrc)
-      console.log('Proxied URL:', proxiedThumbnail)
-
       return {
         id: item._id,
         title: item.source || 'Wallpaper',
@@ -219,9 +205,10 @@ const fetchWallpapers = async () => {
         category: item.source || '',
         resolution: item.dimensions || '',
         format: 'jpg',
-        thumbnail: smallThumbnail, // 使用小尺寸预览图片
-        url: proxiedUrl, // 使用代理 URL
-        lqip: lqipUrl, // 低质量图片占位符
+        thumbnail: rawSrc, // 直接使用原始图片 URL
+        smallThumbnail: rawSrc, // 直接使用原始图片 URL
+        url: rawSrc, // 直接使用原始图片 URL
+        lqip: rawSrc, // 直接使用原始图片 URL
         fallbackUrl: 'https://picsum.photos/seed/wallpaper' + item._id + '/400/300.jpg' // 添加备用图片URL
       }
     })
