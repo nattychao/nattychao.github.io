@@ -122,6 +122,9 @@ const fetchWallpapers = async () => {
     wallpapers.value = list.map(item => {
       const rawSrc = item.src?.rawSrc || ''
 
+      // 直接使用原始的 rawSrc 作为 url，不进行任何修改
+      const originalUrl = rawSrc
+
       // 根据环境判断使用代理还是真实地址
       const imageUrl = import.meta.env.DEV
         ? rawSrc.replace('https://infinitypro-img.infinitynewtab.com', '/img') // 开发环境使用代理
@@ -136,7 +139,7 @@ const fetchWallpapers = async () => {
         format: 'jpg',
         thumbnail: imageUrl, // 根据环境选择图片 URL
         smallThumbnail: imageUrl, // 根据环境选择图片 URL
-        url: imageUrl, // 根据环境选择图片 URL
+        url: originalUrl, // 使用原始 URL，不进行修改
         lqip: imageUrl, // 根据环境选择图片 URL
         fallbackUrl: 'https://picsum.photos/seed/wallpaper' + item._id + '/400/300.jpg' // 添加备用图片URL
       }
@@ -465,30 +468,11 @@ onBeforeUnmount(() => {
                 <img :src="wallpaper.url" :alt="wallpaper.title || 'Wallpaper'"
                   class="absolute inset-0 w-full h-full object-cover" />
 
-                <!-- 显示真实图片地址用于线上排查 -->
-                <div
-                  class="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-2 overflow-hidden whitespace-nowrap text-ellipsis">
-                  {{ wallpaper.url }}
-                </div>
+
               </div>
             </div>
 
-            <!-- 悬浮信息层 -->
-            <div
-              class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-              <h3 class="text-white font-semibold text-lg mb-1 truncate">{{ wallpaper.title }}</h3>
-              <p class="text-white/80 text-sm mb-3 truncate">{{ wallpaper.description }}</p>
-              <div class="flex gap-2">
-                <button @click="handlePreview(wallpaper)"
-                  class="flex-1 bg-white/20 backdrop-blur-sm text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-white/30 transition-colors">
-                  预览
-                </button>
-                <button @click="handleDownload(wallpaper)"
-                  class="flex-1 bg-theme-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-theme-700 transition-colors">
-                  下载
-                </button>
-              </div>
-            </div>
+
 
             <!-- 壁纸信息 -->
             <div class="p-4">
