@@ -2,7 +2,7 @@
 title: Jewellery网站制作指南
 date: 2025-12-03
 description: 使用Vue 3和Tailwind CSS制作Jewellery网站的完整指南，包括组件设计、布局实现和优化技巧。
-tags: ['Vue3', 'Tailwind CSS', '网站开发', '电商网站', '响应式设计']
+tags: ['AI', 'Vue3', 'Tailwind CSS', '网站开发', '电商网站', '响应式设计']
 ---
 
 # Jewellery 网站制作指南
