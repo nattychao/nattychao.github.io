@@ -19,7 +19,7 @@
         <JewellerySocial />
 
         <!-- 页脚 -->
-        <Footer />
+        <JewelleryFooter />
     </div>
 </template>
 
@@ -30,7 +30,7 @@ import JewelleryProducts from '@/components/jewellery/JewelleryProducts.vue'
 import JewelleryBanner2 from '@/components/jewellery/JewelleryBanner2.vue'
 import JewelleryStore from '@/components/jewellery/JewelleryStore.vue'
 import JewellerySocial from '@/components/jewellery/JewellerySocial.vue'
-import Footer from '@/components/Footer.vue'
+import JewelleryFooter from '@/components/jewellery/JewelleryFooter.vue'
 
 export default {
     name: 'JewelleryPage',
@@ -41,7 +41,7 @@ export default {
         JewelleryBanner2,
         JewelleryStore,
         JewellerySocial,
-        Footer
+        JewelleryFooter
     }
 }
 </script>

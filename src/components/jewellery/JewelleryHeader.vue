@@ -66,7 +66,7 @@ export default {
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 1.0);
   backdrop-filter: blur(10px);
 }
 </style>

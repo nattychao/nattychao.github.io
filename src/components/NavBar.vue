@@ -136,7 +136,7 @@ const navLinks = [
   { name: '项目', path: '/projects' },
   { name: '博客', path: '/blog' },
   { name: '壁纸', path: '/wallpapers' },
-  { name: 'my', path: '/jewellery' },
+  { name: 'jewellery', path: '/jewellery', icon: '/myjwfavicon.svg' },
 ]
 
 // 显示微信二维码
@@ -189,7 +189,7 @@ const toggleSideMenu = () => {
         <!-- Desktop Menu -->
         <div class="hidden md:flex space-x-8 items-center">
           <RouterLink v-for="link in navLinks" :key="link.name" :to="link.path" :class="[
-            'font-medium transition-colors relative',
+            'font-medium transition-colors relative flex items-center',
             !isHomePage
               ? route.path === link.path ? 'text-theme-600' : 'text-slate-600 hover:text-theme-600'
               : isFullyScrolled
@@ -198,7 +198,8 @@ const toggleSideMenu = () => {
           ]">
             <!-- 选中指示器 -->
             <span v-if="route.path === link.path" class="absolute -bottom-1 left-0 right-0 h-0.5 bg-current"></span>
-            {{ link.name }}
+            <img v-if="link.icon" :src="link.icon" alt="link.name" class="w-6 h-6" />
+            <span v-else>{{ link.name }}</span>
           </RouterLink>
 
           <div :class="[

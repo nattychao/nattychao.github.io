@@ -1,5 +1,6 @@
 <script setup>
 import NavBar from './components/NavBar.vue'
+import Footer from './components/Footer.vue'
 </script>
 
 <template>
@@ -12,6 +13,7 @@ import NavBar from './components/NavBar.vue'
         </transition>
       </router-view>
     </main>
+    <Footer v-if="$route.name !== 'Jewellery'" />
   </div>
 </template>
 

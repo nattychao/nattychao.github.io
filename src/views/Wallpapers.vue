@@ -276,8 +276,10 @@ const throttledHandleScroll = throttle(handleScroll, 16)
 
 // Actions
 const handleDownload = (wallpaper) => {
+  // 使用 wsrv.nl 服务处理下载链接，避免防盗链问题
+  const processedUrl = 'https://wsrv.nl/?url=' + wallpaper.url
   const link = document.createElement('a')
-  link.href = wallpaper.url
+  link.href = processedUrl
   link.download = `wallpaper-${wallpaper.id}.jpg`
   document.body.appendChild(link)
   link.click()
@@ -285,7 +287,9 @@ const handleDownload = (wallpaper) => {
 }
 
 const handlePreview = (wallpaper) => {
-  window.open(wallpaper.url, '_blank')
+  // 使用 wsrv.nl 服务处理预览链接，避免防盗链问题
+  const processedUrl = 'https://wsrv.nl/?url=' + wallpaper.url
+  window.open(processedUrl, '_blank')
 }
 
 // 根据图片真实尺寸比例计算样式

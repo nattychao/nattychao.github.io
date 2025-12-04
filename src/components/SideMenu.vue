@@ -51,7 +51,8 @@
               :class="isActiveLink(link.path)
                 ? 'bg-gradient-to-r from-theme-500 to-purple-600 text-white'
                 : 'bg-slate-100 text-slate-500 group-hover:bg-theme-100 group-hover:text-theme-600'">
-              <component :is="getMenuIcon(link.name)" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <img v-if="link.icon" :src="link.icon" alt="link.name" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <component v-else :is="getMenuIcon(link.name)" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </span>
             <span class="flex-1 text-sm sm:text-base">{{ link.name }}</span>
             <ChevronRight class="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-200"
@@ -180,7 +181,7 @@ const navLinks = [
   { name: '项目', path: '/projects' },
   { name: '博客', path: '/blog' },
   { name: '壁纸', path: '/wallpapers' },
-  { name: 'my', path: '/jewellery' },
+  { name: 'jewellery', path: '/jewellery', icon: '/myjwfavicon.svg' },
 ]
 
 // 关闭菜单
@@ -201,7 +202,7 @@ const getMenuIcon = (name) => {
     '博客': BookOpen,
     '壁纸': Image,
     '简历': FileText,
-    'my': Heart
+    'jewellery': Heart
   }
   return icons[name] || Home
 }
