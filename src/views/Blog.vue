@@ -30,8 +30,10 @@ const tabsScrollRef = ref(null)
 const categories = [
   { id: '全部', name: '全部' },
   { id: 'AI', name: 'AI' }, // 人工智能相关
+  { id: 'iOS', name: 'iOS' }, // iOS相关
   { id: 'Objective-C', name: 'Objective-C' },
   { id: 'Swift', name: 'Swift' },
+  { id: 'Android', name: 'Android' }, // Android相关
   { id: 'Vue', name: 'Vue' },
   { id: 'React', name: 'React' },
   { id: '前端开发', name: '前端开发' },
@@ -224,7 +226,7 @@ onBeforeUnmount(() => {
   <div class="py-8 sm:py-12 md:py-20" :style="{ paddingTop }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1 class="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 mb-2 sm:mb-4 md:mb-6">
-        宋的技术博客
+        宋朝的技术博客
       </h1>
     </div>
     <!-- 分类标签栏 -->
