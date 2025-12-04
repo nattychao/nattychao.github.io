@@ -6,6 +6,7 @@ export const categoryColors = {
   'Objective-C': 'bg-theme-100 text-theme-800 border-theme-200', // GitHub: #438eff
   'Swift': 'bg-orange-100 text-orange-800 border-orange-200', // GitHub: #fa7343
   'Vue': 'bg-green-100 text-green-800 border-green-200', // Vue绿色
+  'Vue3': 'bg-green-100 text-green-800 border-green-200', // Vue3绿色
   'Nuxt': 'bg-teal-100 text-teal-800 border-teal-200', // Nuxt绿色
   'Web开发': 'bg-purple-100 text-purple-800 border-purple-200', // 通用Web开发
   'React': 'bg-cyan-100 text-cyan-800 border-cyan-200', // GitHub: #61dafb
@@ -44,6 +45,43 @@ export const categoryColors = {
   'Shell': 'bg-green-100 text-green-800 border-green-200', // GitHub: #89e051
   'HTML': 'bg-orange-100 text-orange-800 border-orange-200', // GitHub: #e34c26
   'AI': 'bg-yellow-100 text-yellow-800 border-yellow-200', // 人工智能相关
+  
+  // AI相关标签
+  'AI编程': 'bg-yellow-100 text-yellow-800 border-yellow-200', // AI编程
+  '提示词模板': 'bg-yellow-100 text-yellow-800 border-yellow-200', // 提示词模板
+  '无代码开发': 'bg-yellow-100 text-yellow-800 border-yellow-200', // 无代码开发
+  '0代码': 'bg-yellow-100 text-yellow-800 border-yellow-200', // 0代码
+  
+  // 技术相关标签
+  'Android': 'bg-green-100 text-green-800 border-green-200', // Android绿色
+  'AndroidStudio': 'bg-green-100 text-green-800 border-green-200', // Android Studio
+  'TailwindCSS': 'bg-cyan-100 text-cyan-800 border-cyan-200', // Tailwind CSS
+  'UI/UX': 'bg-purple-100 text-purple-800 border-purple-200', // UI/UX设计
+  
+  // 项目相关标签
+  '迁移指南': 'bg-blue-100 text-blue-800 border-blue-200', // 迁移指南
+  '网站开发': 'bg-indigo-100 text-indigo-800 border-indigo-200', // 网站开发
+  '网站建设': 'bg-indigo-100 text-indigo-800 border-indigo-200', // 网站建设
+  '网站实现': 'bg-indigo-100 text-indigo-800 border-indigo-200', // 网站实现
+  '电商网站': 'bg-indigo-100 text-indigo-800 border-indigo-200', // 电商网站
+  '组件设计': 'bg-teal-100 text-teal-800 border-teal-200', // 组件设计
+  
+  // 响应式设计相关
+  '响应式设计': 'bg-pink-100 text-pink-800 border-pink-200', // 响应式设计
+  '响应式布局': 'bg-pink-100 text-pink-800 border-pink-200', // 响应式布局
+  
+  // 其他标签
+  '新手指南': 'bg-blue-100 text-blue-800 border-blue-200', // 新手指南
+  '源码阅读': 'bg-gray-100 text-gray-800 border-gray-200', // 源码阅读
+  '源码分析': 'bg-gray-100 text-gray-800 border-gray-200', // 源码分析
+  'InterviewQuestions': 'bg-blue-100 text-blue-800 border-blue-200', // 面试问题
+  'Resume': 'bg-blue-100 text-blue-800 border-blue-200', // 简历
+  'QMUI': 'bg-teal-100 text-teal-800 border-teal-200', // QMUI框架
+  'SourceCode': 'bg-gray-100 text-gray-800 border-gray-200', // 源代码
+  'Analyze': 'bg-gray-100 text-gray-800 border-gray-200', // 分析
+  'Libraries': 'bg-purple-100 text-purple-800 border-purple-200', // 库
+  'Mac': 'bg-gray-100 text-gray-800 border-gray-200', // Mac
+  
   '默认标签': 'bg-gray-100 text-gray-800 border-gray-200' // 默认标签颜色
 }
 
