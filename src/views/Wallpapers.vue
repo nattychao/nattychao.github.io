@@ -337,30 +337,9 @@ const getImageStyle = (wallpaper) => {
   }
 }
 
-// 根据屏幕尺寸调整图片参数
-const adjustImageParams = () => {
-  const screenWidth = window.innerWidth
 
-  if (screenWidth < 640) { // 移动设备
-    imageWidth.value = 300
-    imageQuality.value = 60
-  } else if (screenWidth < 1024) { // 平板设备
-    imageWidth.value = 500
-    imageQuality.value = 70
-  } else { // 桌面设备
-    imageWidth.value = 700
-    imageQuality.value = 75
-  }
-
-  console.log(`调整图片参数: 宽度=${imageWidth.value}, 质量=${imageQuality.value}`)
-
-  // 重新获取壁纸以应用新的图片参数
-  fetchWallpapers()
-}
 
 onMounted(() => {
-  // 初始化图片参数
-  adjustImageParams()
   fetchWallpapers()
   updateUnderline()
 
@@ -368,7 +347,6 @@ onMounted(() => {
   window.addEventListener('resize', () => {
     hasTransition.value = false
     updateUnderline()
-    adjustImageParams() // 添加图片参数调整
   })
   window.addEventListener('scroll', throttledHandleScroll)
 
