@@ -1,4 +1,9 @@
 <template>
+  <!-- 手势检测区域 - 整个屏幕左侧边缘 -->
+  <div class="fixed inset-0 z-[50] md:hidden pointer-events-none" @touchstart="handleTouchStart"
+    @touchmove="handleTouchMove" @touchend="handleTouchEnd" @touchcancel="handleTouchEnd">
+  </div>
+
   <!-- 侧滑菜单容器 -->
   <Transition enter-active-class="transition-all duration-300 ease-out" enter-from-class="opacity-0"
     enter-to-class="opacity-100" leave-active-class="transition-all duration-200 ease-in" leave-from-class="opacity-100"
@@ -12,7 +17,9 @@
     enter-to-class="translate-x-0" leave-active-class="transition-all duration-200 ease-in"
     leave-from-class="translate-x-0" leave-to-class="-translate-x-full">
     <div v-if="isOpen"
-      class="fixed top-0 left-0 h-full w-[75%] sm:w-[80%] max-w-sm bg-gradient-to-br from-slate-50 to-white z-[60] md:hidden overflow-y-auto shadow-2xl">
+      class="fixed top-0 left-0 h-full w-[75%] sm:w-[80%] max-w-sm bg-gradient-to-br from-slate-50 to-white z-[60] md:hidden overflow-y-auto shadow-2xl"
+      style="touch-action: pan-y;" @touchstart.stop="handleMenuTouchStart" @touchmove.stop="handleMenuTouchMove"
+      @touchend.stop="handleMenuTouchEnd">
       <!-- 菜单头部 -->
       <div class="relative overflow-hidden bg-gradient-to-r from-theme-500 to-purple-600 p-4 sm:p-6 shadow-lg">
         <!-- 装饰性背景元素 - 添加无规则运动的半圆 -->
@@ -167,12 +174,20 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'open'])
 
 const route = useRoute()
 
 // Toast功能
 const { showToast } = useToast()
+
+// 手势相关状态
+const touchStartX = ref(0)
+const touchCurrentX = ref(0)
+const isTouching = ref(false)
+const isTouchingMenu = ref(false)
+const swipeThreshold = ref(50) // 触发滑动的最小距离
+const edgeThreshold = ref(50) // 屏幕左侧边缘触发区域宽度
 
 // 导航链接
 const navLinks = [
@@ -180,8 +195,8 @@ const navLinks = [
   { name: '简历', path: '/resume' },
   { name: '项目', path: '/projects' },
   { name: '博客', path: '/blog' },
-  { name: '壁纸', path: '/wallpapers' },
-  { name: 'jewellery', path: '/jewellery', icon: '/myjwfavicon.svg' },
+  { name: '壁纸', path: '/wallpapers' }
+  // { name: 'jewellery', path: '/jewellery', icon: '/myjwfavicon.svg' },
 ]
 
 // 关闭菜单
@@ -227,6 +242,51 @@ const showWeChatQR = () => {
 
       showToast()
     })
+}
+
+// 手势处理相关方法
+const handleTouchStart = (e) => {
+  isTouching.value = true
+  touchStartX.value = e.touches[0].clientX
+  touchCurrentX.value = e.touches[0].clientX
+}
+
+const handleTouchMove = (e) => {
+  if (!isTouching.value) return
+
+  touchCurrentX.value = e.touches[0].clientX
+
+  // 从屏幕左侧边缘滑动打开菜单
+  if (touchStartX.value < edgeThreshold.value && touchCurrentX.value - touchStartX.value > swipeThreshold.value) {
+    emit('open')
+    isTouching.value = false
+  }
+}
+
+const handleTouchEnd = () => {
+  isTouching.value = false
+}
+
+const handleMenuTouchStart = (e) => {
+  isTouchingMenu.value = true
+  touchStartX.value = e.touches[0].clientX
+}
+
+const handleMenuTouchMove = (e) => {
+  if (!isTouchingMenu.value) return
+
+  const currentX = e.touches[0].clientX
+  const deltaX = currentX - touchStartX.value
+
+  // 从菜单右侧边缘滑动关闭菜单
+  if (deltaX < -swipeThreshold.value) {
+    emit('close')
+    isTouchingMenu.value = false
+  }
+}
+
+const handleMenuTouchEnd = () => {
+  isTouchingMenu.value = false
 }
 
 // 阻止背景滚动

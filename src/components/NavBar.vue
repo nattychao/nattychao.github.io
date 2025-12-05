@@ -272,5 +272,5 @@ const toggleSideMenu = () => {
   </nav>
 
   <!-- SideMenu Component -->
-  <SideMenu :isOpen="isMenuOpen" @close="isMenuOpen = false" />
+  <SideMenu :isOpen="isMenuOpen" @close="isMenuOpen = false" @open="isMenuOpen = true" />
 </template>
