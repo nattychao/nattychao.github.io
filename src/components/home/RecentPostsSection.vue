@@ -97,7 +97,7 @@ function estimateReadTime(content) {
       <!-- Mobile: Horizontal Scroll -->
       <div class="flex overflow-x-auto gap-3 pb-4 hide-scrollbar md:hidden -mx-4 px-2">
         <router-link v-for="(post, index) in allRecentPosts" :key="post.slug" :to="`/blog/${post.slug}`"
-          class="group bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300 flex-shrink-0 w-[80vw] mx-1">
+          class="group bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-sm border border-slate-100 transition-all duration-300 flex-shrink-0 w-[80vw] mx-1">
           <!-- Card Header with Unique Gradient -->
           <div class="h-2 bg-gradient-to-r bg-size-200 animate-gradient" :class="{
             'from-violet-600 via-purple-500 to-theme-600': index === 0,
