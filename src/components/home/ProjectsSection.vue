@@ -23,21 +23,55 @@ const openProjectLink = (url) => {
 
 <template>
   <!-- Featured Projects -->
-  <section class="py-12 sm:py-20 md:py-24 bg-white">
+  <section class="py-10 sm:py-20 md:py-24 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-end mb-8 sm:mb-10 md:mb-12">
+      <div class="flex justify-between items-start mb-6 sm:mb-10 md:mb-12">
         <div>
           <h2 class="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 mb-3 sm:mb-4">精选项目</h2>
           <p class="text-sm sm:text-base text-slate-600">我最近的一些作品。</p>
         </div>
         <RouterLink to="/projects"
-          class="hidden md:flex items-center text-theme-600 font-semibold hover:text-theme-700 transition-colors">
+          class="flex items-center text-theme-600 font-semibold hover:text-theme-700 transition-colors md:hidden text-sm sm:text-base mt-1">
           查看所有项目
           <ArrowRight class="w-4 h-4 ml-1" />
         </RouterLink>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+      <!-- Mobile: Horizontal Scroll -->
+      <div class="flex overflow-x-auto gap-4 pb-0 hide-scrollbar md:hidden -mx-4 px-2">
+        <div v-for="project in featuredProjects" :key="project.title" class="group flex-shrink-0 w-[80vw] mx-1">
+          <div class="relative overflow-hidden rounded-xl sm:rounded-2xl mb-3 sm:mb-4 aspect-video">
+            <img :src="project.image" :alt="project.title"
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <div
+              class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <span
+                class="text-white font-semibold border border-white/30 bg-white/10 backdrop-blur-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-full cursor-pointer hover:bg-white/20 transition-colors text-sm sm:text-base"
+                @click="openProjectLink(project.href)">
+                查看详情
+              </span>
+            </div>
+          </div>
+          <h3
+            class="text-lg sm:text-xl font-bold text-slate-900 mb-2 group-hover:text-theme-600 transition-colors line-clamp-1">
+            {{ project.title }}
+          </h3>
+          <p class="text-sm sm:text-base text-slate-600 mb-3 line-clamp-1">
+            {{ project.description }}
+          </p>
+          <div class="flex flex-wrap gap-1.5 sm:gap-2 overflow-hidden">
+            <div class="flex flex-wrap gap-1.5 sm:gap-2 whitespace-nowrap">
+              <span v-for="tag in project.tags" :key="tag"
+                class="text-xs font-medium px-2 sm:px-2.5 py-0.5 sm:py-1 bg-slate-100 text-slate-600 rounded-md">
+                {{ tag }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PC: Grid Layout -->
+      <div class="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         <div v-for="project in featuredProjects" :key="project.title" class="group">
           <div class="relative overflow-hidden rounded-xl sm:rounded-2xl mb-3 sm:mb-4 aspect-video">
             <img :src="project.image" :alt="project.title"
@@ -64,7 +98,8 @@ const openProjectLink = (url) => {
         </div>
       </div>
 
-      <div class="mt-6 sm:mt-8 text-center md:hidden">
+      <!-- PC: View All Projects Button at Bottom -->
+      <div class="mt-6 sm:mt-8 text-center md:block hidden">
         <RouterLink to="/projects"
           class="inline-flex items-center text-theme-600 font-semibold hover:text-theme-700 transition-colors">
           查看所有项目
@@ -74,3 +109,18 @@ const openProjectLink = (url) => {
     </div>
   </section>
 </template>
+
+<style scoped>
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+</style>

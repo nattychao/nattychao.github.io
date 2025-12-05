@@ -164,7 +164,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { X, Github, Mail, Phone, MessageCircle, Home, Briefcase, BookOpen, FileText, Image, Heart, ChevronRight } from 'lucide-vue-next'
+import { X, Github, Mail, Phone, MessageCircle, Home, Briefcase, BookOpen, FileText, Image, Heart, ChevronRight, Settings } from 'lucide-vue-next'
 import { useToast } from '@/composables/useToast.js'
 
 const props = defineProps({
@@ -195,7 +195,8 @@ const navLinks = [
   { name: '简历', path: '/resume' },
   { name: '项目', path: '/projects' },
   { name: '博客', path: '/blog' },
-  { name: '壁纸', path: '/wallpapers' }
+  { name: '壁纸', path: '/wallpapers' },
+  { name: '工具', path: '/github' }
   // { name: 'jewellery', path: '/jewellery', icon: '/myjwfavicon.svg' },
 ]
 
@@ -217,6 +218,7 @@ const getMenuIcon = (name) => {
     '博客': BookOpen,
     '壁纸': Image,
     '简历': FileText,
+    '工具': Settings,
     'jewellery': Heart
   }
   return icons[name] || Home
