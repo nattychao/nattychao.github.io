@@ -235,8 +235,7 @@ function estimateReadTime(content) {
       </div>
 
       <!-- 分页控件 - Only show on PC -->
-      <div v-if="totalPages > 1"
-        class="mt-8 sm:mt-10 md:mt-12 flex justify-center items-center space-x-2 md:flex hidden">
+      <div v-if="totalPages > 1" class="mt-8 sm:mt-10 md:mt-12 hidden md:flex justify-center items-center space-x-2">
         <!-- 上一页按钮 -->
         <button @click="goToPrevPage" :disabled="currentPage === 1" class="p-2 rounded-full transition-colors" :class="currentPage === 1
           ? 'text-slate-300 cursor-not-allowed'
