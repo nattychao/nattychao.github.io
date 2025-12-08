@@ -185,7 +185,8 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { X, Github, Mail, Phone, MessageCircle, Home, Briefcase, BookOpen, FileText, Image, Heart, ChevronRight, Settings, Brain, Bot, Globe } from 'lucide-vue-next'
+// 导入图标
+import { X, Github, Mail, Phone, MessageCircle, Home, Briefcase, BookOpen, FileText, Image, Heart, ChevronRight, Settings, Brain, Bot, Globe, Infinity } from 'lucide-vue-next'
 import { useToast } from '@/composables/useToast.js'
 
 const props = defineProps({
@@ -219,6 +220,7 @@ const navLinks = [
   { name: '壁纸', path: '/wallpapers' },
   { name: 'AI-BIO', path: '/ai-bio' },
   { name: '网站导航', path: '/websites' },
+  { name: 'Inftab', path: '/inftab' },
 ]
 
 // 关闭菜单
@@ -241,7 +243,8 @@ const getMenuIcon = (name) => {
     '简历': FileText,
     '工具': Settings,
     'AI-BIO': Bot,
-    '网站导航': Globe
+    '网站导航': Globe,
+    'Inftab': Infinity
   }
   return icons[name] || Home
 }

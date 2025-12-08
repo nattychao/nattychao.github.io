@@ -1,8 +1,8 @@
 export const projects = [
   {
-    title: 'Yehwang iOS端APP',
-    description: 'iOS端APP',
-    tags: ['Objective-C', 'Swift', 'React Native', 'SwiftUI'],
+    title: 'Yehwang APP',
+    description: 'iOS、Android端APP',
+    tags: ['Objective-C', 'Swift', 'React Native', 'SwiftUI', 'Java', 'Kotlin'],
     image: 'https://is2-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/6f/1d/76/6f1d7602-bee3-6479-a15a-9f52af2fc5db/_U7f16_U7ec4@3x_U00283_U0029.jpg/0x0ss.png',
     href: 'https://apps.apple.com/cn/app/yehwang/id1382135697?l=en'
   },
@@ -38,7 +38,7 @@ export const projects = [
     title: '最美壁纸 iOS APP',
     description: '全球精品壁纸，超高清壁纸，Unsplash等著名壁纸，无限免费下载',
     tags: ['Swift', 'SwiftUI'],
-    image: 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=800&q=80',
     href: 'https://github.com/nattychao/Wallpaper'
   },
   {
@@ -53,5 +53,12 @@ export const projects = [
     tags: ['Vue', 'API', 'Tailwind'],
     image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80',
     href: '/websites'
+  },
+  {
+    title: 'Unsplash 壁纸浏览',
+    description: '内嵌 Unsplash 官方网站，浏览和下载高质量壁纸资源。',
+    tags: ['Vue', 'Iframe', 'Unsplash'],
+    image: 'https://images.unsplash.com/photo-1761839262867-af53d08b0eb5?auto=format&fit=crop&w=800&q=80',
+    href: '/unsplash'
   }
 ]

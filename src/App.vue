@@ -31,7 +31,7 @@ onMounted(() => {
         </transition>
       </router-view>
     </main>
-    <Footer v-if="$route.name !== 'Jewellery'" />
+    <Footer v-if="$route.name !== 'Jewellery' && $route.name !== 'Inftab'" />
   </div>
 </template>
 

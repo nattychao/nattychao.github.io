@@ -25,8 +25,8 @@
       </div>
     </div>
 
-    <!-- 分类筛选 -->
-    <div class="mb-8 overflow-x-auto">
+    <!-- 分类筛选：PC端水平滚动，移动端垂直边栏 -->
+    <div class="hidden sm:block mb-8 overflow-x-auto">
       <div class="flex space-x-2 pb-2">
         <button v-for="category in categories" :key="category.type + '-' + category.source"
           @click="selectCategory(category)" :class="[
@@ -40,8 +40,77 @@
       </div>
     </div>
 
-    <!-- 网站列表 -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+    <!-- 主内容区：移动端布局 -->
+    <div class="flex flex-row sm:hidden h-screen overflow-hidden">
+      <!-- 分类筛选：移动端垂直边栏 (占30%) -->
+      <div class="w-[40%] p-2 sticky top-0 self-start h-full bg-white border-r border-slate-100">
+        <div class="flex flex-col space-y-1 h-[calc(100vh-150px)] overflow-y-auto pr-1">
+          <button v-for="category in categories" :key="category.type + '-' + category.source"
+            @click="selectCategory(category)" :class="[
+              'px-4 py-3 rounded-lg text-sm font-medium text-left transition-all duration-200 w-full',
+              selectedCategory === (category.type || category.source) && !isSearching
+                ? 'bg-theme-600 text-white shadow-md transform'
+                : 'bg-slate-50 text-slate-700 hover:bg-theme-100'
+            ]">
+            {{ category.name }}
+          </button>
+        </div>
+      </div>
+
+      <!-- 网站列表：移动端占70%宽度 -->
+      <div class="w-[70%] grid grid-cols-1 gap-3 p-2 overflow-y-auto h-full">
+        <a v-for="website in websites" :key="website._id" :href="website.url" target="_blank" rel="noopener noreferrer"
+          class="bg-white rounded-xl px-4 pt-8 relative block md:hover:shadow-md md:hover:scale-105 active:scale-105 transition-all duration-300 mb-2">
+          <!-- 地球图标 (访问网站) -->
+          <div class="absolute top-3 right-3 text-slate-400 hover:text-slate-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+              </path>
+            </svg>
+          </div>
+
+          <!-- 网站信息 -->
+          <div class="absolute -top-[12px] left-4 right-9 flex items-center">
+            <!-- 网站图标 (带白色圆环) -->
+            <div class="w-[60px] h-[60px] rounded-full flex items-center justify-center p-[6px]"
+              style="background-color: white;">
+              <div class="w-full h-full rounded-full flex items-center justify-center"
+                :style="{ backgroundColor: website.color || '#f3f4f6' }">
+                <img v-if="website.src" :src="website.src" :alt="website.name"
+                  class="w-full h-full rounded-full object-cover"
+                  @error="($event) => $event.target.style.display = 'none'" />
+              </div>
+            </div>
+            <!-- 网站名称 -->
+            <h3 class="text-[14px] font-semibold text-slate-900 truncate ml-2 translate-y-1 flex-1">
+              {{ website.name }}
+            </h3>
+          </div>
+
+          <div class="pt-4"> <!-- 描述部分距离图标底部12px -->
+            <p v-if="website.description" class="text-xs text-slate-600 mb-4 mt-1 line-clamp-4">
+              {{ website.description }}
+            </p>
+            <p v-else class="text-xs text-slate-400 mb-4 mt-1">无描述</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- 加载状态 -->
+      <div v-if="loading" class="fixed inset-0 flex flex-col justify-center items-center bg-white/80 z-50">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-theme-600 mb-4"></div>
+        <p class="text-slate-600">加载中...</p>
+      </div>
+
+      <!-- 无数据状态 -->
+      <div v-else-if="websites.length === 0" class="text-center py-12">
+        <p class="text-slate-600">暂无网站数据</p>
+      </div>
+    </div>
+
+    <!-- 网站列表：PC端布局 -->
+    <div class="hidden sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       <a v-for="website in websites" :key="website._id" :href="website.url" target="_blank" rel="noopener noreferrer"
         class="bg-white rounded-xl px-4 pt-8 relative block md:hover:shadow-md md:hover:scale-105 active:scale-105 transition-all duration-300 mb-2">
         <!-- 地球图标 (访问网站) -->
@@ -79,19 +148,8 @@
       </a>
     </div>
 
-    <!-- 加载状态 -->
-    <div v-if="loading" class="fixed inset-0 flex flex-col justify-center items-center bg-white/80 z-50">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-theme-600 mb-4"></div>
-      <p class="text-slate-600">加载中...</p>
-    </div>
-
-    <!-- 无数据状态 -->
-    <div v-else-if="websites.length === 0" class="text-center py-12">
-      <p class="text-slate-600">暂无网站数据</p>
-    </div>
-
     <!-- 分页 -->
-    <div v-if="websites.length > 0" class="mt-8">
+    <div v-if="websites.length > 0" class="mt-8 sm:block">
       <!-- 统计信息 -->
       <div class="text-center text-sm text-slate-600 mb-4">
         共 {{ totalCount }} 个网站，每页 {{ pageSize }} 个，共 {{ totalPages }} 页
