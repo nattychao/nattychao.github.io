@@ -88,7 +88,7 @@ function estimateReadTime(content) {
           <p class="text-sm sm:text-base text-slate-600">关于 全栈 开发和设计的见解。</p>
         </div>
         <router-link to="/blog"
-          class="flex items-center text-theme-600 font-semibold hover:text-theme-700 transition-colors md:hidden text-sm sm:text-base mt-1">
+          class="flex items-center text-theme-600 font-semibold md:hover:text-theme-700 transition-colors md:hidden text-sm sm:text-base mt-1">
           更多博客
           <ArrowRight class="w-4 h-4 ml-1" />
         </router-link>
@@ -116,7 +116,7 @@ function estimateReadTime(content) {
 
           <div class="p-4 sm:p-5 md:p-7">
             <h3
-              class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 leading-tight group-hover:text-theme-600 transition-colors line-clamp-1 md:line-clamp-2">
+              class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 leading-tight md:group-hover:text-theme-600 transition-colors line-clamp-1 md:line-clamp-2">
               {{ post.title }}
             </h3>
             <p class="text-sm sm:text-base text-slate-600 mb-4 sm:mb-5 line-clamp-2 md:line-clamp-3 leading-relaxed">
@@ -127,7 +127,7 @@ function estimateReadTime(content) {
             <div class="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-5 overflow-hidden">
               <div class="flex flex-wrap gap-1.5 sm:gap-2 whitespace-nowrap overflow-hidden">
                 <span v-for="tag in (post.tags || [])" :key="tag" :class="getCategoryClass(tag)"
-                  class="inline-block px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-medium rounded-full border transition-all duration-200 hover:shadow-sm hover:scale-105">
+                  class="inline-block px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-medium rounded-full border transition-all duration-200 md:hover:shadow-sm md:hover:scale-105">
                   {{ tag }}
                 </span>
               </div>
@@ -168,7 +168,7 @@ function estimateReadTime(content) {
       <!-- PC: Grid Layout -->
       <div class="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         <router-link v-for="(post, index) in recentPosts" :key="post.slug" :to="`/blog/${post.slug}`"
-          class="group bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+          class="group bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-sm border border-slate-100 md:hover:shadow-xl transition-all duration-300 md:hover:-translate-y-2">
           <!-- Card Header with Animated Gradient -->
           <div class="h-2 bg-gradient-to-r bg-size-200 animate-gradient" :class="{
             'from-violet-600 via-purple-500 to-theme-600': (currentPage - 1) * postsPerPage + index === 0,
@@ -187,7 +187,7 @@ function estimateReadTime(content) {
 
           <div class="p-4 sm:p-5 md:p-7">
             <h3
-              class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 leading-tight group-hover:text-theme-600 transition-colors line-clamp-2">
+              class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 leading-tight md:group-hover:text-theme-600 transition-colors line-clamp-2">
               {{ post.title }}
             </h3>
             <p class="text-sm sm:text-base text-slate-600 mb-4 sm:mb-5 line-clamp-3 leading-relaxed">
@@ -197,7 +197,7 @@ function estimateReadTime(content) {
             <!-- Tags -->
             <div class="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-5">
               <span v-for="tag in (post.tags || [])" :key="tag" :class="getCategoryClass(tag)"
-                class="inline-block px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-medium rounded-full border transition-all duration-200 hover:shadow-sm hover:scale-105">
+                class="inline-block px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-medium rounded-full border transition-all duration-200 md:hover:shadow-sm md:hover:scale-105">
                 {{ tag }}
               </span>
             </div>

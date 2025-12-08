@@ -166,19 +166,19 @@ const contributions = [
         <div
           class="flex flex-col sm:flex-row sm:flex-wrap justify-center md:justify-start gap-2 sm:gap-3 md:gap-4 text-slate-600 text-xs sm:text-sm md:text-base">
           <a href="mailto:nattychaoo@gmail.com"
-            class="flex items-center gap-1.5 sm:gap-2 hover:text-theme-600 transition-colors">
+            class="flex items-center gap-1.5 sm:gap-2 md:hover:text-theme-600 transition-colors">
             <Mail class="w-3.5 h-3.5 sm:w-4 sm:h-4" /> nattychaoo@gmail.com
           </a>
           <a href="https://github.com/nattychao" target="_blank"
-            class="flex items-center gap-1.5 sm:gap-2 hover:text-theme-600 transition-colors">
+            class="flex items-center gap-1.5 sm:gap-2 md:hover:text-theme-600 transition-colors">
             <Github class="w-3.5 h-3.5 sm:w-4 sm:h-4" /> nattychao
           </a>
           <a href="https://linkedin.com/in/nattychao" target="_blank"
-            class="flex items-center gap-1.5 sm:gap-2 hover:text-theme-600 transition-colors">
+            class="flex items-center gap-1.5 sm:gap-2 md:hover:text-theme-600 transition-colors">
             <Linkedin class="w-3.5 h-3.5 sm:w-4 sm:h-4" /> nattychao
           </a>
           <a href="https://nattychao.github.io" target="_blank"
-            class="flex items-center gap-1.5 sm:gap-2 hover:text-theme-600 transition-colors">
+            class="flex items-center gap-1.5 sm:gap-2 md:hover:text-theme-600 transition-colors">
             <Globe class="w-3.5 h-3.5 sm:w-4 sm:h-4" /> nattychao.github.io
           </a>
         </div>
@@ -302,7 +302,7 @@ const contributions = [
               <!-- Additional Info -->
               <div v-if="contribution.url" class="mb-2 sm:mb-3">
                 <a :href="contribution.url" target="_blank"
-                  class="text-theme-600 hover:underline text-sm sm:text-base flex items-center gap-1.5">
+                  class="text-theme-600 md:hover:underline text-sm sm:text-base flex items-center gap-1.5">
                   <Globe class="w-3.5 h-3.5" /> {{ contribution.url }}
                 </a>
               </div>

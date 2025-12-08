@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { ArrowRight } from 'lucide-vue-next'
+import { RouterLink } from 'vue-router'
 import { projects } from '@/data/projects.js'
 import { useToast } from '@/composables/useToast.js'
 
@@ -22,7 +23,11 @@ const handleResize = () => {
 // Method to open project link or show toast
 const openProjectLink = (url) => {
   if (url) {
-    window.open(url, '_blank')
+    // 外部链接在新标签页打开
+    if (!url.startsWith('/')) {
+      window.open(url, '_blank')
+    }
+    // 内部链接通过RouterLink处理，不需要额外操作
   } else {
     // Show toast notification using custom toast component with info style
     showToast('功能开发中', 'info')
@@ -30,6 +35,7 @@ const openProjectLink = (url) => {
 }
 
 onMounted(() => {
+  // 监听窗口大小变化
   handleResize()
   window.addEventListener('resize', handleResize)
 })
@@ -47,22 +53,32 @@ onBeforeUnmount(() => {
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-      <div v-for="project in projects" :key="project.title" class="group">
-        <div class="relative overflow-hidden rounded-xl sm:rounded-2xl mb-3 sm:mb-4 aspect-video">
+      <div v-for="(project, index) in projects" :key="project.title" v-motion :initial="{ opacity: 0, y: 50 }"
+        :enter="{ opacity: 1, y: 0, transition: { duration: 500, delay: index * 100, ease: 'easeOut' } }" class="group">
+        <div class="relative overflow-hidden rounded-xl sm:rounded-2xl mb-3 sm:mb-4 aspect-video bg-slate-100">
           <img :src="project.image" :alt="project.title"
-            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            class="w-full h-full object-cover transition-transform duration-500 md:group-hover:scale-105" />
           <div
-            class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-            <span
-              class="text-white font-semibold border border-white/30 bg-white/10 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-full cursor-pointer hover:bg-white/20 transition-colors text-sm sm:text-base"
+            class="absolute inset-0 bg-black/50 opacity-0 md:group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <!-- 内部链接使用RouterLink，外部链接使用span -->
+            <RouterLink v-if="project.href && project.href.startsWith('/')" :to="project.href"
+              class="text-white font-semibold border border-white/30 bg-white/10 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-full cursor-pointer md:hover:bg-white/20 transition-colors text-sm sm:text-base">
+              查看详情
+            </RouterLink>
+            <button v-else
+              class="text-white font-semibold border border-white/30 bg-white/10 backdrop-blur-sm px-3 sm:px-4 py-2 rounded-full cursor-pointer md:hover:bg-white/20 transition-colors text-sm sm:text-base"
               @click="openProjectLink(project.href)">
               查看详情
-            </span>
+            </button>
           </div>
         </div>
+        <!-- 项目标题也添加链接 -->
         <h3
-          class="text-lg sm:text-xl font-bold text-slate-900 mb-1.5 sm:mb-2 group-hover:text-theme-600 transition-colors">
-          {{ project.title }}
+          class="text-lg sm:text-xl font-bold text-slate-900 mb-1.5 sm:mb-2 md:group-hover:text-theme-600 transition-colors">
+          <RouterLink v-if="project.href && project.href.startsWith('/')" :to="project.href" class="block">
+            {{ project.title }}
+          </RouterLink>
+          <span v-else>{{ project.title }}</span>
         </h3>
         <p class="text-sm sm:text-base text-slate-600 mb-2 sm:mb-3 line-clamp-2">{{ project.description }}</p>
         <div class="flex flex-wrap gap-1.5 sm:gap-2">

@@ -4,14 +4,16 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1 class="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2 sm:mb-4 md:mb-6">
         <a href="https://github.com/nattychao?tab=repositories" target="_blank"
-          class="text-slate-900 hover:text-theme-600 transition-colors">
+          class="text-slate-900 md:hover:text-theme-600 transition-colors">
           我的GitHub公开仓库
         </a>
       </h1>
 
       <!-- 加载状态 -->
-      <div v-if="loading && repos.length === 0" class="text-center py-16 sm:py-20">
-        <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-theme-600 mx-auto"></div>
+      <div v-if="loading && repos.length === 0"
+        class="fixed inset-0 flex flex-col justify-center items-center bg-white/80 z-50">
+        <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-theme-600 mb-4"></div>
+        <p class="text-slate-600">加载中...</p>
       </div>
 
       <!-- 错误状态 -->
@@ -28,7 +30,7 @@
           无法获取GitHub仓库数据，请稍后重试
         </p>
         <button @click="loadRepos"
-          class="px-4 py-2 bg-white border border-slate-100 rounded-lg text-sm font-medium text-slate-700 hover:bg-theme-50 hover:text-theme-600 hover:border-theme-200 transition-colors shadow-sm">
+          class="px-4 py-2 bg-white border border-slate-100 rounded-lg text-sm font-medium text-slate-700 md:hover:bg-theme-50 md:hover:text-theme-600 md:hover:border-theme-200 transition-colors shadow-sm">
           重新加载
         </button>
       </div>
@@ -40,7 +42,7 @@
           <!-- 类型选择器 -->
           <div id="type-dropdown" class="relative">
             <button @click="toggleDropdown('type')"
-              class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-1">
+              class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 md:hover:bg-slate-50 transition-colors flex items-center gap-1">
               {{ currentTypeText }}
               <svg class="w-4 h-4 text-slate-500 transition-transform" :class="isTypeOpen ? 'rotate-180' : ''"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,7 +53,7 @@
             <div v-if="isTypeOpen"
               class="absolute left-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg overflow-hidden z-50 min-w-[120px]">
               <div v-for="option in typeOptions" :key="option.value"
-                class="px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer transition-colors"
+                class="px-3 py-2 text-sm text-slate-700 md:hover:bg-slate-50 cursor-pointer transition-colors"
                 @click="selectType(option.value)">
                 {{ option.label }}
               </div>
@@ -61,7 +63,7 @@
           <!-- 语言选择器 -->
           <div id="language-dropdown" class="relative">
             <button @click="toggleDropdown('language')"
-              class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-1">
+              class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 md:hover:bg-slate-50 transition-colors flex items-center gap-1">
               {{ filters.language || 'All Languages' }}
               <svg class="w-4 h-4 text-slate-500 transition-transform" :class="isLanguageOpen ? 'rotate-180' : ''"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,7 +74,7 @@
             <div v-if="isLanguageOpen"
               class="absolute left-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg overflow-hidden z-50 min-w-[150px] max-h-60 overflow-y-auto">
               <div v-for="language in uniqueLanguages" :key="language"
-                class="px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer transition-colors flex items-center gap-2"
+                class="px-3 py-2 text-sm text-slate-700 md:hover:bg-slate-50 cursor-pointer transition-colors flex items-center gap-2"
                 @click="selectLanguage(language)">
                 <span v-if="(language === 'All' && !filters.language) || filters.language === language"
                   class="w-4 h-4 text-theme-600">
@@ -91,7 +93,7 @@
           <!-- 排序选择器 -->
           <div id="sort-dropdown" class="relative">
             <button @click="toggleDropdown('sort')"
-              class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-1">
+              class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 md:hover:bg-slate-50 transition-colors flex items-center gap-1">
               {{ currentSortText }}
               <svg class="w-4 h-4 text-slate-500 transition-transform" :class="isSortOpen ? 'rotate-180' : ''"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -102,7 +104,7 @@
             <div v-if="isSortOpen"
               class="absolute left-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg overflow-hidden z-50 min-w-[150px]">
               <div v-for="option in sortOptions" :key="option.value"
-                class="px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer transition-colors flex items-center gap-2"
+                class="px-3 py-2 text-sm text-slate-700 md:hover:bg-slate-50 cursor-pointer transition-colors flex items-center gap-2"
                 @click="selectSort(option.value)">
                 <span v-if="filters.sort === option.value" class="w-4 h-4 text-theme-600">
                   <svg fill="currentColor" viewBox="0 0 20 20">
@@ -126,13 +128,14 @@
         <!-- 仓库列表 -->
         <div v-if="repos.length > 0" class="space-y-3">
           <div v-for="repo in repos" :key="repo.id"
-            class="bg-white rounded-lg border border-slate-100 cursor-pointer overflow-hidden hover:scale-[0.98] transition-transform duration-200"
+            class="bg-white rounded-lg border border-slate-100 cursor-pointer overflow-hidden md:hover:scale-[0.98] transition-transform duration-200"
             @click="navigateToRepo(repo.html_url)">
             <div class="p-4 sm:p-5">
               <!-- 仓库名称和描述 -->
               <div class="mb-3">
                 <h2 class="text-lg font-bold text-slate-900 mb-1.5">
-                  <a :href="repo.html_url" target="_blank" class="hover:text-theme-600 transition-colors" @click.stop>
+                  <a :href="repo.html_url" target="_blank" class="md:hover:text-theme-600 transition-colors"
+                    @click.stop>
                     {{ repo.name }}
                   </a>
                 </h2>
@@ -172,7 +175,7 @@
                 </span>
                 <div class="ml-auto flex items-center gap-2">
                   <a :href="repo.html_url" target="_blank"
-                    class="text-theme-600 font-medium hover:text-theme-700 text-xs sm:text-sm" @click.stop>
+                    class="text-theme-600 font-medium md:hover:text-theme-700 text-xs sm:text-sm" @click.stop>
                     查看
                   </a>
                 </div>
@@ -195,7 +198,7 @@
             没有找到匹配的仓库，请尝试调整筛选条件或稍后重试
           </p>
           <button @click="resetFilters"
-            class="px-4 py-2 bg-white border border-slate-100 rounded-lg text-sm font-medium text-slate-700 hover:bg-theme-50 hover:text-theme-600 hover:border-theme-200 transition-colors shadow-sm">
+            class="px-4 py-2 bg-white border border-slate-100 rounded-lg text-sm font-medium text-slate-700 md:hover:bg-theme-50 md:hover:text-theme-600 md:hover:border-theme-200 transition-colors shadow-sm">
             重置筛选条件
           </button>
         </div>
@@ -206,7 +209,7 @@
           <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1"
             class="px-3 py-1.5 rounded-lg border transition-all duration-200 text-sm font-medium" :class="currentPage === 1
               ? 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed'
-              : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'">
+              : 'bg-white border-slate-200 text-slate-700 md:hover:bg-slate-50'">
             上一页
           </button>
 
@@ -214,7 +217,7 @@
           <div class="flex gap-1">
             <!-- 第一页 -->
             <button v-if="currentPage > 3" @click="changePage(1)"
-              class="w-9 h-9 rounded-lg border transition-all duration-200 text-sm font-medium bg-white border-slate-200 text-slate-700 hover:bg-slate-50">
+              class="w-9 h-9 rounded-lg border transition-all duration-200 text-sm font-medium bg-white border-slate-200 text-slate-700 md:hover:bg-slate-50">
               1
             </button>
 
@@ -226,7 +229,7 @@
             <button v-for="page in visiblePages" :key="page" @click="changePage(page)"
               class="w-9 h-9 rounded-lg transition-all duration-200 text-sm font-medium" :class="currentPage === page
                 ? 'bg-theme-600 text-white shadow-sm'
-                : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'">
+                : 'bg-white border border-slate-200 text-slate-700 md:hover:bg-slate-50'">
               {{ page }}
             </button>
 
@@ -236,16 +239,15 @@
 
             <!-- 最后一页 -->
             <button v-if="currentPage < totalPages - 2" @click="changePage(totalPages)"
-              class="w-9 h-9 rounded-lg border transition-all duration-200 text-sm font-medium bg-white border-slate-200 text-slate-700 hover:bg-slate-50">
-              {{ totalPages }}
-            </button>
+              class="w-9 h-9 rounded-lg border transition-all duration-200 text-sm font-medium bg-white border-slate-200 text-slate-700 md:hover:bg-slate-50">
+              {{ totalPages }}</button>
           </div>
 
           <!-- 下一页按钮 -->
           <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages"
             class="px-3 py-1.5 rounded-lg border transition-all duration-200 text-sm font-medium" :class="currentPage === totalPages
               ? 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed'
-              : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'">
+              : 'bg-white border-slate-200 text-slate-700 md:hover:bg-slate-50'">
             下一页
           </button>
         </div>

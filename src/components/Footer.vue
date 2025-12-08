@@ -45,7 +45,7 @@ const copyWeChatFromSocial = () => {
         <!-- Brand -->
         <div class="text-center md:text-left">
           <h3
-            class="text-xl sm:text-2xl font-bold text-slate-900 mb-3 sm:mb-4 cursor-pointer hover:text-theme-600 transition-colors">
+            class="text-xl sm:text-2xl font-bold text-slate-900 mb-3 sm:mb-4 cursor-pointer md:hover:text-theme-600 transition-colors">
             <a href="/github" class="block">
               个人作品集
             </a>
@@ -56,7 +56,7 @@ const copyWeChatFromSocial = () => {
           <div class="flex items-center justify-center md:justify-start mt-4 text-sm text-slate-500">
             <MapPin class="w-4 h-4 mr-1" />
             <a href="https://map.baidu.com/search/%E5%9C%86%E4%BC%A6%E5%A4%A7%E5%8E%A6/@13381212.069172671,3508106.77779075,19z?querytype=s&da_src=shareurl&wd=%E5%9C%86%E4%BC%A6%E5%A4%A7%E5%8E%A6&c=179&src=0&wd2=%E6%9D%AD%E5%B7%9E%E5%B8%82%E6%BB%A8%E6%B1%9F%E5%8C%BA&pn=0&sug=1&l=17&b=(13380041,3508425;13384923,3510911)&from=webmap&biz_forward=%7B%22scaler%22:2,%22styles%22:%22pl%22%7D&sug_forward=622fc00d249f4223c92915e9&device_ratio=2"
-              target="_blank" class="hover:text-theme-600 transition-colors cursor-pointer">
+              target="_blank" class="md:hover:text-theme-600 transition-colors cursor-pointer">
               中国 · 浙江 · 杭州
             </a>
           </div>
@@ -70,30 +70,30 @@ const copyWeChatFromSocial = () => {
           <ul class="space-y-2 sm:space-y-3 text-sm sm:text-base text-slate-600">
             <li class="flex items-center justify-center md:justify-start gap-2 group">
               <div
-                class="w-8 h-8 rounded-full bg-theme-50 flex items-center justify-center group-hover:bg-theme-100 transition-colors">
+                class="w-8 h-8 rounded-full bg-theme-50 flex items-center justify-center md:group-hover:bg-theme-100 transition-colors">
                 <Phone class="w-4 h-4 text-theme-600" />
               </div>
               <a href="tel:+8617681870768"
-                class="hover:text-theme-600 transition-colors relative inline-block after:content-[''] after:absolute after:w-0 after:h-[1px] after:bottom-0 after:left-0 after:bg-theme-600 after:transition-all after:duration-300 hover:after:w-full">+86
+                class="md:hover:text-theme-600 transition-colors relative inline-block after:content-[''] after:absolute after:w-0 after:h-[1px] after:bottom-0 after:left-0 after:bg-theme-600 after:transition-all after:duration-300 md:hover:after:w-full">+86
                 176 8187 0768</a>
             </li>
             <li class="flex items-center justify-center md:justify-start gap-2 group cursor-pointer"
               @click="copyWeChat">
               <div
-                class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center group-hover:bg-green-100 transition-colors">
+                class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center md:group-hover:bg-green-100 transition-colors">
                 <MessageCircle class="w-4 h-4 text-green-600" />
               </div>
               <span
-                class="hover:text-green-600 transition-colors relative inline-block after:content-[''] after:absolute after:w-0 after:h-[1px] after:bottom-0 after:left-0 after:bg-green-600 after:transition-all after:duration-300 hover:after:w-full cursor-pointer">WeChat:
+                class="md:hover:text-green-600 transition-colors relative inline-block after:content-[''] after:absolute after:w-0 after:h-[1px] after:bottom-0 after:left-0 after:bg-green-600 after:transition-all after:duration-300 md:hover:after:w-full cursor-pointer">WeChat:
                 nattychao</span>
             </li>
             <li class="flex items-center justify-center md:justify-start gap-2 group">
               <div
-                class="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center group-hover:bg-red-100 transition-colors">
+                class="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center md:group-hover:bg-red-100 transition-colors">
                 <Mail class="w-4 h-4 text-red-600" />
               </div>
               <a href="mailto:nattychaoo@gmail.com"
-                class="hover:text-red-600 transition-colors relative inline-block after:content-[''] after:absolute after:w-0 after:h-[1px] after:bottom-0 after:left-0 after:bg-red-600 after:transition-all after:duration-300 hover:after:w-full">nattychaoo@gmail.com</a>
+                class="md:hover:text-red-600 transition-colors relative inline-block after:content-[''] after:absolute after:w-0 after:h-[1px] after:bottom-0 after:left-0 after:bg-red-600 after:transition-all after:duration-300 md:hover:after:w-full">nattychaoo@gmail.com</a>
             </li>
           </ul>
         </div>
@@ -106,25 +106,25 @@ const copyWeChatFromSocial = () => {
           <div class="flex justify-center md:justify-start gap-3 sm:gap-4">
             <a href="https://github.com/nattychao" target="_blank" class="group">
               <div
-                class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-theme-600 group-hover:text-white transition-all duration-300 transform group-hover:scale-110">
+                class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 md:group-hover:bg-theme-600 md:group-hover:text-white transition-all duration-300 transform md:group-hover:scale-110">
                 <Github class="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
             </a>
             <div @click="copyWeChatFromSocial" class="group cursor-pointer">
               <div
-                class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-green-500 group-hover:text-white transition-all duration-300 transform group-hover:scale-110">
+                class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 md:group-hover:bg-green-500 md:group-hover:text-white transition-all duration-300 transform md:group-hover:scale-110">
                 <MessageCircle class="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
             </div>
             <a href="#" class="group">
               <div
-                class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-theme-400 group-hover:text-white transition-all duration-300 transform group-hover:scale-110">
+                class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 md:group-hover:bg-theme-400 md:group-hover:text-white transition-all duration-300 transform md:group-hover:scale-110">
                 <Twitter class="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
             </a>
             <a href="#" class="group">
               <div
-                class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-theme-600 group-hover:text-white transition-all duration-300 transform group-hover:scale-110">
+                class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 md:group-hover:bg-theme-600 md:group-hover:text-white transition-all duration-300 transform md:group-hover:scale-110">
                 <Linkedin class="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
             </a>

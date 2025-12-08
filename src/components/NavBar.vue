@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { Menu, X, Github, Mail, Phone, MessageCircle } from 'lucide-vue-next'
 import SideMenu from './SideMenu.vue'
@@ -79,6 +79,8 @@ const handleScroll = () => {
   isFullyScrolled.value = window.scrollY > secondThreshold
 }
 
+
+
 // 检查当前滚动位置
 const checkScrollPosition = () => {
   // 更新滚动位置
@@ -136,7 +138,7 @@ const navLinks = [
   { name: '项目', path: '/projects' },
   { name: '博客', path: '/blog' },
   { name: '壁纸', path: '/wallpapers' },
-  { name: 'jewellery', path: '/jewellery', icon: '/myjwfavicon.svg' },
+  { name: 'AI-BIO', path: '/ai-bio' },
 ]
 
 // 显示微信二维码
@@ -188,19 +190,32 @@ const toggleSideMenu = () => {
 
         <!-- Desktop Menu -->
         <div class="hidden md:flex space-x-8 items-center">
-          <RouterLink v-for="link in navLinks" :key="link.name" :to="link.path" :class="[
-            'font-medium transition-colors relative flex items-center',
-            !isHomePage
-              ? route.path === link.path ? 'text-theme-600' : 'text-slate-600 hover:text-theme-600'
-              : isFullyScrolled
-                ? route.path === link.path ? 'text-theme-600' : 'text-slate-600 hover:text-theme-600'
-                : route.path === link.path ? 'text-white' : 'text-white hover:text-white/80'
-          ]">
-            <!-- 选中指示器 -->
-            <span v-if="route.path === link.path" class="absolute -bottom-1 left-0 right-0 h-0.5 bg-current"></span>
-            <img v-if="link.icon" :src="link.icon" alt="link.name" class="w-6 h-6" />
-            <span v-else>{{ link.name }}</span>
-          </RouterLink>
+          <template v-for="link in navLinks" :key="link.name">
+            <!-- 内部链接使用RouterLink -->
+            <RouterLink v-if="!link.external" :to="link.path" :class="[
+              'font-medium transition-colors relative flex items-center',
+              !isHomePage
+                ? route.path === link.path ? 'text-theme-600' : 'text-slate-600 md:hover:text-theme-600'
+                : isFullyScrolled
+                  ? route.path === link.path ? 'text-theme-600' : 'text-slate-600 md:hover:text-theme-600'
+                  : route.path === link.path ? 'text-white' : 'text-white md:hover:text-white/80'
+            ]">
+              <!-- 选中指示器 -->
+              <span v-if="route.path === link.path" class="absolute -bottom-1 left-0 right-0 h-0.5 bg-current"></span>
+              <span>{{ link.name }}</span>
+            </RouterLink>
+            <!-- 外部链接使用a标签 -->
+            <a v-else :href="link.path" target="_blank" rel="noopener noreferrer" :class="[
+              'font-medium transition-colors relative flex items-center',
+              !isHomePage
+                ? 'text-slate-600 md:hover:text-theme-600'
+                : isFullyScrolled
+                  ? 'text-slate-600 md:hover:text-theme-600'
+                  : 'text-white md:hover:text-white/80'
+            ]">
+              <span>{{ link.name }}</span>
+            </a>
+          </template>
 
           <div :class="[
             'flex space-x-4 border-l pl-6',
@@ -213,40 +228,40 @@ const toggleSideMenu = () => {
             <a href="https://github.com/nattychao" target="_blank" :class="[
               'transition-colors',
               !isHomePage
-                ? 'text-slate-400 hover:text-slate-800'
+                ? 'text-slate-400 md:hover:text-slate-800'
                 : isFullyScrolled
-                  ? 'text-slate-400 hover:text-slate-800'
-                  : 'text-white/80 hover:text-white'
+                  ? 'text-slate-400 md:hover:text-slate-800'
+                  : 'text-white/80 md:hover:text-white'
             ]">
               <Github class="w-5 h-5" />
             </a>
             <a href="mailto:2439194386@qq.com" :class="[
               'transition-colors',
               !isHomePage
-                ? 'text-slate-400 hover:text-theme-600'
+                ? 'text-slate-400 md:hover:text-theme-600'
                 : isFullyScrolled
-                  ? 'text-slate-400 hover:text-theme-600'
-                  : 'text-white/80 hover:text-white'
+                  ? 'text-slate-400 md:hover:text-theme-600'
+                  : 'text-white/80 md:hover:text-white'
             ]">
               <Mail class="w-5 h-5" />
             </a>
             <a href="tel:+8617681870768" :class="[
               'transition-colors',
               !isHomePage
-                ? 'text-slate-400 hover:text-theme-600'
+                ? 'text-slate-400 md:hover:text-theme-600'
                 : isFullyScrolled
-                  ? 'text-slate-400 hover:text-theme-600'
-                  : 'text-white/80 hover:text-white'
+                  ? 'text-slate-400 md:hover:text-theme-600'
+                  : 'text-white/80 md:hover:text-white'
             ]">
               <Phone class="w-5 h-5" />
             </a>
             <a href="#" @click.prevent="showWeChatQR" :class="[
               'transition-colors',
               !isHomePage
-                ? 'text-slate-400 hover:text-theme-600'
+                ? 'text-slate-400 md:hover:text-theme-600'
                 : isFullyScrolled
-                  ? 'text-slate-400 hover:text-theme-600'
-                  : 'text-white/80 hover:text-white'
+                  ? 'text-slate-400 md:hover:text-theme-600'
+                  : 'text-white/80 md:hover:text-white'
             ]">
               <MessageCircle class="w-5 h-5" />
             </a>
@@ -258,10 +273,10 @@ const toggleSideMenu = () => {
           <button @click="toggleSideMenu" :class="[
             'focus:outline-none transition-colors',
             !isHomePage
-              ? 'text-slate-600 hover:text-slate-900'
+              ? 'text-slate-600 md:hover:text-slate-900'
               : isFullyScrolled
-                ? 'text-slate-600 hover:text-slate-900'
-                : 'text-white hover:text-white/80'
+                ? 'text-slate-600 md:hover:text-slate-900'
+                : 'text-white md:hover:text-white/80'
           ]">
             <Menu v-if="!isMenuOpen" class="w-6 h-6" />
             <X v-else class="w-6 h-6" />

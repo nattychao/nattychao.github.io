@@ -22,7 +22,7 @@
           :style="{ transform: `translateX(${translateX}%)` }">
           <!-- 图片卡片 -->
           <div v-for="(item, index) in infiniteImages" :key="index"
-            class="relative overflow-hidden flex-shrink-0 w-1/2 md:w-1/4 cursor-pointer group">
+            class="relative overflow-hidden flex-shrink-0 w-1/2 md:w-1/4 cursor-pointer group bg-slate-100">
             <img :src="item" alt="Jewellery Style"
               class="w-full h-full object-cover aspect-square transition-transform duration-500 group-hover:scale-110" />
             <!-- 悬停效果层 -->

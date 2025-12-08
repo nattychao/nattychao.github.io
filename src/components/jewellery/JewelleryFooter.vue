@@ -36,7 +36,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7" />
                         </svg>
                     </a>
-                    <div class="mt-6">
+                    <div class="mt-6 bg-slate-100 rounded-lg overflow-hidden">
                         <a href="#" class="block hover:opacity-80 transition-opacity">
                             <img src="https://art.my-jewellery.com/m/3dbbeadac529010d/original/WEB-boutiques.jpg"
                                 alt="Boutiques" class="w-full h-auto object-cover" />

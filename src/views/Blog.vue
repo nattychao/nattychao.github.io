@@ -244,7 +244,7 @@ onBeforeUnmount(() => {
                 'px-3 sm:px-4 py-2 font-medium text-xs sm:text-sm transition-all duration-200',
                 selectedCategory === category.id
                   ? 'text-theme-600'
-                  : 'text-slate-600 hover:text-slate-900'
+                  : 'text-slate-600 md:hover:text-slate-900'
               ]">
               {{ category.name }}
             </button>
@@ -267,8 +267,9 @@ onBeforeUnmount(() => {
       </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-      <div v-if="loading" class="text-center py-16 sm:py-20">
-        <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-theme-600 mx-auto"></div>
+      <div v-if="loading" class="fixed inset-0 flex flex-col justify-center items-center bg-white/80 z-50">
+        <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-theme-600 mb-4"></div>
+        <p class="text-slate-600">加载中...</p>
       </div>
       <div v-else>
         <!-- 当前分类的博客数量 -->
@@ -281,20 +282,21 @@ onBeforeUnmount(() => {
         <div v-if="filteredPosts.length > 0"
           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           <article v-for="post in filteredPosts" :key="post.slug"
-            class="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-100 hover:shadow-md transition-all hover:-translate-y-1 flex flex-col cursor-pointer"
+            class="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-100 md:hover:shadow-md transition-all md:hover:-translate-y-1 flex flex-col cursor-pointer"
             @click="navigateToPost(post.slug)">
             <!-- 分类标签 -->
             <div class="flex flex-wrap gap-1.5 sm:gap-2 mb-2 sm:mb-3">
-              <span v-for="tag in post.tags || []" :key="tag" :class="getCategoryClass(tag)"
-                class="inline-block px-2 sm:px-3 py-1 text-xs font-medium rounded-full border transition-all duration-200 hover:shadow-sm">
-                {{ tag }}
-              </span>
+              <span v-for="tag in post.tags || []" :key="tag" :class="[
+                getCategoryClass(tag),
+                'inline-block px-2 sm:px-3 py-1 text-xs font-medium rounded-full border transition-all duration-200 md:hover:shadow-sm'
+              ]">
+                {{ tag }}</span>
             </div>
             <div class="text-xs sm:text-sm text-slate-500 mb-1.5 sm:mb-2">
               {{ new Date(post.date).toLocaleDateString() }}
             </div>
             <h2 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3">
-              <RouterLink :to="'/blog/' + post.slug" class="hover:text-theme-600 transition-colors" @click.stop>
+              <RouterLink :to="'/blog/' + post.slug" class="md:hover:text-theme-600 transition-colors" @click.stop>
                 {{ post.title }}
               </RouterLink>
             </h2>
@@ -302,7 +304,7 @@ onBeforeUnmount(() => {
               {{ post.description }}
             </p>
             <RouterLink :to="'/blog/' + post.slug"
-              class="text-theme-600 font-medium hover:text-theme-700 inline-flex items-center gap-1 mt-auto text-sm sm:text-base"
+              class="text-theme-600 font-medium md:hover:text-theme-700 inline-flex items-center gap-1 mt-auto text-sm sm:text-base"
               @click.stop>
               阅读更多 &rarr;
             </RouterLink>
@@ -314,7 +316,7 @@ onBeforeUnmount(() => {
             暂无{{ selectedCategory }}相关的博客
           </div>
           <button @click="handleTabClick('全部')"
-            class="px-3 sm:px-4 py-2 bg-theme-600 text-white rounded-full hover:bg-theme-700 transition-colors text-sm sm:text-base">
+            class="px-3 sm:px-4 py-2 bg-theme-600 text-white rounded-full md:hover:bg-theme-700 transition-colors text-sm sm:text-base">
             查看全部博客
           </button>
         </div>

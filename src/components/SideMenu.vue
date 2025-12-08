@@ -36,7 +36,7 @@
             <p class="text-theme-100 text-xs sm:text-sm mt-1">探索更多精彩内容</p>
           </div>
           <button @click="closeMenu"
-            class="p-1.5 sm:p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all duration-200 backdrop-blur-sm">
+            class="p-1.5 sm:p-2 rounded-full bg-white/20 text-white md:hover:bg-white/30 transition-all duration-200 backdrop-blur-sm">
             <X class="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
@@ -48,23 +48,40 @@
           <h3 class="text-xs font-semibold text-slate-900 uppercase tracking-wider">导航</h3>
         </div>
         <div class="space-y-1 px-2">
-          <RouterLink v-for="link in navLinks" :key="link.name" :to="link.path"
-            class="group flex items-center px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium rounded-lg sm:rounded-xl transition-all duration-200"
-            :class="isActiveLink(link.path)
-              ? 'bg-gradient-to-r from-theme-50 to-purple-50 text-theme-700 shadow-sm'
-              : 'text-slate-700 hover:bg-slate-50 hover:text-theme-600'" @click="closeMenu">
-            <span
-              class="w-7 h-7 sm:w-8 sm:h-8 mr-2 sm:mr-3 flex items-center justify-center rounded-lg transition-all duration-200"
+          <template v-for="link in navLinks" :key="link.name">
+            <!-- 内部链接使用RouterLink -->
+            <RouterLink v-if="!link.external" :to="link.path"
+              class="group flex items-center px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium rounded-lg sm:rounded-xl transition-all duration-200"
               :class="isActiveLink(link.path)
-                ? 'bg-gradient-to-r from-theme-500 to-purple-600 text-white'
-                : 'bg-slate-100 text-slate-500 group-hover:bg-theme-100 group-hover:text-theme-600'">
-              <img v-if="link.icon" :src="link.icon" alt="link.name" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              <component v-else :is="getMenuIcon(link.name)" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            </span>
-            <span class="flex-1 text-sm sm:text-base">{{ link.name }}</span>
-            <ChevronRight class="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-200"
-              :class="isActiveLink(link.path) ? 'text-theme-600' : 'text-slate-400 group-hover:text-theme-600'" />
-          </RouterLink>
+                ? 'bg-gradient-to-r from-theme-50 to-purple-50 text-theme-700 shadow-sm'
+                : 'text-slate-700 md:hover:bg-slate-50 md:hover:text-theme-600'" @click="closeMenu">
+              <span
+                class="w-7 h-7 sm:w-8 sm:h-8 mr-2 sm:mr-3 flex items-center justify-center rounded-lg transition-all duration-200"
+                :class="isActiveLink(link.path)
+                  ? 'bg-gradient-to-r from-theme-500 to-purple-600 text-white'
+                  : 'bg-slate-100 text-slate-500 md:group-hover:bg-theme-100 md:group-hover:text-theme-600'">
+                <img v-if="link.icon" :src="link.icon" alt="link.name" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <component v-else :is="getMenuIcon(link.name)" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              </span>
+              <span class="flex-1 text-sm sm:text-base">{{ link.name }}</span>
+              <ChevronRight class="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-200"
+                :class="isActiveLink(link.path) ? 'text-theme-600' : 'text-slate-400 md:group-hover:text-theme-600'" />
+            </RouterLink>
+            <!-- 外部链接使用a标签 -->
+            <a v-else :href="link.path" target="_blank" rel="noopener noreferrer"
+              class="group flex items-center px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base font-medium rounded-lg sm:rounded-xl transition-all duration-200"
+              :class="'text-slate-700 md:hover:bg-slate-50 md:hover:text-theme-600'" @click="closeMenu">
+              <span
+                class="w-7 h-7 sm:w-8 sm:h-8 mr-2 sm:mr-3 flex items-center justify-center rounded-lg transition-all duration-200"
+                :class="'bg-slate-100 text-slate-500 md:group-hover:bg-theme-100 md:group-hover:text-theme-600'">
+                <img v-if="link.icon" :src="link.icon" alt="link.name" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <component v-else :is="getMenuIcon(link.name)" class="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              </span>
+              <span class="flex-1 text-sm sm:text-base">{{ link.name }}</span>
+              <ChevronRight class="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-200"
+                :class="'text-slate-400 md:group-hover:text-theme-600'" />
+            </a>
+          </template>
         </div>
       </div>
 
@@ -75,27 +92,28 @@
         </div>
         <div class="grid grid-cols-2 gap-2 sm:gap-3">
           <a href="https://github.com/nattychao" target="_blank"
-            class="group relative flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-slate-50 to-white shadow-sm border border-slate-100 hover:shadow-lg hover:border-theme-200 transition-all duration-300 overflow-hidden">
+            class="group relative flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-slate-50 to-white shadow-sm border border-slate-100 md:hover:shadow-lg md:hover:border-theme-200 transition-all duration-300 overflow-hidden">
             <!-- 背景装饰 -->
             <div
-              class="absolute inset-0 bg-gradient-to-br from-theme-500/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              class="absolute inset-0 bg-gradient-to-br from-theme-500/5 to-purple-600/5 opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
             </div>
 
             <!-- 图标容器 -->
             <div
-              class="relative w-10 h-10 sm:w-12 sm:h-12 mb-1.5 sm:mb-2 flex items-center justify-center rounded-lg sm:rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 group-hover:from-theme-100 group-hover:to-purple-100 transition-all duration-300 shadow-sm group-hover:shadow-md">
-              <Github class="w-5 h-5 sm:w-6 sm:h-6 text-slate-600 group-hover:text-theme-600 transition-colors" />
+              class="relative w-10 h-10 sm:w-12 sm:h-12 mb-1.5 sm:mb-2 flex items-center justify-center rounded-lg sm:rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 md:group-hover:from-theme-100 md:group-hover:to-purple-100 transition-all duration-300 shadow-sm md:group-hover:shadow-md">
+              <Github class="w-5 h-5 sm:w-6 sm:h-6 text-slate-600 md:group-hover:text-theme-600 transition-colors" />
             </div>
 
             <!-- 文字内容 -->
             <div class="text-center relative z-10">
-              <div class="text-xs sm:text-sm font-medium text-slate-900 group-hover:text-theme-700 transition-colors">
+              <div
+                class="text-xs sm:text-sm font-medium text-slate-900 md:group-hover:text-theme-700 transition-colors">
                 GitHub</div>
-              <div class="text-xs text-slate-500 group-hover:text-theme-500 transition-colors mt-0.5">查看项目</div>
+              <div class="text-xs text-slate-500 md:group-hover:text-theme-500 transition-colors mt-0.5">查看项目</div>
             </div>
           </a>
           <a href="mailto:2439194386@qq.com"
-            class="group relative flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-slate-50 to-white shadow-sm border border-slate-100 hover:shadow-lg hover:border-theme-200 transition-all duration-300 overflow-hidden">
+            class="group relative flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-slate-50 to-white shadow-sm border border-slate-100 md:hover:shadow-lg md:hover:border-theme-200 transition-all duration-300 overflow-hidden">
             <!-- 背景装饰 -->
             <div
               class="absolute inset-0 bg-gradient-to-br from-theme-500/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -103,19 +121,20 @@
 
             <!-- 图标容器 -->
             <div
-              class="relative w-10 h-10 sm:w-12 sm:h-12 mb-1.5 sm:mb-2 flex items-center justify-center rounded-lg sm:rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 group-hover:from-theme-100 group-hover:to-purple-100 transition-all duration-300 shadow-sm group-hover:shadow-md">
-              <Mail class="w-5 h-5 sm:w-6 sm:h-6 text-slate-600 group-hover:text-theme-600 transition-colors" />
+              class="relative w-10 h-10 sm:w-12 sm:h-12 mb-1.5 sm:mb-2 flex items-center justify-center rounded-lg sm:rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 md:group-hover:from-theme-100 md:group-hover:to-purple-100 transition-all duration-300 shadow-sm md:group-hover:shadow-md">
+              <Mail class="w-5 h-5 sm:w-6 sm:h-6 text-slate-600 md:group-hover:text-theme-600 transition-colors" />
             </div>
 
             <!-- 文字内容 -->
             <div class="text-center relative z-10">
-              <div class="text-xs sm:text-sm font-medium text-slate-900 group-hover:text-theme-700 transition-colors">
+              <div
+                class="text-xs sm:text-sm font-medium text-slate-900 md:group-hover:text-theme-700 transition-colors">
                 邮件</div>
-              <div class="text-xs text-slate-500 group-hover:text-theme-500 transition-colors mt-0.5">发送邮件</div>
+              <div class="text-xs text-slate-500 md:group-hover:text-theme-500 transition-colors mt-0.5">发送邮件</div>
             </div>
           </a>
           <a href="tel:+8617681870768"
-            class="group relative flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-slate-50 to-white shadow-sm border border-slate-100 hover:shadow-lg hover:border-theme-200 transition-all duration-300 overflow-hidden">
+            class="group relative flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-slate-50 to-white shadow-sm border border-slate-100 md:hover:shadow-lg md:hover:border-theme-200 transition-all duration-300 overflow-hidden">
             <!-- 背景装饰 -->
             <div
               class="absolute inset-0 bg-gradient-to-br from-theme-500/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -123,19 +142,20 @@
 
             <!-- 图标容器 -->
             <div
-              class="relative w-10 h-10 sm:w-12 sm:h-12 mb-1.5 sm:mb-2 flex items-center justify-center rounded-lg sm:rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 group-hover:from-theme-100 group-hover:to-purple-100 transition-all duration-300 shadow-sm group-hover:shadow-md">
-              <Phone class="w-5 h-5 sm:w-6 sm:h-6 text-slate-600 group-hover:text-theme-600 transition-colors" />
+              class="relative w-10 h-10 sm:w-12 sm:h-12 mb-1.5 sm:mb-2 flex items-center justify-center rounded-lg sm:rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 md:group-hover:from-theme-100 md:group-hover:to-purple-100 transition-all duration-300 shadow-sm md:group-hover:shadow-md">
+              <Phone class="w-5 h-5 sm:w-6 sm:h-6 text-slate-600 md:group-hover:text-theme-600 transition-colors" />
             </div>
 
             <!-- 文字内容 -->
             <div class="text-center relative z-10">
-              <div class="text-xs sm:text-sm font-medium text-slate-900 group-hover:text-theme-700 transition-colors">
+              <div
+                class="text-xs sm:text-sm font-medium text-slate-900 md:group-hover:text-theme-700 transition-colors">
                 电话</div>
-              <div class="text-xs text-slate-500 group-hover:text-theme-500 transition-colors mt-0.5">直接联系</div>
+              <div class="text-xs text-slate-500 md:group-hover:text-theme-500 transition-colors mt-0.5">直接联系</div>
             </div>
           </a>
           <a href="#" @click.prevent="showWeChatQR"
-            class="group relative flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-slate-50 to-white shadow-sm border border-slate-100 hover:shadow-lg hover:border-theme-200 transition-all duration-300 overflow-hidden">
+            class="group relative flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-slate-50 to-white shadow-sm border border-slate-100 md:hover:shadow-lg md:hover:border-theme-200 transition-all duration-300 overflow-hidden">
             <!-- 背景装饰 -->
             <div
               class="absolute inset-0 bg-gradient-to-br from-theme-500/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -143,16 +163,17 @@
 
             <!-- 图标容器 -->
             <div
-              class="relative w-10 h-10 sm:w-12 sm:h-12 mb-1.5 sm:mb-2 flex items-center justify-center rounded-lg sm:rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 group-hover:from-theme-100 group-hover:to-purple-100 transition-all duration-300 shadow-sm group-hover:shadow-md">
+              class="relative w-10 h-10 sm:w-12 sm:h-12 mb-1.5 sm:mb-2 flex items-center justify-center rounded-lg sm:rounded-xl bg-gradient-to-br from-slate-100 to-slate-50 md:group-hover:from-theme-100 md:group-hover:to-purple-100 transition-all duration-300 shadow-sm md:group-hover:shadow-md">
               <MessageCircle
-                class="w-5 h-5 sm:w-6 sm:h-6 text-slate-600 group-hover:text-theme-600 transition-colors" />
+                class="w-5 h-5 sm:w-6 sm:h-6 text-slate-600 md:group-hover:text-theme-600 transition-colors" />
             </div>
 
             <!-- 文字内容 -->
             <div class="text-center relative z-10">
-              <div class="text-xs sm:text-sm font-medium text-slate-900 group-hover:text-theme-700 transition-colors">
+              <div
+                class="text-xs sm:text-sm font-medium text-slate-900 md:group-hover:text-theme-700 transition-colors">
                 微信</div>
-              <div class="text-xs text-slate-500 group-hover:text-theme-500 transition-colors mt-0.5">扫码添加</div>
+              <div class="text-xs text-slate-500 md:group-hover:text-theme-500 transition-colors mt-0.5">扫码添加</div>
             </div>
           </a>
         </div>
@@ -164,7 +185,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { X, Github, Mail, Phone, MessageCircle, Home, Briefcase, BookOpen, FileText, Image, Heart, ChevronRight, Settings } from 'lucide-vue-next'
+import { X, Github, Mail, Phone, MessageCircle, Home, Briefcase, BookOpen, FileText, Image, Heart, ChevronRight, Settings, Brain, Bot, Globe } from 'lucide-vue-next'
 import { useToast } from '@/composables/useToast.js'
 
 const props = defineProps({
@@ -196,8 +217,8 @@ const navLinks = [
   { name: '项目', path: '/projects' },
   { name: '博客', path: '/blog' },
   { name: '壁纸', path: '/wallpapers' },
-  { name: '工具', path: '/github' }
-  // { name: 'jewellery', path: '/jewellery', icon: '/myjwfavicon.svg' },
+  { name: 'AI-BIO', path: '/ai-bio' },
+  { name: '网站导航', path: '/websites' },
 ]
 
 // 关闭菜单
@@ -219,7 +240,8 @@ const getMenuIcon = (name) => {
     '壁纸': Image,
     '简历': FileText,
     '工具': Settings,
-    'jewellery': Heart
+    'AI-BIO': Bot,
+    '网站导航': Globe
   }
   return icons[name] || Home
 }

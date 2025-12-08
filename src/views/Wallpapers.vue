@@ -387,7 +387,7 @@ onBeforeUnmount(() => {
                 'px-3 sm:px-4 py-2 font-medium text-xs sm:text-sm transition-all duration-200',
                 currentSource === source.value
                   ? 'text-theme-600'
-                  : 'text-slate-600 hover:text-slate-900'
+                  : 'text-slate-600 md:hover:text-slate-900'
               ]">
               {{ source.name }}
             </button>
@@ -409,7 +409,7 @@ onBeforeUnmount(() => {
               'px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 border',
               currentTag === tag.value
                 ? 'bg-theme-600 text-white border-theme-600'
-                : 'bg-white text-slate-600 border-slate-200 hover:border-theme-300 hover:text-theme-600'
+                : 'bg-white text-slate-600 border-slate-200 md:hover:border-theme-300 md:hover:text-theme-600'
             ]">
               {{ tag.name }}
             </button>
@@ -423,8 +423,9 @@ onBeforeUnmount(() => {
       </div>
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-      <div v-if="loading" class="text-center py-16 sm:py-20">
-        <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-theme-600 mx-auto"></div>
+      <div v-if="loading" class="fixed inset-0 flex flex-col justify-center items-center bg-white/80 z-50">
+        <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-theme-600 mb-4"></div>
+        <p class="text-slate-600">加载中...</p>
       </div>
       <div v-else>
         <!-- 当前分类的壁纸数量 -->
@@ -435,10 +436,10 @@ onBeforeUnmount(() => {
         <div v-if="wallpapers.length > 0"
           class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 sm:gap-4 md:gap-5">
           <div v-for="wallpaper in wallpapers" :key="wallpaper.id" :id="`wallpaper-${wallpaper.id}`"
-            class="group relative overflow-hidden rounded-xl sm:rounded-2xl shadow-sm border border-slate-100 hover:shadow-lg transition-all duration-300">
+            class="group relative overflow-hidden rounded-xl sm:rounded-2xl shadow-sm border border-slate-100 md:hover:shadow-lg transition-all duration-300">
             <!-- 壁纸图片 -->
             <div class="overflow-hidden bg-slate-100" :style="getImageStyle(wallpaper)">
-              <div class="relative w-full h-full group-hover:scale-105 transition-transform duration-500">
+              <div class="relative w-full h-full md:group-hover:scale-105 transition-transform duration-500">
                 <!-- 直接加载原图 特别注意一个非常经典的**防盗链（Hotlink Protection）**问题。-->
                 <img :src="wallpaper.thumbnail" referrerpolicy="no-referrer" :alt="wallpaper.title || 'Wallpaper'"
                   class="absolute inset-0 w-full h-full object-cover" />
@@ -457,11 +458,11 @@ onBeforeUnmount(() => {
 
                 <!-- 桌面设备鼠标移入浮层 -->
                 <div
-                  class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 hidden sm:flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  class="absolute inset-0 bg-black bg-opacity-0 md:group-hover:bg-opacity-30 transition-all duration-300 hidden sm:flex items-center justify-center opacity-0 md:group-hover:opacity-100">
                   <div class="flex gap-2 sm:gap-3">
                     <!-- 下载按钮 -->
                     <button @click.stop="handleDownload(wallpaper)"
-                      class="bg-white/90 hover:bg-white text-slate-800 px-3 py-2 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-1"
+                      class="bg-white/90 md:hover:bg-white text-slate-800 px-3 py-2 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-1"
                       title="下载壁纸">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -473,7 +474,7 @@ onBeforeUnmount(() => {
 
                     <!-- 预览按钮 -->
                     <button @click.stop="handlePreview(wallpaper)"
-                      class="bg-white/90 hover:bg-white text-slate-800 px-3 py-2 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-1"
+                      class="bg-white/90 md:hover:bg-white text-slate-800 px-3 py-2 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-1"
                       title="预览壁纸">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -508,7 +509,7 @@ onBeforeUnmount(() => {
             'px-3 py-2 rounded-lg text-sm font-medium transition-all',
             currentPage === 0
               ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-              : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-theme-300'
+              : 'bg-white text-slate-700 border border-slate-200 md:hover:bg-slate-50 md:hover:border-theme-300'
           ]">
             上一页
           </button>
@@ -527,7 +528,7 @@ onBeforeUnmount(() => {
             'px-3 py-2 rounded-lg text-sm font-medium transition-all',
             currentPage === page
               ? 'bg-theme-600 text-white'
-              : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-theme-300'
+              : 'bg-white text-slate-700 border border-slate-200 md:hover:bg-slate-50 md:hover:border-theme-300'
           ]">
             {{ page + 1 }}
           </button>
@@ -558,7 +559,7 @@ onBeforeUnmount(() => {
             暂无壁纸
           </div>
           <button @click="handleTabClick('')"
-            class="px-3 sm:px-4 py-2 bg-theme-600 text-white rounded-full hover:bg-theme-700 transition-colors text-sm sm:text-base">
+            class="px-3 sm:px-4 py-2 bg-theme-600 text-white rounded-full md:hover:bg-theme-700 transition-colors text-sm sm:text-base">
             查看全部壁纸
           </button>
         </div>

@@ -36,12 +36,12 @@ const heroBgImage = 'https://images.unsplash.com/photo-1727434032773-af3cd98375b
         </p>
         <div class="flex flex-row justify-center gap-2 sm:gap-3 md:gap-5 px-4">
           <router-link to="/resume"
-            class="px-4 sm:px-5 md:px-8 py-2 sm:py-3 md:py-4 bg-white text-theme-900 rounded-full font-bold hover:bg-slate-100 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 flex items-center justify-center gap-2 text-xs sm:text-sm md:text-base whitespace-nowrap">
+            class="px-4 sm:px-5 md:px-8 py-2 sm:py-3 md:py-4 bg-white text-theme-900 rounded-full font-bold md:hover:bg-slate-100 transition-all shadow-xl md:hover:shadow-2xl md:hover:-translate-y-1 flex items-center justify-center gap-2 text-xs sm:text-sm md:text-base whitespace-nowrap">
             查看简历
             <ArrowRight class="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" />
           </router-link>
           <router-link to="/blog"
-            class="px-4 sm:px-5 md:px-8 py-2 sm:py-3 md:py-4 bg-white/10 backdrop-blur-md text-white border border-white/30 rounded-full font-bold hover:bg-white/20 transition-all hover:-translate-y-1 flex items-center justify-center text-xs sm:text-sm md:text-base whitespace-nowrap">
+            class="px-4 sm:px-5 md:px-8 py-2 sm:py-3 md:py-4 bg-white/10 backdrop-blur-md text-white border border-white/30 rounded-full font-bold md:hover:bg-white/20 transition-all md:hover:-translate-y-1 flex items-center justify-center text-xs sm:text-sm md:text-base whitespace-nowrap">
             阅读博客
           </router-link>
         </div>
