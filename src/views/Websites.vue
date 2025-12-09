@@ -156,53 +156,73 @@
       </div>
 
       <!-- 分页控件 -->
-      <div v-if="totalPages > 1" class="mt-4 flex justify-center items-center gap-2">
+      <!-- 分页控件 -->
+      <div v-if="totalPages > 1" class="mt-4 flex justify-center items-center gap-2 sm:gap-3">
         <!-- 上一页按钮 -->
-        <button @click="prevPage" :disabled="currentPage === 1" :class="[
-          'px-3 py-2 rounded-lg text-sm font-medium transition-all',
+        <button @click="prevPage" :disabled="currentPage === 1" aria-label="Previous Page" :class="[
+          'flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200',
           currentPage === 1
-            ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-            : 'bg-white text-slate-700 border border-slate-200 md:hover:bg-slate-50 md:hover:border-theme-300'
+            ? 'text-slate-300 cursor-not-allowed'
+            : 'text-slate-600 hover:bg-slate-100 hover:text-theme-600 active:scale-95'
         ]">
-          上一页
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+            class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
         </button>
 
         <!-- 第一页 -->
         <button v-if="visiblePages[0] > 1" @click="goToPage(1)"
-          class="px-3 py-2 rounded-lg text-sm font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-theme-300 transition-all">
+          class="w-10 h-10 rounded-full text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-theme-600 transition-all duration-200">
           1
         </button>
 
         <!-- 省略号 -->
-        <span v-if="visiblePages[0] > 2" class="text-slate-400">...</span>
+        <span v-if="visiblePages[0] > 2" class="w-10 h-10 flex items-center justify-center text-slate-400">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+          </svg>
+        </span>
 
         <!-- 页码按钮 -->
         <button v-for="page in visiblePages" :key="page" @click="goToPage(page)" :class="[
-          'px-3 py-2 rounded-lg text-sm font-medium transition-all',
+          'w-10 h-10 rounded-full text-sm font-medium transition-all duration-200',
           currentPage === page
-            ? 'bg-theme-600 text-white border border-theme-600'
-            : 'bg-white text-slate-700 border border-slate-200 md:hover:bg-slate-50 md:hover:border-theme-300'
+            ? 'bg-theme-600 text-white shadow-lg shadow-theme-600/30 scale-110'
+            : 'text-slate-600 hover:bg-slate-100 hover:text-theme-600'
         ]">
           {{ page }}
         </button>
 
         <!-- 省略号 -->
-        <span v-if="visiblePages[visiblePages.length - 1] < totalPages - 1" class="text-slate-400">...</span>
+        <span v-if="visiblePages[visiblePages.length - 1] < totalPages - 1"
+          class="w-10 h-10 flex items-center justify-center text-slate-400">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+          </svg>
+        </span>
 
         <!-- 最后一页 -->
         <button v-if="visiblePages[visiblePages.length - 1] < totalPages" @click="goToPage(totalPages)"
-          class="px-3 py-2 rounded-lg text-sm font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-theme-300 transition-all">
+          class="w-10 h-10 rounded-full text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-theme-600 transition-all duration-200">
           {{ totalPages }}
         </button>
 
         <!-- 下一页按钮 -->
-        <button @click="nextPage" :disabled="currentPage === totalPages" :class="[
-          'px-3 py-2 rounded-lg text-sm font-medium transition-all',
+        <button @click="nextPage" :disabled="currentPage === totalPages" aria-label="Next Page" :class="[
+          'flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200',
           currentPage === totalPages
-            ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-            : 'bg-white text-slate-700 border border-slate-200 md:hover:bg-slate-50 md:hover:border-theme-300'
+            ? 'text-slate-300 cursor-not-allowed'
+            : 'text-slate-600 hover:bg-slate-100 hover:text-theme-600 active:scale-95'
         ]">
-          下一页
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+            class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
         </button>
       </div>
     </div>

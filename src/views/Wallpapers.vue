@@ -13,10 +13,6 @@ const currentColor = ref('')
 const currentTag = ref('')
 const currentOrder = ref('')
 
-// 响应式图片尺寸参数
-const imageWidth = ref(800) // 默认宽度
-const imageQuality = ref(80) // 默认质量
-
 // Data Arrays
 const sources = [
   { name: "全部壁纸源", value: "" },
@@ -36,6 +32,7 @@ const sources = [
 ]
 
 const availableTags = [
+  { name: "全部", value: "" },
   { name: "自然", value: "nature" },
   { name: "海洋", value: "ocean" },
   { name: "建筑", value: "architecture" },
@@ -61,7 +58,6 @@ const isSticky = ref(false)
 const scrollPosition = ref(0)
 const totalCount = ref(0)
 const totalPages = ref(0)
-// 直接加载原图，移除所有图片优化
 
 // 节流函数
 const throttle = (func, limit) => {
@@ -132,6 +128,7 @@ const fetchWallpapers = async () => {
         description: item.dimensions || '',
         category: item.source || '',
         resolution: item.dimensions || '',
+        colors: item.colors || [],
         format: 'jpg',
         thumbnail: smallImageUrl, // 根据环境选择图片 URL
         url: largeImageUrl,
@@ -195,9 +192,6 @@ const handleTabClick = (sourceValue) => {
 
 // Handle Tag Click
 const handleTagClick = (tagValue) => {
-  // Toggle tag if clicking the same one, or just set it? 
-  // User said "click tab and new added tag to dynamic modify params"
-  // If I click the same tag, maybe deselect? For now just set it.
   if (currentTag.value === tagValue) {
     currentTag.value = '' // Allow deselecting
   } else {
@@ -292,77 +286,150 @@ const handlePreview = (wallpaper) => {
   window.open(processedUrl, '_blank')
 }
 
-// 根据图片真实尺寸比例计算样式
-const getImageStyle = (wallpaper) => {
-  if (!wallpaper.resolution) {
-    return { aspectRatio: '3/4' } // 默认比例
+// Generate placeholder background from colors
+const getPlaceholderStyle = (colors) => {
+  if (!colors || colors.length === 0) {
+    return {}
   }
-
-  // 解析分辨率字符串，例如 "1920x1080"
-  const [width, height] = wallpaper.resolution.split('x').map(Number)
-
-  if (!width || !height) {
-    return { aspectRatio: '3/4' } // 默认比例
-  }
-
-  // 计算宽高比
-  const aspectRatio = width / height
-
-  // 设置最小和最大高度限制
-  const minHeight = 150
-  const maxHeight = 400
-
-  // 根据屏幕宽度计算列宽
-  const screenWidth = window.innerWidth
-  let columnWidth
-
-  if (screenWidth < 640) { // 移动端两列
-    columnWidth = (screenWidth - 48) / 2 // 减去padding和gap
-  } else if (screenWidth < 768) { // 平板端三列
-    columnWidth = (screenWidth - 64) / 3
-  } else if (screenWidth < 1024) { // 中等屏幕四列
-    columnWidth = (screenWidth - 80) / 4
-  } else { // 大屏幕四列
-    columnWidth = (screenWidth - 80) / 4
-  }
-
-  // 根据宽高比计算高度
-  let calculatedHeight = columnWidth / aspectRatio
-
-  // 限制高度范围
-  calculatedHeight = Math.max(minHeight, Math.min(calculatedHeight, maxHeight))
-
+  const c1 = colors[0]
+  const c2 = colors[1] || c1
   return {
-    height: `${calculatedHeight}px`
+    background: `linear-gradient(135deg, ${c1}, ${c2})`
   }
 }
 
+import PhotoSwipeLightbox from 'photoswipe/lightbox'
+import 'photoswipe/style.css'
 
+let lightbox = null
+
+// Helper to get width/height from resolution string
+const getResolutionWidth = (resolution) => {
+  if (!resolution) return 0
+  const match = resolution.match(/(\d+)\s*(?:px)?\s*[x×]\s*(\d+)/i)
+  return match ? Number(match[1]) : 0
+}
+
+const getResolutionHeight = (resolution) => {
+  if (!resolution) return 0
+  const match = resolution.match(/(\d+)\s*(?:px)?\s*[x×]\s*(\d+)/i)
+  return match ? Number(match[2]) : 0
+}
 
 onMounted(() => {
   fetchWallpapers()
   updateUnderline()
 
-  // 添加事件监听
+  // Initialize PhotoSwipe
+  lightbox = new PhotoSwipeLightbox({
+    gallery: '#gallery',
+    children: '.gallery-item',
+    pswpModule: () => import('photoswipe'),
+    bgOpacity: 1, // Pure black background
+    showHideOpacity: false,
+    padding: { top: 0, bottom: 0, left: 0, right: 0 },
+  })
+
+  // Custom UI - Add Download Button
+  lightbox.on('uiRegister', function () {
+    lightbox.pswp.ui.registerElement({
+      name: 'download-button',
+      order: 9,
+      isButton: true,
+      tagName: 'a',
+
+      // SVG with outline
+      html: {
+        isCustomSVG: true,
+        inner: '<path d="M20.5 14.3 17.1 18V10h-2.2v7.9l-3.4-3.6L10 16l6 6.1 6-6.1ZM23 23H9v2h14Z" id="pswp__icn-download"/>',
+        outlineID: 'pswp__icn-download'
+      },
+
+      onInit: (el, pswp) => {
+        el.setAttribute('download', '')
+        el.setAttribute('target', '_blank')
+        el.setAttribute('rel', 'noopener')
+
+        pswp.on('change', () => {
+          const currSlide = pswp.currSlide
+          if (currSlide) {
+            // Use wsrv.nl proxy to bypass referrer checks (anti-hotlinking)
+            // Adding &output=jpg ensures it's treated as an image
+            const originalUrl = currSlide.data.src
+            el.href = `https://wsrv.nl/?url=${originalUrl}&output=jpg`
+            el.download = `wallpaper-${currSlide.data.id || 'download'}.jpg`
+          }
+        })
+      }
+    })
+
+    // Custom UI - Add Close Button
+    lightbox.pswp.ui.registerElement({
+      name: 'custom-close-button',
+      order: 20,
+      isButton: true,
+      tagName: 'a',
+
+      // SVG with outline
+      html: {
+        isCustomSVG: true,
+        inner: '<path d="M24 10l-2-2-6 6-6-6-2 2 6 6-6 6 2 2 6-6 6 6 2-2-6-6z" id="pswp__icn-close"/>',
+        outlineID: 'pswp__icn-close'
+      },
+
+      onInit: (el, pswp) => {
+        el.setAttribute('target', '_blank')
+        el.setAttribute('rel', 'noopener')
+        el.addEventListener('click', (e) => {
+          e.preventDefault()
+          pswp.close()
+        })
+      }
+    })
+  })
+
+  lightbox.init()
+
+  // Add event listeners
   window.addEventListener('resize', () => {
     hasTransition.value = false
     updateUnderline()
   })
   window.addEventListener('scroll', throttledHandleScroll)
 
-  // 恢复滚动位置
+  // Restore scroll position
   nextTick(() => {
     window.scrollTo(0, scrollPosition.value)
   })
 })
 
 onBeforeUnmount(() => {
-  // 保存滚动位置
+  if (lightbox) {
+    lightbox.destroy()
+    lightbox = null
+    document.body.style.overflow = '';
+  }
+  // Save scroll position
   scrollPosition.value = window.scrollY
 
-  // 移除事件监听
+  // Remove event listeners
   window.removeEventListener('scroll', throttledHandleScroll)
 })
+
+
+// Get Aspect Ratio
+const getAspectRatio = (resolution) => {
+  if (!resolution) return 3 / 4
+  // Handle "2048px × 1143px" or "1920x1080"
+  const match = resolution.match(/(\d+)\s*(?:px)?\s*[x×]\s*(\d+)\s*(?:px)?/i)
+  if (!match) return 3 / 4
+  const width = Number(match[1])
+  const height = Number(match[2])
+
+  if (!width || !height) return 3 / 4
+  return width / height
+}
+
 </script>
 
 <template>
@@ -404,7 +471,7 @@ onBeforeUnmount(() => {
 
         <!-- Tags List -->
         <div class="overflow-x-auto scrollbar-hide mt-2 pb-2">
-          <div class="flex gap-2 whitespace-nowrap min-w-max px-1">
+          <div class="flex gap-2 whitespace-nowrap min-w-max px-0 md:px-1">
             <button v-for="tag in availableTags" :key="tag.value" @click="handleTagClick(tag.value)" :class="[
               'px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 border',
               currentTag === tag.value
@@ -422,134 +489,117 @@ onBeforeUnmount(() => {
         :class="['absolute bottom-0 left-0 right-0 h-px bg-slate-200 transition-opacity duration-200', isSticky ? 'opacity-100' : 'opacity-0']">
       </div>
     </div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+    <div id="gallery" class="max-w-7xl mx-auto px-1 sm:px-6 lg:px-8 pt-4">
       <div v-if="loading" class="fixed inset-0 flex flex-col justify-center items-center bg-white/80 z-50">
         <div class="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-theme-600 mb-4"></div>
         <p class="text-slate-600">加载中...</p>
       </div>
       <div v-else>
         <!-- 当前分类的壁纸数量 -->
-        <div class="mb-4 sm:mb-6 text-sm sm:text-base text-slate-600">
+        <div class="ml-3 md:ml-0 mb-4 sm:mb-6 text-sm sm:text-base text-slate-600 hidden md:block">
           找到 {{ totalCount }} 张壁纸 <span v-if="totalPages > 0">(第 {{ currentPage + 1 }} / {{ totalPages }} 页)</span>
         </div>
-        <!-- 壁纸列表 -->
-        <div v-if="wallpapers.length > 0"
-          class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 sm:gap-4 md:gap-5">
+
+        <!-- Masonry Wall Layout -->
+        <div v-if="wallpapers.length > 0" class="columns-2 md:columns-3 lg:columns-4 gap-1">
           <div v-for="wallpaper in wallpapers" :key="wallpaper.id" :id="`wallpaper-${wallpaper.id}`"
-            class="group relative overflow-hidden rounded-xl sm:rounded-2xl shadow-sm border border-slate-100 md:hover:shadow-lg transition-all duration-300">
-            <!-- 壁纸图片 -->
-            <div class="overflow-hidden bg-slate-100" :style="getImageStyle(wallpaper)">
-              <div class="relative w-full h-full md:group-hover:scale-105 transition-transform duration-500">
-                <!-- 直接加载原图 特别注意一个非常经典的**防盗链（Hotlink Protection）**问题。-->
+            class="break-inside-avoid mb-1 group relative rounded-[4px] md:rounded-none overflow-hidden bg-slate-100 transition-all duration-300 hover:shadow-lg">
+            <!-- Image Container with Aspect Ratio -->
+            <div
+              :style="{ aspectRatio: getAspectRatio(wallpaper.resolution), ...getPlaceholderStyle(wallpaper.colors) }"
+              class="relative w-full">
+
+              <a :href="wallpaper.url" :data-pswp-width="getResolutionWidth(wallpaper.resolution)"
+                :data-pswp-height="getResolutionHeight(wallpaper.resolution)" target="_blank" rel="noreferrer"
+                class="gallery-item block w-full h-full">
                 <img :src="wallpaper.thumbnail" referrerpolicy="no-referrer" :alt="wallpaper.title || 'Wallpaper'"
-                  class="absolute inset-0 w-full h-full object-cover" />
+                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy" />
+              </a>
 
-                <!-- 移动设备下载按钮（始终显示） -->
-                <button @click.stop="handleDownload(wallpaper)"
-                  class="absolute bottom-3 right-3 bg-white/90 text-slate-800 px-3 py-2 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-1 sm:hidden"
-                  title="下载壁纸">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  <span class="text-xs">下载</span>
-                </button>
-
-                <!-- 桌面设备鼠标移入浮层 -->
-                <div
-                  class="absolute inset-0 bg-black bg-opacity-0 md:group-hover:bg-opacity-30 transition-all duration-300 hidden sm:flex items-center justify-center opacity-0 md:group-hover:opacity-100">
-                  <div class="flex gap-2 sm:gap-3">
-                    <!-- 下载按钮 -->
-                    <button @click.stop="handleDownload(wallpaper)"
-                      class="bg-white/90 md:hover:bg-white text-slate-800 px-3 py-2 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-1"
-                      title="下载壁纸">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                      </svg>
-                      <span class="text-xs">下载</span>
-                    </button>
-
-                    <!-- 预览按钮 -->
-                    <button @click.stop="handlePreview(wallpaper)"
-                      class="bg-white/90 md:hover:bg-white text-slate-800 px-3 py-2 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-1"
-                      title="预览壁纸">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                      <span class="text-xs">预览</span>
-                    </button>
-                  </div>
-                </div>
+              <!-- Overlay (Desktop) -->
+              <div
+                class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 hidden sm:flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none">
+                <!-- Overlay content removed as interaction is now handled by PhotoSwipe -->
               </div>
+
             </div>
-
-
-
-            <!-- 壁纸信息 -->
-            <!-- <div class="p-4">
-              <div class="flex justify-between items-center">
-                <span class="text-xs sm:text-sm text-slate-500">{{ wallpaper.resolution }}</span>
-                <span class="text-xs sm:text-sm text-slate-500 truncate max-w-[50%]">{{ wallpaper.category }}</span>
-              </div>
-            </div> -->
           </div>
         </div>
 
+        <!-- 当前分类的壁纸数量 -->
+        <div class="mt-4 flex justify-center items-center text-sm sm:text-base text-slate-600 md:hidden">
+          找到 {{ totalCount }} 张壁纸 <span v-if="totalPages > 0">(第 {{ currentPage + 1 }} / {{ totalPages }} 页)</span>
+        </div>
+
         <!-- 分页控件 -->
-        <div v-if="totalPages > 1" class="mt-8 flex justify-center items-center gap-2">
+        <!-- 分页控件 -->
+        <div v-if="totalPages > 1" class="mt-8 md:mt-12 flex justify-center items-center gap-2 sm:gap-3">
           <!-- 上一页按钮 -->
-          <button @click="prevPage" :disabled="currentPage === 0" :class="[
-            'px-3 py-2 rounded-lg text-sm font-medium transition-all',
+          <button @click="prevPage" :disabled="currentPage === 0" aria-label="Previous Page" :class="[
+            'flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200',
             currentPage === 0
-              ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-              : 'bg-white text-slate-700 border border-slate-200 md:hover:bg-slate-50 md:hover:border-theme-300'
+              ? 'text-slate-300 cursor-not-allowed'
+              : 'text-slate-600 hover:bg-slate-100 hover:text-theme-600 active:scale-95'
           ]">
-            上一页
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
           </button>
 
           <!-- 第一页 -->
           <button v-if="visiblePages[0] > 0" @click="goToPage(0)"
-            class="px-3 py-2 rounded-lg text-sm font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-theme-300 transition-all">
+            class="w-10 h-10 rounded-full text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-theme-600 transition-all duration-200">
             1
           </button>
 
           <!-- 省略号 -->
-          <span v-if="visiblePages[0] > 1" class="text-slate-400">...</span>
+          <span v-if="visiblePages[0] > 1" class="w-10 h-10 flex items-center justify-center text-slate-400">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+            </svg>
+          </span>
 
           <!-- 页码按钮 -->
           <button v-for="page in visiblePages" :key="page" @click="goToPage(page)" :class="[
-            'px-3 py-2 rounded-lg text-sm font-medium transition-all',
+            'w-10 h-10 rounded-full text-sm font-medium transition-all duration-200',
             currentPage === page
-              ? 'bg-theme-600 text-white'
-              : 'bg-white text-slate-700 border border-slate-200 md:hover:bg-slate-50 md:hover:border-theme-300'
+              ? 'bg-theme-600 text-white shadow-lg shadow-theme-600/30 scale-110'
+              : 'text-slate-600 hover:bg-slate-100 hover:text-theme-600'
           ]">
             {{ page + 1 }}
           </button>
 
           <!-- 省略号 -->
-          <span v-if="visiblePages[visiblePages.length - 1] < totalPages - 2" class="text-slate-400">...</span>
+          <span v-if="visiblePages[visiblePages.length - 1] < totalPages - 2"
+            class="w-10 h-10 flex items-center justify-center text-slate-400">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+              stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+            </svg>
+          </span>
 
           <!-- 最后一页 -->
           <button v-if="visiblePages[visiblePages.length - 1] < totalPages - 1" @click="goToPage(totalPages - 1)"
-            class="px-3 py-2 rounded-lg text-sm font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-theme-300 transition-all">
+            class="w-10 h-10 rounded-full text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-theme-600 transition-all duration-200">
             {{ totalPages }}
           </button>
 
           <!-- 下一页按钮 -->
-          <button @click="nextPage" :disabled="currentPage === totalPages - 1" :class="[
-            'px-3 py-2 rounded-lg text-sm font-medium transition-all',
+          <button @click="nextPage" :disabled="currentPage === totalPages - 1" aria-label="Next Page" :class="[
+            'flex items-center justify-center w-10 h-10 rounded-full transition-all duration-200',
             currentPage === totalPages - 1
-              ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-              : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-theme-300'
+              ? 'text-slate-300 cursor-not-allowed'
+              : 'text-slate-600 hover:bg-slate-100 hover:text-theme-600 active:scale-95'
           ]">
-            下一页
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+              stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
           </button>
         </div>
 
@@ -580,5 +630,84 @@ onBeforeUnmount(() => {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
   /* Chrome, Safari and Opera */
+}
+</style>
+
+
+
+<style>
+/* PhotoSwipe Custom Styles */
+.pswp__bg {
+  background: #000 !important;
+}
+
+/* Custom Download Button Style */
+.pswp__button--download-button {
+  background: none;
+  margin-top: 0;
+  margin-bottom: 0;
+  position: fixed !important;
+  bottom: 50px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  top: auto !important;
+  right: auto !important;
+  z-index: 200000 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 44px !important;
+  height: 44px !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.pswp__button--download-button:hover {
+  background: none;
+  opacity: 0.8;
+}
+
+.pswp__button--download-button svg {
+  fill: #fff;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+/* Hide default close button, arrows, and zoom button */
+.pswp__button--close,
+.pswp__button--arrow--prev,
+.pswp__button--arrow--next,
+.pswp__button--zoom {
+  display: none !important;
+}
+
+/* Center Counter */
+.pswp__counter {
+  position: absolute;
+  top: 30px;
+  left: 0 !important;
+  width: 100% !important;
+  text-align: center !important;
+  font-size: 16px;
+  opacity: 0.8;
+  padding: 0 !important;
+}
+
+/* Custom Close Button Style */
+.pswp__button--custom-close-button {
+  background: none;
+  margin-top: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.pswp__button--custom-close-button:hover {
+  background: none;
+  opacity: 0.8;
+}
+
+.pswp__button--custom-close-button svg {
+  fill: #fff;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
 }
 </style>
