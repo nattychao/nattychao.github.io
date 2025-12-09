@@ -1,5 +1,10 @@
 <script setup>
+import { ref } from 'vue'
 import { Database, Layout, Smartphone, Globe } from 'lucide-vue-next'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Pagination } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/pagination'
 
 const skills = [
   { name: '前端开发', icon: Layout, items: ['Vue.js', 'React', 'Tailwind CSS', 'TypeScript'] },
@@ -7,20 +12,29 @@ const skills = [
   // { name: '后端开发', icon: Server, items: ['Node.js', 'Python', 'Go', 'PostgreSQL'] },
   { name: '开发工具', icon: Database, items: ['TRAE', 'Antigravity', 'Cursor', 'VS Code'] }
 ]
+
+const showMarquee = false
+const swiperInstance = ref(null)
+const modules = [Pagination]
+
+const onSwiper = (swiper) => {
+  swiperInstance.value = swiper
+}
 </script>
 
 <template>
   <!-- Skills Section -->
-  <section class="py-12 sm:py-20 md:py-24 bg-gradient-to-br from-slate-50 to-theme-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="mb-8 sm:mb-10 md:mb-12 lg:mb-16 text-left sm:text-center md:text-center lg:text-center">
+  <section class="pt-12 pb-6 sm:py-12 md:py-12 bg-gradient-to-br from-slate-50 to-theme-50">
+    <div class="max-w-7xl mx-auto px-0 md:px-4 sm:px-6 lg:px-8">
+      <div class="px-4 mb-8 sm:mb-10 md:mb-12 lg:mb-16 text-left sm:text-center md:text-center lg:text-center">
         <h2 class="text-2xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 mb-3 sm:mb-4">技术专长</h2>
         <p
           class="text-sm sm:text-base text-slate-600 max-w-2xl px-0 sm:px-4 text-left sm:text-center md:text-center lg:text-center mx-auto sm:mx-auto">
           我用于构建可扩展和健壮应用的工具箱。</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+      <!-- Desktop Grid View -->
+      <div class="hidden md:grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
         <div v-for="(skill, index) in skills" :key="skill.name"
           class="group relative bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-lg border border-slate-100 md:hover:shadow-2xl transition-all duration-500 md:hover:-translate-y-2 overflow-hidden"
           v-motion :initial="{ opacity: 0, y: 50 }"
@@ -68,7 +82,8 @@ const skills = [
             <!-- Title with gradient text -->
             <h3
               class="text-lg sm:text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-700 mb-3 sm:mb-4">
-              {{ skill.name }}</h3>
+              {{ skill.name }}
+            </h3>
 
             <!-- Skills list with custom styling -->
             <ul class="space-y-2 sm:space-y-3">
@@ -84,6 +99,74 @@ const skills = [
             </ul>
           </div>
         </div>
+      </div>
+
+      <!-- Mobile Swiper View -->
+      <div class="md:hidden">
+        <swiper :modules="modules" :pagination="{ clickable: true }" :slidesPerView="'auto'" :spaceBetween="16"
+          :slidesOffsetBefore="16" :slidesOffsetAfter="16" class="mySwiper !overflow-visible !pb-8">
+          <swiper-slide v-for="(skill, index) in skills" :key="skill.name" class="!w-[75%] !h-auto group/card">
+            <!-- Gradient Border Wrapper (Marquee Effect) -->
+            <div
+              :class="['relative h-full rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-theme-200/50 bg-white', showMarquee ? 'p-[3px]' : 'border border-slate-100']">
+
+              <!-- Rotating Conic Gradient Border -->
+              <div v-if="showMarquee"
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] animate-border-flow"
+                style="background: conic-gradient(from 0deg, #ec4899, #8b5cf6, #3b82f6, #10b981, #eab308, #f97316, #ec4899);">
+              </div>
+
+              <!-- Card Content Container -->
+              <div
+                :class="['relative h-full bg-white p-6 flex flex-col overflow-hidden', showMarquee ? 'rounded-[13px]' : 'rounded-2xl']">
+
+                <div class="relative z-10 flex flex-col h-full">
+                  <!-- Header: Floating Icon & Title -->
+                  <div class="flex flex-col items-center mb-6">
+                    <div class="relative mb-4 group-hover/card:scale-110 transition-transform duration-500">
+                      <!-- Glow behind icon -->
+                      <div
+                        class="absolute inset-0 bg-gradient-to-tr from-theme-500 to-purple-500 rounded-2xl blur-lg opacity-40 animate-pulse">
+                      </div>
+
+                      <!-- Icon Container -->
+                      <div
+                        class="relative w-16 h-16 bg-gradient-to-br from-white to-slate-50 rounded-2xl flex items-center justify-center shadow-lg shadow-theme-500/20 border border-white/50 animate-float">
+                        <component :is="skill.icon" class="w-8 h-8 text-slate-700" />
+                      </div>
+                    </div>
+
+                    <h3
+                      class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-600 tracking-tight">
+                      {{ skill.name }}
+                    </h3>
+                    <div class="h-1 w-12 bg-gradient-to-r from-theme-400 via-purple-400 to-pink-400 rounded-full mt-3">
+                    </div>
+                  </div>
+
+                  <!-- Skills Tags Cloud -->
+                  <div class="flex-1">
+                    <div class="flex flex-wrap justify-center gap-2.5 content-start">
+                      <span v-for="(item, itemIndex) in skill.items" :key="item"
+                        class="relative px-3 py-1.5 bg-white border border-slate-100 rounded-lg text-sm font-medium text-slate-600 flex items-center shadow-sm overflow-hidden group/tag hover:border-theme-300 transition-colors duration-300">
+                        <!-- Tag subtle gradient bg -->
+                        <div
+                          class="absolute inset-0 bg-gradient-to-r from-theme-50 to-purple-50 opacity-0 group-hover/tag:opacity-100 transition-opacity duration-300">
+                        </div>
+
+                        <!-- Dot -->
+                        <div
+                          class="relative w-1.5 h-1.5 rounded-full bg-gradient-to-r from-theme-400 to-purple-400 mr-2 animate-pulse">
+                        </div>
+                        <span class="relative">{{ item }}</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </swiper-slide>
+        </swiper>
       </div>
     </div>
   </section>
@@ -116,7 +199,78 @@ const skills = [
   animation: spin-slow 3s linear infinite;
 }
 
+.animate-spin-slow-reverse {
+  animation: spin-slow 8s linear infinite reverse;
+}
+
 .animate-shine {
   animation: shine 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s ease-in-out infinite;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes pulse-slow {
+
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+.animate-border-flow {
+  animation: border-flow 4s linear infinite;
+}
+
+@keyframes border-flow {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+:deep(.swiper-pagination-bullet) {
+  width: 6px;
+  height: 6px;
+  background-color: #e2e8f0;
+  opacity: 1;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 9999px;
+  margin: 0 4px !important;
+}
+
+:deep(.swiper-pagination-bullet-active) {
+  width: 24px;
+  background-color: #e2e8f0;
+}
+
+:deep(.swiper-pagination) {
+  bottom: 0 !important;
 }
 </style>
