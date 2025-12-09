@@ -104,7 +104,7 @@ const onSwiper = (swiper) => {
       <!-- Mobile Swiper View -->
       <div class="md:hidden">
         <swiper :modules="modules" :pagination="{ clickable: true }" :slidesPerView="'auto'" :spaceBetween="16"
-          :slidesOffsetBefore="16" :slidesOffsetAfter="16" class="mySwiper !overflow-visible !pb-8">
+          :slidesOffsetBefore="16" :slidesOffsetAfter="16" class="mySwiper !pb-8">
           <swiper-slide v-for="(skill, index) in skills" :key="skill.name" class="!w-[75%] !h-auto group/card">
             <!-- Gradient Border Wrapper (Marquee Effect) -->
             <div
@@ -258,16 +258,17 @@ const onSwiper = (swiper) => {
 :deep(.swiper-pagination-bullet) {
   width: 6px;
   height: 6px;
-  background-color: #e2e8f0;
+  background-color: #ffffff;
   opacity: 1;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 9999px;
   margin: 0 4px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 :deep(.swiper-pagination-bullet-active) {
   width: 24px;
-  background-color: #e2e8f0;
+  background: #ffffff;
 }
 
 :deep(.swiper-pagination) {
