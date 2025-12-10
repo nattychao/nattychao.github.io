@@ -121,6 +121,7 @@ const fetchWallpapers = async () => {
       // 直接使用真实地址，不使用代理
       const smallImageUrl = 'https://wsrv.nl/?url=' + rawSrc + '&w=600'
       const largeImageUrl = rawSrc
+      const bigUrl = 'https://wsrv.nl/?url=' + rawSrc
 
       return {
         id: item._id,
@@ -511,7 +512,7 @@ const getAspectRatio = (resolution) => {
 
               <a :href="wallpaper.url" :data-pswp-width="getResolutionWidth(wallpaper.resolution)"
                 :data-pswp-height="getResolutionHeight(wallpaper.resolution)" target="_blank" rel="noreferrer"
-                class="gallery-item block w-full h-full">
+                referrerpolicy="no-referrer" class="gallery-item block w-full h-full">
                 <img :src="wallpaper.thumbnail" referrerpolicy="no-referrer" :alt="wallpaper.title || 'Wallpaper'"
                   class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   loading="lazy" />
