@@ -119,8 +119,8 @@ const fetchWallpapers = async () => {
       const rawSrc = item.src?.rawSrc || ''
 
       // 直接使用真实地址，不使用代理
-      const smallImageUrl = 'https://wsrv.nl/?url=' + rawSrc + '&w=600'
-      const bigUrl = 'https://wsrv.nl/?url=' + rawSrc
+      const smallImageUrl = 'https://wsrv.nl/?url=' + encodeURIComponent(rawSrc) + '&w=600'
+      const bigUrl = 'https://wsrv.nl/?url=' + encodeURIComponent(rawSrc)
 
       return {
         id: item._id,
@@ -131,7 +131,9 @@ const fetchWallpapers = async () => {
         colors: item.colors || [],
         format: 'jpg',
         thumbnail: smallImageUrl, // 根据环境选择图片 URL
-        url: bigUrl
+        url: bigUrl,
+        // 添加代理 URL 用于 PhotoSwipe 大图预览，避免 referrer 问题
+        proxyUrl: bigUrl
       }
     })
 
@@ -387,6 +389,35 @@ onMounted(() => {
     })
   })
 
+  // Add event listener for PhotoSwipe initialization
+  lightbox.on('beforeInit', (pswp) => {
+    // Override the default image loading behavior to set referrerpolicy
+    const originalLoadImage = pswp.currSlide.loadImage;
+    pswp.currSlide.loadImage = function () {
+      const result = originalLoadImage.apply(this, arguments);
+      // Set referrerpolicy on the newly created image
+      if (this.img) {
+        this.img.setAttribute('referrerpolicy', 'no-referrer');
+      }
+      return result;
+    };
+
+    // Listen for slide changes and update all images
+    pswp.on('beforeChange', () => {
+      document.querySelectorAll('.pswp__img').forEach(img => {
+        img.setAttribute('referrerpolicy', 'no-referrer');
+      });
+    });
+
+    // Listen for slide loading complete
+    pswp.on('slideLoadComplete', (index, item) => {
+      const img = pswp.currSlide.container.querySelector('.pswp__img');
+      if (img) {
+        img.setAttribute('referrerpolicy', 'no-referrer');
+      }
+    });
+  });
+
   lightbox.init()
 
   // Add event listeners
@@ -508,7 +539,7 @@ const getAspectRatio = (resolution) => {
               :style="{ aspectRatio: getAspectRatio(wallpaper.resolution), ...getPlaceholderStyle(wallpaper.colors) }"
               class="relative w-full">
 
-              <a :href="wallpaper.url" :data-pswp-width="getResolutionWidth(wallpaper.resolution)"
+              <a :href="wallpaper.proxyUrl" :data-pswp-width="getResolutionWidth(wallpaper.resolution)"
                 :data-pswp-height="getResolutionHeight(wallpaper.resolution)" target="_blank" rel="noreferrer"
                 referrerpolicy="no-referrer" class="gallery-item block w-full h-full">
                 <img :src="wallpaper.thumbnail" referrerpolicy="no-referrer" :alt="wallpaper.title || 'Wallpaper'"
