@@ -120,7 +120,6 @@ const fetchWallpapers = async () => {
 
       // 直接使用真实地址，不使用代理
       const smallImageUrl = 'https://wsrv.nl/?url=' + rawSrc + '&w=600'
-      const largeImageUrl = rawSrc
       const bigUrl = 'https://wsrv.nl/?url=' + rawSrc
 
       return {
@@ -132,8 +131,7 @@ const fetchWallpapers = async () => {
         colors: item.colors || [],
         format: 'jpg',
         thumbnail: smallImageUrl, // 根据环境选择图片 URL
-        url: largeImageUrl,
-        fallbackUrl: 'https://picsum.photos/seed/wallpaper' + item._id + '/400/300.jpg' // 添加备用图片URL
+        url: bigUrl
       }
     })
 
