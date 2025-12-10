@@ -533,12 +533,13 @@ const getAspectRatio = (resolution) => {
         <!-- Masonry Wall Layout -->
         <div v-if="wallpapers.length > 0" class="columns-2 md:columns-3 lg:columns-4 gap-1">
           <div v-for="wallpaper in wallpapers" :key="wallpaper.id" :id="`wallpaper-${wallpaper.id}`"
-            class="break-inside-avoid mb-1 group relative rounded-[4px] md:rounded-none overflow-hidden bg-slate-100 transition-all duration-300 hover:shadow-lg">
+            class="break-inside-avoid mb-1 group relative overflow-hidden bg-slate-100 transition-all duration-300 hover:shadow-lg">
             <!-- Image Container with Aspect Ratio -->
             <div
               :style="{ aspectRatio: getAspectRatio(wallpaper.resolution), ...getPlaceholderStyle(wallpaper.colors) }"
               class="relative w-full">
 
+              <!-- 通过proxyUrl解决大图浏览因为防盗链加载失败的问题 -->
               <a :href="wallpaper.proxyUrl" :data-pswp-width="getResolutionWidth(wallpaper.resolution)"
                 :data-pswp-height="getResolutionHeight(wallpaper.resolution)" target="_blank" rel="noreferrer"
                 referrerpolicy="no-referrer" class="gallery-item block w-full h-full">
