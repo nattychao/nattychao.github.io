@@ -8,7 +8,7 @@ tags: ['iOS', 'Android', 'Mac', 'Web']
 # Halfrost-Field 冰霜之地
 
 <p align='center'>
-<img src='contents/images/background-cover_.png'>
+<img src='https://github.com/halfrost/Halfrost-Field/raw/master/contents/images/background-cover_.png'>
 </p>
 
 <p align='center'>

@@ -1,7 +1,10 @@
 import { ref } from 'vue'
 import MarkdownIt from 'markdown-it'
 
-const md = new MarkdownIt()
+// 配置markdown-it，启用HTML标签解析
+const md = new MarkdownIt({
+  html: true
+})
 
 export function usePosts() {
   const posts = ref([])
