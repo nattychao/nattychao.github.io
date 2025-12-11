@@ -85,12 +85,14 @@
           <CollectionCard v-for="(collection, index) in collections" :key="index" :collection="collection" />
         </div>
 
-        <div v-else-if="activeTab === 'saved'" key="saved">
-          <p class="text-center text-slate-500 py-8">Saved posts will appear here</p>
+        <div v-else-if="activeTab === 'saved'" key="saved" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <CollectionCard v-for="(collection, index) in collections.slice(0, 1)" :key="index"
+            :collection="collection" />
         </div>
 
-        <div v-else-if="activeTab === 'badges'" key="badges">
-          <p class="text-center text-slate-500 py-8">Badges will appear here</p>
+        <div v-else-if="activeTab === 'badges'" key="badges" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <CollectionCard v-for="(collection, index) in collections.slice(0, 3)" :key="index"
+            :collection="collection" />
         </div>
       </transition>
     </div>
