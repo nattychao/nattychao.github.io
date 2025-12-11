@@ -210,7 +210,8 @@ const navLinks = [
   { name: '壁纸', path: '/wallpapers' },
   { name: '网站导航', path: '/websites' },
   { name: 'AI工具箱', path: '/ai-bio' }, //本身的网页就有问题，会导致页面卡死问题
-  { name: 'Inftab', path: '/inftab' }
+  { name: 'Inftab', path: '/inftab' },
+  { name: '我的', path: '/profile' }
 ]
 
 // 关闭菜单
@@ -234,7 +235,8 @@ const getMenuIcon = (name) => {
     '工具': Settings,
     'AI-BIO': Bot,
     '网站导航': Globe,
-    'Inftab': Infinity
+    'Inftab': Infinity,
+    '我的': Heart
   }
   return icons[name] || Home
 }

@@ -14,3 +14,17 @@
 body {
   @apply bg-slate-50 text-slate-900 antialiased;
 }
+
+/* Tab transition animations using Tailwind CSS */
+.tab-enter-active,
+.tab-leave-active {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.tab-enter-from {
+  @apply opacity-0 translate-y-5;
+}
+
+.tab-leave-to {
+  @apply opacity-0 -translate-y-5;
+}
