@@ -284,30 +284,35 @@ onBeforeUnmount(() => {
           <article v-for="post in filteredPosts" :key="post.slug"
             class="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-100 md:hover:shadow-md transition-all md:hover:-translate-y-1 flex flex-col cursor-pointer"
             @click="navigateToPost(post.slug)">
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900 mb-1 sm:mb-2">
+              <RouterLink :to="'/blog/' + post.slug" class="md:hover:text-theme-600 transition-colors" @click.stop>
+                {{ post.title }}
+              </RouterLink>
+            </h2>
+            <!-- 日期 -->
+            <div class="text-xs sm:text-sm text-slate-500 flex items-center mb-3 sm:mb-4">
+              <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              {{ new Date(post.date).toLocaleDateString() }}
+            </div>
+            <p class="text-sm sm:text-base text-slate-600 mb-3 sm:mb-4 flex-grow">
+              {{ post.description }}
+            </p>
+            <RouterLink :to="'/blog/' + post.slug"
+              class="text-theme-600 font-medium md:hover:text-theme-700 inline-flex items-center gap-1 mt-auto text-sm sm:text-base mb-3 sm:mb-4"
+              @click.stop>
+              阅读更多 &rarr;
+            </RouterLink>
             <!-- 分类标签 -->
-            <div class="flex flex-wrap gap-1.5 sm:gap-2 mb-2 sm:mb-3">
+            <div class="flex flex-wrap gap-1.5 sm:gap-2">
               <span v-for="tag in post.tags || []" :key="tag" :class="[
                 getCategoryClass(tag),
                 'inline-block px-2 sm:px-3 py-1 text-xs font-medium rounded-full border transition-all duration-200 md:hover:shadow-sm'
               ]">
                 {{ tag }}</span>
             </div>
-            <div class="text-xs sm:text-sm text-slate-500 mb-1.5 sm:mb-2">
-              {{ new Date(post.date).toLocaleDateString() }}
-            </div>
-            <h2 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3">
-              <RouterLink :to="'/blog/' + post.slug" class="md:hover:text-theme-600 transition-colors" @click.stop>
-                {{ post.title }}
-              </RouterLink>
-            </h2>
-            <p class="text-sm sm:text-base text-slate-600 mb-3 sm:mb-4 flex-grow">
-              {{ post.description }}
-            </p>
-            <RouterLink :to="'/blog/' + post.slug"
-              class="text-theme-600 font-medium md:hover:text-theme-700 inline-flex items-center gap-1 mt-auto text-sm sm:text-base"
-              @click.stop>
-              阅读更多 &rarr;
-            </RouterLink>
           </article>
         </div>
         <!-- 无内容提示 -->
@@ -324,6 +329,12 @@ onBeforeUnmount(() => {
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  name: 'Blog'
+}
+</script>
 
 <style scoped>
 /* 隐藏滚动条但保持滚动功能 */

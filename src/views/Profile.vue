@@ -215,6 +215,12 @@ const collections = ref([
 ])
 </script>
 
+<script>
+export default {
+  name: 'Profile'
+}
+</script>
+
 <style scoped>
 .tab-enter-active,
 .tab-leave-active {

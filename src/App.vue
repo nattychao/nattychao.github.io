@@ -32,7 +32,9 @@ onMounted(() => {
     <main class="flex-grow">
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
-          <component :is="Component" />
+          <KeepAlive :include="['Home', 'Blog', 'Profile', 'Projects', 'Resume']">
+            <component :is="Component" />
+          </KeepAlive>
         </transition>
       </router-view>
     </main>

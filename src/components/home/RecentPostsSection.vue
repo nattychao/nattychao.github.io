@@ -70,12 +70,7 @@ function formatDate(dateString) {
   return date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })
 }
 
-function estimateReadTime(content) {
-  const wordsPerMinute = 200
-  const wordCount = content.split(/\s+/).length
-  const minutes = Math.ceil(wordCount / wordsPerMinute)
-  return `${minutes} 分钟阅读`
-}
+
 </script>
 
 <template>
@@ -116,46 +111,38 @@ function estimateReadTime(content) {
 
           <div class="p-4 sm:p-5 md:p-7">
             <h3
-              class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 leading-tight md:group-hover:text-theme-600 transition-colors line-clamp-1 md:line-clamp-2">
+              class="text-lg sm:text-xl font-bold text-slate-900 mb-1 sm:mb-2 leading-tight md:group-hover:text-theme-600 transition-colors line-clamp-1 md:line-clamp-2">
               {{ post.title }}
             </h3>
+            <!-- Date below title -->
+            <div class="text-xs text-slate-500 flex items-center mb-3 sm:mb-4">
+              <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              {{ formatDate(post.date) }}
+            </div>
             <p class="text-sm sm:text-base text-slate-600 mb-4 sm:mb-5 line-clamp-2 md:line-clamp-3 leading-relaxed">
               {{ post.description }}
             </p>
-
-            <!-- Tags -->
-            <div class="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-5 overflow-hidden">
-              <div class="flex flex-wrap gap-1.5 sm:gap-2 whitespace-nowrap overflow-hidden">
+            <!-- Tags at bottom -->
+            <div class="flex gap-1.5 sm:gap-2 overflow-hidden mt-auto relative">
+              <div class="flex nowrap overflow-x-auto gap-1.5 sm:gap-2 whitespace-nowrap scrollbar-hide pb-2">
                 <span v-for="tag in (post.tags || [])" :key="tag" :class="getCategoryClass(tag)"
                   class="inline-block px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-medium rounded-full border transition-all duration-200 md:hover:shadow-sm md:hover:scale-105">
                   {{ tag }}
                 </span>
               </div>
-            </div>
-
-            <!-- Footer with date and read time -->
-            <div class="flex items-center justify-between pt-3 sm:pt-4 border-t border-slate-100">
-              <div class="text-xs text-slate-500 flex items-center">
-                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-                {{ formatDate(post.date) }}
+              <!-- Gradient overlay -->
+              <div
+                class="absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-white to-transparent pointer-events-none">
               </div>
-              <span class="text-xs font-medium text-slate-700 flex items-center">
-                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
-                  </path>
-                </svg>
-                {{ estimateReadTime(post.content) }}
-              </span>
             </div>
           </div>
         </router-link>
 
         <!-- Placeholder if less than 3 posts on current page -->
-        <div v-for="i in Math.max(0, postsPerPage - allRecentPosts.length)" :key="`placeholder-${i}`"
+        <div v-if="recentPosts.length < 3"
           class="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 shadow-sm border border-slate-100 opacity-50 flex-shrink-0">
           <div class="text-xs font-bold tracking-wider text-slate-400 uppercase mb-2 sm:mb-3">即将推出</div>
           <h3 class="text-lg sm:text-xl font-bold text-slate-400 mb-2 sm:mb-3 leading-tight">更多内容即将到来</h3>
@@ -185,46 +172,40 @@ function estimateReadTime(content) {
             'from-teal-500 via-cyan-500 to-theme-500': (currentPage - 1) * postsPerPage + index === 11
           }"></div>
 
-          <div class="p-4 sm:p-5 md:p-7">
+          <div class="p-4 sm:p-5 md:p-6">
             <h3
-              class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 leading-tight md:group-hover:text-theme-600 transition-colors line-clamp-2">
+              class="text-lg sm:text-xl font-bold text-slate-900 mb-1 sm:mb-2 leading-tight md:group-hover:text-theme-600 transition-colors line-clamp-2">
               {{ post.title }}
             </h3>
+            <!-- Date below title -->
+            <div class="text-xs text-slate-500 flex items-center mb-3 sm:mb-4">
+              <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              {{ formatDate(post.date) }}
+            </div>
             <p class="text-sm sm:text-base text-slate-600 mb-4 sm:mb-5 line-clamp-3 leading-relaxed">
               {{ post.description }}
             </p>
-
-            <!-- Tags -->
-            <div class="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-5">
-              <span v-for="tag in (post.tags || [])" :key="tag" :class="getCategoryClass(tag)"
-                class="inline-block px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-medium rounded-full border transition-all duration-200 md:hover:shadow-sm md:hover:scale-105">
-                {{ tag }}
-              </span>
-            </div>
-
-            <!-- Footer with date and read time -->
-            <div class="flex items-center justify-between pt-3 sm:pt-4 border-t border-slate-100">
-              <div class="text-xs text-slate-500 flex items-center">
-                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-                {{ formatDate(post.date) }}
+            <!-- Tags at bottom -->
+            <div class="flex gap-1.5 sm:gap-2 overflow-hidden mt-auto relative">
+              <div class="flex nowrap overflow-x-auto gap-1.5 sm:gap-2 whitespace-nowrap scrollbar-hide pb-2">
+                <span v-for="tag in (post.tags || [])" :key="tag" :class="getCategoryClass(tag)"
+                  class="inline-block px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-medium rounded-full border transition-all duration-200 md:hover:shadow-sm md:hover:scale-105">
+                  {{ tag }}
+                </span>
               </div>
-              <span class="text-xs font-medium text-slate-700 flex items-center">
-                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
-                  </path>
-                </svg>
-                {{ estimateReadTime(post.content) }}
-              </span>
+              <!-- Gradient overlay -->
+              <div
+                class="absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-white to-transparent pointer-events-none">
+              </div>
             </div>
           </div>
         </router-link>
 
         <!-- Placeholder if less than 3 posts on current page -->
-        <div v-for="i in Math.max(0, postsPerPage - recentPosts.length)" :key="`placeholder-${i}`"
+        <div v-if="recentPosts.length < 3"
           class="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 shadow-sm border border-slate-100 opacity-50">
           <div class="text-xs font-bold tracking-wider text-slate-400 uppercase mb-2 sm:mb-3">即将推出</div>
           <h3 class="text-lg sm:text-xl font-bold text-slate-400 mb-2 sm:mb-3 leading-tight">更多内容即将到来</h3>

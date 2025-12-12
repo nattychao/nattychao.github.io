@@ -45,6 +45,12 @@ onBeforeUnmount(() => {
 })
 </script>
 
+<script>
+export default {
+  name: 'Projects'
+}
+</script>
+
 <template>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20" :style="{ paddingTop }">
     <div class="mb-8 sm:mb-10 md:mb-12">
