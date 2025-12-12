@@ -278,11 +278,10 @@ onBeforeUnmount(() => {
             selectedCategory === '全部' ? '' : selectedCategory
           }}相关博客
         </div>
-        <!-- 博客列表 -->
-        <div v-if="filteredPosts.length > 0"
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+        <!-- 博客列表 - 瀑布流布局 (从左到右排列)-->
+        <div v-if="filteredPosts.length > 0" class="flex flex-wrap gap-3 sm:gap-4 md:gap-4">
           <article v-for="post in filteredPosts" :key="post.slug"
-            class="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-100 md:hover:shadow-md transition-all md:hover:-translate-y-1 flex flex-col cursor-pointer"
+            class="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-100 md:hover:shadow-md transition-all md:hover:-translate-y-1 flex flex-col cursor-pointer w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.667rem)]"
             @click="navigateToPost(post.slug)">
             <h2 class="text-lg sm:text-xl font-bold text-slate-900 mb-1 sm:mb-2">
               <RouterLink :to="'/blog/' + post.slug" class="md:hover:text-theme-600 transition-colors" @click.stop>
@@ -297,22 +296,23 @@ onBeforeUnmount(() => {
               </svg>
               {{ new Date(post.date).toLocaleDateString() }}
             </div>
-            <p class="text-sm sm:text-base text-slate-600 mb-3 sm:mb-4 flex-grow">
+            <!-- flex-grow 会使描述文本占满剩余空间，避免标签被截断 -->
+            <p class="text-sm sm:text-base text-slate-600 mb-2 sm:mb-4">
               {{ post.description }}
             </p>
-            <RouterLink :to="'/blog/' + post.slug"
-              class="text-theme-600 font-medium md:hover:text-theme-700 inline-flex items-center gap-1 mt-auto text-sm sm:text-base mb-3 sm:mb-4"
-              @click.stop>
-              阅读更多 &rarr;
-            </RouterLink>
             <!-- 分类标签 -->
-            <div class="flex flex-wrap gap-1.5 sm:gap-2">
+            <div class="flex flex-wrap gap-1.5 mb-2 sm:gap-2">
               <span v-for="tag in post.tags || []" :key="tag" :class="[
                 getCategoryClass(tag),
                 'inline-block px-2 sm:px-3 py-1 text-xs font-medium rounded-full border transition-all duration-200 md:hover:shadow-sm'
               ]">
                 {{ tag }}</span>
             </div>
+            <RouterLink :to="'/blog/' + post.slug"
+              class="text-theme-600 font-medium md:hover:text-theme-700 inline-flex items-center justify-start gap-1 mb-auto text-sm sm:text-base"
+              @click.stop>
+              阅读更多 &rarr;
+            </RouterLink>
           </article>
         </div>
         <!-- 无内容提示 -->

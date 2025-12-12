@@ -189,17 +189,11 @@ function formatDate(dateString) {
               {{ post.description }}
             </p>
             <!-- Tags at bottom -->
-            <div class="flex gap-1.5 sm:gap-2 overflow-hidden mt-auto relative">
-              <div class="flex nowrap overflow-x-auto gap-1.5 sm:gap-2 whitespace-nowrap scrollbar-hide pb-2">
-                <span v-for="tag in (post.tags || [])" :key="tag" :class="getCategoryClass(tag)"
-                  class="inline-block px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-medium rounded-full border transition-all duration-200 md:hover:shadow-sm md:hover:scale-105">
-                  {{ tag }}
-                </span>
-              </div>
-              <!-- Gradient overlay -->
-              <div
-                class="absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-white to-transparent pointer-events-none">
-              </div>
+            <div class="flex flex-wrap gap-1.5 sm:gap-2 mt-auto">
+              <span v-for="tag in (post.tags || [])" :key="tag" :class="getCategoryClass(tag)"
+                class="inline-block px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-medium rounded-full border transition-all duration-200 md:hover:shadow-sm md:hover:scale-105">
+                {{ tag }}
+              </span>
             </div>
           </div>
         </router-link>
