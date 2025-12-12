@@ -80,17 +80,90 @@
     </div>
     <!-- 标签页内容 -->
     <div class="px-4">
-      <div v-if="activeTab === 'photos'" key="photos" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <!-- 收藏夹卡片 -->
-        <CollectionCard v-for="(collection, index) in collections" :key="index" :collection="collection" />
+      <!-- 精美的空白页面 -->
+      <!-- 我的照片 - 有数据时显示卡片，无数据时显示空白页 -->
+      <div v-if="activeTab === 'photos'" key="photos">
+        <template v-if="collections.length > 0">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <CollectionCard v-for="(collection, index) in collections" :key="index" :collection="collection" />
+          </div>
+        </template>
+        <template v-else>
+          <div class="min-h-[400px] flex flex-col items-center justify-center py-12">
+            <div class="w-24 h-24 mb-6 bg-theme-100 rounded-full flex items-center justify-center shadow-lg">
+              <svg class="w-12 h-12 text-theme-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                </path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-slate-800 mb-2">我的照片</h3>
+            <p class="text-slate-500 text-center max-w-md mb-8">
+              这里是您的照片收藏夹，您可以将喜欢的照片保存在不同的收藏夹中，方便随时查看。
+            </p>
+            <button
+              class="px-6 py-3 bg-theme-600 text-white font-medium rounded-full shadow-md hover:shadow-lg hover:bg-theme-700 transition-all duration-300">
+              创建收藏夹
+            </button>
+          </div>
+        </template>
       </div>
 
-      <div v-else-if="activeTab === 'saved'" key="saved" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <CollectionCard v-for="(collection, index) in collections.slice(0, 1)" :key="index" :collection="collection" />
+      <!-- 收藏的帖子 - 有数据时显示卡片，无数据时显示空白页 -->
+      <div v-else-if="activeTab === 'saved'" key="saved">
+        <template v-if="collections.slice(0, 0).length > 0">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <CollectionCard v-for="(collection, index) in collections.slice(0, 0)" :key="index"
+              :collection="collection" />
+          </div>
+        </template>
+        <template v-else>
+          <div class="min-h-[400px] flex flex-col items-center justify-center py-12">
+            <div class="w-24 h-24 mb-6 bg-purple-100 rounded-full flex items-center justify-center shadow-lg">
+              <svg class="w-12 h-12 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-slate-800 mb-2">收藏的帖子</h3>
+            <p class="text-slate-500 text-center max-w-md mb-8">
+              您还没有收藏任何帖子，浏览时点击收藏按钮可以将喜欢的内容保存到这里。
+            </p>
+            <button
+              class="px-6 py-3 bg-purple-600 text-white font-medium rounded-full shadow-md hover:shadow-lg hover:bg-purple-700 transition-all duration-300">
+              浏览内容
+            </button>
+          </div>
+        </template>
       </div>
 
-      <div v-else-if="activeTab === 'badges'" key="badges" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <CollectionCard v-for="(collection, index) in collections.slice(0, 3)" :key="index" :collection="collection" />
+      <!-- 徽章 - 有数据时显示卡片，无数据时显示空白页 -->
+      <div v-else-if="activeTab === 'badges'" key="badges">
+        <template v-if="collections.slice(0, 0).length > 0">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <CollectionCard v-for="(collection, index) in collections.slice(0, 0)" :key="index"
+              :collection="collection" />
+          </div>
+        </template>
+        <template v-else>
+          <div class="min-h-[400px] flex flex-col items-center justify-center py-12">
+            <div class="w-24 h-24 mb-6 bg-amber-100 rounded-full flex items-center justify-center shadow-lg">
+              <svg class="w-12 h-12 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z">
+                </path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-semibold text-slate-800 mb-2">徽章</h3>
+            <p class="text-slate-500 text-center max-w-md mb-8">
+              完成任务和成就可以获得徽章，展示您的专业技能和贡献。
+            </p>
+            <button
+              class="px-6 py-3 bg-amber-600 text-white font-medium rounded-full shadow-md hover:shadow-lg hover:bg-amber-700 transition-all duration-300">
+              查看任务
+            </button>
+          </div>
+        </template>
       </div>
     </div>
   </div>
