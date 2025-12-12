@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { Home, FileText, Briefcase, BookOpen, User } from 'lucide-vue-next'
+import { Home, FileText, Briefcase, BookOpen, User, Image } from 'lucide-vue-next'
 
 /**
  * Tab栏相关的composable函数
@@ -15,6 +15,7 @@ export function useTabBar() {
     { name: '简历', path: '/resume', icon: FileText },
     { name: '项目', path: '/projects', icon: Briefcase },
     { name: '博客', path: '/blog', icon: BookOpen },
+    // { name: '壁纸', path: '/wallpapers', icon: Image },
     { name: '我的', path: '/profile', icon: User },
   ]
 

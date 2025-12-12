@@ -41,10 +41,11 @@
 
       <!-- 编辑资料按钮 -->
       <div class="flex justify-center">
-        <button
-          class="px-8 py-3 rounded-full bg-theme-600 text-white font-medium hover:bg-theme-700 transition-colors duration-200">
-          Edit Profile
-        </button>
+        <router-link to="/resume"
+          class="px-8 py-3 rounded-full bg-theme-600 text-white font-medium hover:bg-theme-700 transition-colors duration-200 flex items-center justify-center gap-2">
+          查看简历
+          <ArrowRight class="w-4 h-4 sm:w-5 sm:h-5" />
+        </router-link>
       </div>
     </div>
 
@@ -97,6 +98,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { ArrowRight } from 'lucide-vue-next'
 import CollectionCard from '../components/CollectionCard.vue'
 
 // 活动标签页

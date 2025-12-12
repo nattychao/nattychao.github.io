@@ -23,11 +23,11 @@ defineExpose({
         :class="[
           isActive(item.path)
             ? 'text-theme-600 font-medium' // 选中状态使用主题色
-            : 'text-slate-500 hover:text-theme-500' // 未选中状态
+            : 'text-slate-500' // 未选中状态
         ]">
         <!-- 图标 -->
         <component :is="item.icon" :class="[
-          isActive(item.path) ? 'text-theme-600' : 'text-slate-500',
+          isActive(item.path) ? 'text-theme-600 tab-icon-bounce' : 'text-slate-500',
           'h-[18px] w-[18px] mb-[2px]'
         ]" />
         <!-- 文字 -->
@@ -36,3 +36,24 @@ defineExpose({
     </div>
   </nav>
 </template>
+
+<style scoped>
+/* BottomTabBar icon bounce animation */
+@keyframes tabIconBounce {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+.tab-icon-bounce {
+  animation: tabIconBounce 0.4s ease-in-out forwards;
+}
+</style>
