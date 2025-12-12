@@ -175,7 +175,7 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 // 导入图标
-import { X, Github, Mail, Phone, MessageCircle, Home, Briefcase, BookOpen, FileText, Image, Heart, ChevronRight, Settings, Brain, Bot, Globe, Infinity } from 'lucide-vue-next'
+import { X, Github, Mail, Phone, MessageCircle, Home, Briefcase, BookOpen, FileText, Image, User, ChevronRight, Settings, Brain, Bot, Globe, Infinity } from 'lucide-vue-next'
 import { useToast } from '@/composables/useToast.js'
 
 const props = defineProps({
@@ -236,7 +236,7 @@ const getMenuIcon = (name) => {
     'AI-BIO': Bot,
     '网站导航': Globe,
     'Inftab': Infinity,
-    '我的': Heart
+    '我的': User
   }
   return icons[name] || Home
 }

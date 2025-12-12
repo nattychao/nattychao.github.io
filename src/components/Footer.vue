@@ -1,8 +1,10 @@
 <script setup>
 import { Phone, MessageCircle, Mail, Github, Twitter, Linkedin, MapPin } from 'lucide-vue-next'
 import { useToast } from '@/composables/useToast.js'
+import { useTabBar } from '@/composables/useTabBar.js'
 const currentYear = new Date().getFullYear()
 const { showToast } = useToast()
+const { isTabPage } = useTabBar()
 
 // 复制微信号
 const copyWeChat = () => {
@@ -141,5 +143,8 @@ const copyWeChatFromSocial = () => {
         </p>
       </div>
     </div>
+    <!-- 在特定页面底部添加与Tab栏高度相同的透明区域，用来撑起页面底部间距 -->
+    <div v-if="isTabPage" class="opacity-0 pointer-events-none"
+      :style="{ height: 'calc(60px + var(--safe-area-inset-bottom, 0px))' }"></div>
   </footer>
 </template>
