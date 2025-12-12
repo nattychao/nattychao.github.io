@@ -16,6 +16,13 @@ export default defineConfig({
     fs: {
       // Allow serving files from one level up to the project root
       allow: ['..']
+    },
+    proxy: {
+      '/api/dingtalk': {
+        target: 'https://oapi.dingtalk.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/dingtalk/, '/robot/send')
+      }
     }
   }
 })
