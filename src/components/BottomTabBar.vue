@@ -28,7 +28,7 @@ defineExpose({
         <!-- 图标 -->
         <component :is="item.icon" :class="[
           isActive(item.path) ? 'text-theme-600' : 'text-slate-500',
-          'h-5 w-5 mb-[2px]'
+          'h-[18px] w-[18px] mb-[2px]'
         ]" />
         <!-- 文字 -->
         <span class="text-[10px]">{{ item.name }}</span>

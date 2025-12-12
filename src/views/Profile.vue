@@ -79,22 +79,18 @@
     </div>
     <!-- 标签页内容 -->
     <div class="px-4">
-      <transition name="tab" mode="out-in">
-        <div v-if="activeTab === 'photos'" key="photos" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <!-- 收藏夹卡片 -->
-          <CollectionCard v-for="(collection, index) in collections" :key="index" :collection="collection" />
-        </div>
+      <div v-if="activeTab === 'photos'" key="photos" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- 收藏夹卡片 -->
+        <CollectionCard v-for="(collection, index) in collections" :key="index" :collection="collection" />
+      </div>
 
-        <div v-else-if="activeTab === 'saved'" key="saved" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <CollectionCard v-for="(collection, index) in collections.slice(0, 1)" :key="index"
-            :collection="collection" />
-        </div>
+      <div v-else-if="activeTab === 'saved'" key="saved" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <CollectionCard v-for="(collection, index) in collections.slice(0, 1)" :key="index" :collection="collection" />
+      </div>
 
-        <div v-else-if="activeTab === 'badges'" key="badges" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <CollectionCard v-for="(collection, index) in collections.slice(0, 3)" :key="index"
-            :collection="collection" />
-        </div>
-      </transition>
+      <div v-else-if="activeTab === 'badges'" key="badges" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <CollectionCard v-for="(collection, index) in collections.slice(0, 3)" :key="index" :collection="collection" />
+      </div>
     </div>
   </div>
 </template>

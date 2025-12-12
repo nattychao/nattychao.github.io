@@ -3,7 +3,9 @@
     <!-- 收藏夹标题和统计 -->
     <div class="flex justify-between items-center mb-4">
       <div>
-        <h3 class="text-base md:text-lg font-semibold text-slate-900">{{ collection.title }}</h3>
+        <h3 class="text-base md:text-lg font-semibold text-slate-900 line-clamp-1 md:line-clamp-2">
+          {{ collection.title }}
+        </h3>
         <p class="text-xs md:text-sm text-slate-500">{{ collection.photos.length }} photos</p>
       </div>
       <div class="hidden md:block text-sm text-theme-600 font-medium">View All</div>
