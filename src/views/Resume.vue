@@ -164,23 +164,27 @@ const contributions = [
         <p class="text-base sm:text-lg md:text-xl text-theme-600 font-medium mb-3 sm:mb-4">高级iOS开发工程师</p>
         <p class="text-slate-600 text-sm sm:text-base mb-3 sm:mb-4">拥有6年iOS开发经验，精通Swift和Objective-C，专注于高性能、高可用的移动应用开发
         </p>
-        <div
-          class="flex flex-col sm:flex-row sm:flex-wrap justify-center md:justify-start gap-2 sm:gap-3 md:gap-4 text-slate-600 text-xs sm:text-sm md:text-base">
+        <!-- 社交链接 - H5端只显示居中图标，PC端显示完整文本 -->
+        <div class="flex flex-wrap justify-center md:justify-start gap-2 sm:gap-3 md:gap-4 text-slate-600">
           <a href="mailto:nattychaoo@gmail.com"
-            class="flex items-center gap-1.5 sm:gap-2 md:hover:text-theme-600 transition-colors">
-            <Mail class="w-3.5 h-3.5 sm:w-4 sm:h-4" /> nattychaoo@gmail.com
+            class="flex items-center justify-center gap-0 md:gap-2 w-8 h-8 sm:w-auto sm:h-auto rounded-full bg-slate-100 sm:bg-transparent hover:bg-theme-100 md:hover:bg-transparent transition-all duration-300">
+            <Mail class="w-4 h-4 sm:w-4 sm:h-4" />
+            <span class="hidden md:inline text-xs sm:text-sm md:text-base">nattychaoo@gmail.com</span>
           </a>
           <a href="https://github.com/nattychao" target="_blank"
-            class="flex items-center gap-1.5 sm:gap-2 md:hover:text-theme-600 transition-colors">
-            <Github class="w-3.5 h-3.5 sm:w-4 sm:h-4" /> nattychao
+            class="flex items-center justify-center gap-0 md:gap-2 w-8 h-8 sm:w-auto sm:h-auto rounded-full bg-slate-100 sm:bg-transparent hover:bg-theme-100 md:hover:bg-transparent transition-all duration-300">
+            <Github class="w-4 h-4 sm:w-4 sm:h-4" />
+            <span class="hidden md:inline text-xs sm:text-sm md:text-base">nattychao</span>
           </a>
           <a href="https://linkedin.com/in/nattychao" target="_blank"
-            class="flex items-center gap-1.5 sm:gap-2 md:hover:text-theme-600 transition-colors">
-            <Linkedin class="w-3.5 h-3.5 sm:w-4 sm:h-4" /> nattychao
+            class="flex items-center justify-center gap-0 md:gap-2 w-8 h-8 sm:w-auto sm:h-auto rounded-full bg-slate-100 sm:bg-transparent hover:bg-theme-100 md:hover:bg-transparent transition-all duration-300">
+            <Linkedin class="w-4 h-4 sm:w-4 sm:h-4" />
+            <span class="hidden md:inline text-xs sm:text-sm md:text-base">nattychao</span>
           </a>
           <a href="https://nattychao.github.io" target="_blank"
-            class="flex items-center gap-1.5 sm:gap-2 md:hover:text-theme-600 transition-colors">
-            <Globe class="w-3.5 h-3.5 sm:w-4 sm:h-4" /> nattychao.github.io
+            class="flex items-center justify-center gap-0 md:gap-2 w-8 h-8 sm:w-auto sm:h-auto rounded-full bg-slate-100 sm:bg-transparent hover:bg-theme-100 md:hover:bg-transparent transition-all duration-300">
+            <Globe class="w-4 h-4 sm:w-4 sm:h-4" />
+            <span class="hidden md:inline text-xs sm:text-sm md:text-base">nattychao.github.io</span>
           </a>
         </div>
       </div>
