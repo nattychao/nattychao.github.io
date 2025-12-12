@@ -154,9 +154,10 @@ const contributions = [
     <!-- Header -->
     <div
       class="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-sm border border-slate-100 mb-6 sm:mb-8 md:mb-12 flex flex-col md:flex-row items-center gap-4 sm:gap-6 md:gap-8">
-      <div
-        class="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 bg-theme-100 rounded-full flex items-center justify-center text-theme-600 font-bold text-2xl sm:text-3xl md:text-4xl">
-        NC
+      <div class="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full overflow-hidden">
+        <img
+          src="https://avatars.githubusercontent.com/u/26376013?s=4000&u=0de45a7006d3bcded69f813ba870dceaf9ccf870&v=4"
+          alt="Natty Chao" class="w-full h-full object-cover">
       </div>
       <div class="text-center md:text-left flex-grow">
         <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-1.5 sm:mb-2">Natty Chao</h1>

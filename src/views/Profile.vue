@@ -7,7 +7,7 @@
         <div
           class="w-32 h-32 rounded-full p-1 bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-500 animate-gradient">
           <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
+            src="https://avatars.githubusercontent.com/u/26376013?s=4000&u=0de45a7006d3bcded69f813ba870dceaf9ccf870&v=4"
             alt="Profile picture" class="w-full h-full rounded-full object-cover bg-white border-4 border-white">
         </div>
       </div>
