@@ -72,7 +72,7 @@ const submitForm = () => {
     // 生产环境使用CORS代理服务解决跨域问题
     const apiUrl = import.meta.env.DEV
         ? '/api/dingtalk?access_token=181aa4e0625b37819a04749f196c539335d4ebb3a3bc028e93380bc6c303d5ca'
-        : 'https://cors-anywhere.herokuapp.com/https://oapi.dingtalk.com/robot/send?access_token=181aa4e0625b37819a04749f196c539335d4ebb3a3bc028e93380bc6c303d5ca'
+        : 'https://cors.bridged.cc/https://oapi.dingtalk.com/robot/send?access_token=181aa4e0625b37819a04749f196c539335d4ebb3a3bc028e93380bc6c303d5ca'
 
     // 发送请求到钉钉机器人接口
     fetch(apiUrl, {
