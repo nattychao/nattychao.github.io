@@ -68,10 +68,11 @@ const submitForm = () => {
     }
 
     // 根据环境选择不同的接口URL
-    // 开发环境使用Vite代理，生产环境直接调用钉钉接口
+    // 开发环境使用Vite代理
+    // 生产环境使用CORS代理服务解决跨域问题
     const apiUrl = import.meta.env.DEV
         ? '/api/dingtalk?access_token=181aa4e0625b37819a04749f196c539335d4ebb3a3bc028e93380bc6c303d5ca'
-        : 'https://oapi.dingtalk.com/robot/send?access_token=181aa4e0625b37819a04749f196c539335d4ebb3a3bc028e93380bc6c303d5ca'
+        : 'https://cors-anywhere.herokuapp.com/https://oapi.dingtalk.com/robot/send?access_token=181aa4e0625b37819a04749f196c539335d4ebb3a3bc028e93380bc6c303d5ca'
 
     // 发送请求到钉钉机器人接口
     fetch(apiUrl, {
