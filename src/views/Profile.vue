@@ -1,7 +1,13 @@
 <template>
   <div class="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 pt-20 pb-12 sm:py-16 md:py-20">
     <!-- 个人信息卡片 -->
-    <div class="bg-white mx-4 rounded-3xl shadow-sm p-6 sm:p-8 mb-8">
+    <div class="bg-white mx-4 rounded-3xl shadow-sm p-6 sm:p-8 mb-8 relative">
+      <!-- 设置按钮 -->
+      <button
+        class="absolute top-4 right-4 p-2 rounded-full bg-theme-100 text-theme-600 hover:bg-theme-200 transition-colors duration-200"
+        @click="handleSettingsClick">
+        <Settings class="w-5 h-5" />
+      </button>
       <!-- 头像 -->
       <div class="flex justify-center mb-6">
         <div
@@ -166,16 +172,55 @@
         </template>
       </div>
     </div>
+
+    <!-- 设置模态框 -->
+    <SettingsModal :visible="showSettingsModal" @close="showSettingsModal = false" />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { ArrowRight } from 'lucide-vue-next'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { ArrowRight, Settings } from 'lucide-vue-next'
 import CollectionCard from '../components/CollectionCard.vue'
+import SettingsModal from '../components/SettingsModal.vue'
 
+// 路由
+const router = useRouter()
 // 活动标签页
 const activeTab = ref('photos')
+// 设置模态框显示状态
+const showSettingsModal = ref(false)
+// 是否为移动端设备
+const isMobile = ref(false)
+
+// 判断设备类型
+const checkDeviceType = () => {
+  isMobile.value = window.innerWidth < 768
+}
+
+// 处理设置按钮点击
+const handleSettingsClick = () => {
+  if (isMobile.value) {
+    // 移动端显示模态框
+    showSettingsModal.value = true
+  } else {
+    // PC端跳转到设置页面
+    router.push('/settings')
+  }
+}
+
+// 页面挂载时检查设备类型
+onMounted(() => {
+  checkDeviceType()
+  // 监听窗口大小变化
+  window.addEventListener('resize', checkDeviceType)
+})
+
+// 组件卸载时移除事件监听
+onUnmounted(() => {
+  window.removeEventListener('resize', checkDeviceType)
+})
 
 // 收藏夹数据
 const collections = ref([
