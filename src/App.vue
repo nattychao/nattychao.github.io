@@ -28,7 +28,7 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen flex flex-col font-sans">
-    <NavBar v-if="$route.name !== 'Jewellery'" />
+    <NavBar v-if="$route.name !== 'Jewellery' && $route.name !== 'Yehwang'" />
     <main class="flex-grow">
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
@@ -39,9 +39,11 @@ onMounted(() => {
       </router-view>
     </main>
     <!-- 移动端底部Tab栏，仅在小屏幕显示且特定页面显示 -->
-    <BottomTabBar v-if="isTabPage && $route.name !== 'Jewellery' && $route.name !== 'Inftab'" class="md:hidden" />
+    <BottomTabBar
+      v-if="isTabPage && $route.name !== 'Jewellery' && $route.name !== 'Yehwang' && $route.name !== 'Inftab'"
+      class="md:hidden" />
     <!-- Footer组件 - 在不显示Tab栏的页面显示 -->
-    <Footer v-if="$route.name !== 'Jewellery' && $route.name !== 'Inftab'" />
+    <Footer v-if="$route.name !== 'Jewellery' && $route.name !== 'Yehwang' && $route.name !== 'Inftab'" />
   </div>
 </template>
 

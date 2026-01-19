@@ -13,7 +13,14 @@ export const projects = [
     image: 'https://art.my-jewellery.com/transform/78666544-157a-4822-8817-9e9b40039772/BANNER-HOME-DESKTOP-gifting?io=transform:crop,width:2880,height:1440&format=avif',
     href: '/jewellery'
   },
-   {
+  {
+    title: 'Yehwang Wholesale',
+    description: '提供批发珠宝和时尚产品的B2B平台，为商家提供优质的供应链服务。',
+    tags: ['Vue', 'Vite', 'Tailwind'],
+    image: '/yehwang/hero.png',
+    href: '/yehwang'
+  },
+  {
     title: 'Yehwang B2B跨境电商网站',
     description: '公司B2B跨境电商网站',
     tags: ['Vue', 'Vite', 'Tailwind'],
