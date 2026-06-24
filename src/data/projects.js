@@ -31,7 +31,7 @@ export const projects = [
     title: 'Dropshipping 一键代发项目',
     description: 'drop shipping 一键代发项目',
     tags: ['Node.js', 'Express', 'MongoDB'],    
-    image: 'https://cfcdn.yehwang.com/cdn-cgi/image/format=webp/image/catalog/web-static/public/bb641e7b-0c4e-44b0-a0cb-51aba65ad5db.jpg',
+    image: 'https://dropshipping.yehwang.com/images/index/banner.jpg',
     href: 'https://dropshipping.yehwang.com'
   },
   {
