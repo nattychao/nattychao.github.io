@@ -67,5 +67,12 @@ export const projects = [
     tags: ['Vue', 'Iframe', 'Unsplash'],
     image: 'https://images.unsplash.com/photo-1761839262867-af53d08b0eb5?auto=format&fit=crop&w=800&q=80',
     href: '/unsplash'
-  }
+  },
+  {
+    title: '线下分销系统',
+    description: '订单管理系统',
+    tags: ['Vue', 'Vite', 'bettersqlite3', 'redis'],
+    image: 'https://img-cdn.yehwang.com/image/catalog/home3.0/19c2f6c8-3ba3-4886-b2ec-cc288fef4916.jpg',
+    href: 'https://ods.yehwang.com'
+  } 
 ]
