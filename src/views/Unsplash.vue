@@ -62,8 +62,8 @@ const fetchWallpaper = async () => {
         img.src = displayUrl
       })
       bgUrl.value = displayUrl
-      // 下载走原图，同样经代理并强制输出 jpg
-      rawUrl.value = proxy(src.rawSrc || src.bigSrc) + '&output=jpg'
+      // 下载保留原始高清链接（不经 wsrv），下载时用 no-referrer 规避防盗链
+      rawUrl.value = src.rawSrc || src.bigSrc
       // 每次获取成功都更新本地缓存
       writeCache({ bgUrl: bgUrl.value, rawUrl: rawUrl.value })
     }
@@ -79,7 +79,8 @@ const downloadWallpaper = async () => {
   if (!rawUrl.value || downloading.value) return
   downloading.value = true
   try {
-    const res = await fetch(rawUrl.value)
+    // 用原始高清链接下载；no-referrer 避免源站防盗链返回 403（CDN 已开启 CORS *）
+    const res = await fetch(rawUrl.value, { referrerPolicy: 'no-referrer' })
     const blob = await res.blob()
     const objectUrl = URL.createObjectURL(blob)
     const link = document.createElement('a')
